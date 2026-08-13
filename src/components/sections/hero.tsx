@@ -49,7 +49,7 @@ export function Hero({ settings }: { settings: Settings }) {
                 </motion.p>
               ) : null}
 
-              <h1 className="h1-display text-left text-[var(--c-primary)]">
+              <h1 className="h1-display text-center text-[var(--c-primary)] lg:text-left">
                 <motion.span variants={fadeUp} className="block">
                   {title}
                 </motion.span>

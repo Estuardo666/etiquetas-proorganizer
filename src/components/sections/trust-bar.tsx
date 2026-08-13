@@ -36,7 +36,15 @@ export function TrustBar({ settings }: { settings: Settings }) {
           gap={0.05}
         >
           {items.map(([icon, title, desc], index) => (
-            <RevealItem key={index} variants={fadeUp}>
+            <RevealItem
+              key={index}
+              variants={fadeUp}
+              className={cn(
+                index === items.length - 1 && items.length % 2 === 1
+                  ? "col-span-2 sm:col-span-1"
+                  : undefined,
+              )}
+            >
               {/* Hover en su propio motion.div: separado de la animación de
                   entrada, para que el gesto de hover siempre tenga su propia
                   transición sin depender de en qué punto va el fadeUp. */}
