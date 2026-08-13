@@ -83,7 +83,7 @@ export function FloatingCta({ settings }: { settings: Settings }) {
       <motion.div
         animate={{ y: atEnd ? 90 : 0, opacity: atEnd ? 0 : 1 }}
         transition={{ duration: 0.25 }}
-        className="fixed inset-x-0 bottom-0 z-40 border-t border-[var(--c-border)] bg-white/95 backdrop-blur-md md:hidden"
+        className="fixed inset-x-0 bottom-0 z-40 hidden border-t border-[var(--c-border)] bg-white/95 backdrop-blur-md md:block"
         style={{
           paddingBottom: "env(safe-area-inset-bottom)",
           pointerEvents: atEnd ? "none" : "auto",
