@@ -10,9 +10,8 @@ import { Process } from "@/components/sections/process";
 import { Pricing } from "@/components/sections/pricing";
 import { Testimonials } from "@/components/sections/testimonials";
 import { Faq } from "@/components/sections/faq";
-import { FinalCta } from "@/components/sections/final-cta";
+import { Founder } from "@/components/sections/founder";
 import { Footer } from "@/components/sections/footer";
-import { FloatingCta } from "@/components/sections/floating-cta";
 
 export default async function Page() {
   const content = await getSiteContent();
@@ -84,13 +83,11 @@ export default async function Page() {
         <Process settings={settings} steps={content.steps} />
         <Testimonials settings={settings} testimonials={content.testimonials} />
         <Faq settings={settings} faqs={content.faqs} />
-        {/* El cierre existía como componente pero no estaba montado: el CTA
-            flotante ya observaba `#cta-final` para apartarse de él. */}
-        <FinalCta settings={settings} />
+        {/* Cierre humano: quién firma el trabajo, garantía y arranque por chat. */}
+        <Founder />
       </main>
 
       <Footer settings={settings} />
-      <FloatingCta settings={settings} />
       <BackToTop />
     </OrderProvider>
   );

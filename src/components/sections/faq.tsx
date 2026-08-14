@@ -6,7 +6,7 @@ import { ChevronDown } from "lucide-react";
 import { SectionHeader } from "@/components/ui/section-header";
 import { RevealGroup, RevealItem } from "@/components/ui/reveal";
 import { DecorativeBackground } from "@/components/ui/decor";
-import { LinkButton } from "@/components/ui/button";
+import { SecondaryButton } from "@/components/ui/secondary-button";
 import { fadeScaleIn } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import type { FaqItem, Settings } from "@/lib/types";
@@ -108,15 +108,12 @@ export function Faq({ settings, faqs }: { settings: Settings; faqs: FaqItem[] })
         {settings.faq.linkText ? (
           <div className="mt-7 flex justify-center">
             {/* Mismo sistema visual que el resto de botones secundarios. */}
-            <LinkButton
+            <SecondaryButton
               href={settings.faq.linkUrl || "#preguntas-frecuentes"}
-              variant="outline"
-              size="sm"
-              className="border-[var(--c-pastel-accent)]"
+              ariaLabel={`${settings.faq.linkText}: ver el resto de preguntas frecuentes`}
             >
               {settings.faq.linkText}
-              <ChevronDown className="size-[17px] text-[var(--c-accent)]" aria-hidden="true" />
-            </LinkButton>
+            </SecondaryButton>
           </div>
         ) : null}
       </div>

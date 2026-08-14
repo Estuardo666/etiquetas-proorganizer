@@ -151,7 +151,7 @@ export function DesignsPanel({ settings, designs }: { settings: Settings; design
                       "flex items-center justify-center gap-1 pt-2 pb-0.5 text-center font-extrabold text-[var(--c-ink)] transition-transform duration-[260ms] group-hover:-translate-y-0.5",
                       featured
                         ? "font-[family-name:var(--font-heading)] text-[22px] font-semibold sm:justify-start sm:pt-0 sm:text-left"
-                        : "text-[12.5px]",
+                        : "text-[16px]",
                     )}
                   >
                     {design.title}

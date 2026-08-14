@@ -9,8 +9,8 @@ import { cardHover, fadeScaleIn } from "@/lib/motion";
 import { cn, pipes } from "@/lib/utils";
 import type { Settings } from "@/lib/types";
 
-/** El circulo del icono alterna los dos tintes de la paleta, nada mas. */
-const tints = ["var(--c-tint-accent)", "var(--c-tint-highlight)"];
+/** Fondos con suficiente color para que los iconos no se vean lavados. */
+const tints = ["var(--c-pastel-accent)", "var(--c-pastel-highlight)"];
 
 /**
  * Franja de beneficios: cinco tarjetas bajas con icono ilustrado y texto muy

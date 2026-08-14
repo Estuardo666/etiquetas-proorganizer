@@ -233,9 +233,9 @@ export function ArtWater({ className, size = 40 }: ArtProps) {
     <svg viewBox="0 0 48 48" width={size} height={size} className={cn(svgBase, className)} aria-hidden="true">
       <path
         d="M24 5c8 10 13 16 13 22.5A13 13 0 0 1 11 27.5C11 21 16 15 24 5Z"
-        fill={C.inkSoft}
-        stroke="#fff"
-        strokeWidth="2.5"
+        fill={C.accent}
+        stroke={C.ink}
+        strokeWidth="1.8"
         strokeLinejoin="round"
       />
       <path d="M18 28a6 6 0 0 0 5 5.6" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" fill="none" />
@@ -246,9 +246,9 @@ export function ArtWater({ className, size = 40 }: ArtProps) {
 export function ArtWasher({ className, size = 40 }: ArtProps) {
   return (
     <svg viewBox="0 0 48 48" width={size} height={size} className={cn(svgBase, className)} aria-hidden="true">
-      <rect x="8" y="6" width="32" height="36" rx="8" fill={C.inkSoft} stroke="#fff" strokeWidth="2.5" />
+      <rect x="8" y="6" width="32" height="36" rx="8" fill={C.warm} stroke={C.ink} strokeWidth="1.8" />
       <circle cx="24" cy="27" r="10" fill="#fff" />
-      <circle cx="24" cy="27" r="6" fill={C.inkSoft} />
+      <circle cx="24" cy="27" r="6" fill={C.accent} />
       <circle cx="14" cy="13" r="2.2" fill="#fff" />
       <circle cx="21" cy="13" r="2.2" fill="#fff" />
     </svg>
@@ -260,9 +260,9 @@ export function ArtShield({ className, size = 40 }: ArtProps) {
     <svg viewBox="0 0 48 48" width={size} height={size} className={cn(svgBase, className)} aria-hidden="true">
       <path
         d="M24 4 40 10v13c0 10-7 18-16 21-9-3-16-11-16-21V10Z"
-        fill={C.inkFaint}
-        stroke="#fff"
-        strokeWidth="2.5"
+        fill={C.accent}
+        stroke={C.ink}
+        strokeWidth="1.8"
         strokeLinejoin="round"
       />
       <path d="m16 24 6 6 11-12" stroke="#fff" strokeWidth="3.6" strokeLinecap="round" strokeLinejoin="round" fill="none" />
@@ -275,9 +275,9 @@ export function ArtHeart({ className, size = 40 }: ArtProps) {
     <svg viewBox="0 0 48 48" width={size} height={size} className={cn(svgBase, className)} aria-hidden="true">
       <path
         d="M24 42S5 30.5 5 18.5C5 11.6 10.4 6 17.2 6c3.7 0 6.4 1.7 6.8 3.8.4-2.1 3.1-3.8 6.8-3.8C37.6 6 43 11.6 43 18.5 43 30.5 24 42 24 42Z"
-        fill={C.accentSoft}
-        stroke="#fff"
-        strokeWidth="2.5"
+        fill={C.warm}
+        stroke={C.ink}
+        strokeWidth="1.8"
         strokeLinejoin="round"
       />
     </svg>
@@ -287,7 +287,7 @@ export function ArtHeart({ className, size = 40 }: ArtProps) {
 export function ArtSmile({ className, size = 40 }: ArtProps) {
   return (
     <svg viewBox="0 0 48 48" width={size} height={size} className={cn(svgBase, className)} aria-hidden="true">
-      <circle cx="24" cy="24" r="19" fill={C.warm} stroke="#fff" strokeWidth="2.5" />
+      <circle cx="24" cy="24" r="19" fill={C.warm} stroke={C.ink} strokeWidth="1.8" />
       <circle cx="18" cy="20" r="2.6" fill={C.ink} />
       <circle cx="30" cy="20" r="2.6" fill={C.ink} />
       <path d="M16 28c3.4 4.6 12.6 4.6 16 0" stroke={C.ink} strokeWidth="3" strokeLinecap="round" fill="none" />

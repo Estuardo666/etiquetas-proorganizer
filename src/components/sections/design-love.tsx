@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { ImageIcon, Sticker, Type, Video } from "lucide-react";
-import { TextArrowCta } from "@/components/ui/text-arrow-cta";
+import { SecondaryButton } from "@/components/ui/secondary-button";
 import labelSheet from "../../../public/hoja de etiquetas.png";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
 import {
@@ -132,14 +132,12 @@ export function PersonalizationPanel() {
               </p>
 
               <span className="mt-6 flex justify-center">
-                <TextArrowCta
+                <SecondaryButton
                   href="#como-funciona"
                   ariaLabel="Ver el paso a paso para personalizar las etiquetas"
-                  color="var(--c-accent-ink)"
-                  lineColor="var(--c-accent)"
                 >
                   Ver el paso a paso
-                </TextArrowCta>
+                </SecondaryButton>
               </span>
             </div>
           </Reveal>

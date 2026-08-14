@@ -7,6 +7,10 @@
   --color-highlight: var(--c-highlight);
   --color-highlight-ink: var(--c-highlight-ink);
   --color-surface: var(--c-surface);
+  --color-purple: var(--c-purple);
+  --color-pink: var(--c-pink);
+  --color-gray-warm: var(--c-gray);
+  --color-green: var(--c-green);
   --color-whatsapp: var(--c-whatsapp);
   --color-whatsapp-ink: var(--c-whatsapp-ink);
   --color-muted: var(--c-muted);
@@ -17,59 +21,71 @@
 }
 
 /**
- * Paleta: cuatro roles y nada más.
+ * Paleta: cuatro colores planos y un gris oscuro para leer.
  *
- * La página llegó a tener ~125 hex distintos porque cada sección se inventaba
- * su propia fila de tintes pastel. Con cuatro roles la jerarquía la marca el
- * *papel* de cada color, no su tono: tinta para leer, acento para actuar,
- * destacado para el dinero, superficie para respirar.
+ * Los cuatro son *superficie*, nunca texto: son pasteles saturados y ninguno
+ * llega a 4,5:1 con blanco encima. Todo lo que se lee va en `--c-ink`, que es
+ * el mismo gris oscuro sobre los cuatro fondos. Eso es lo que mantiene la
+ * página legible aunque las tarjetas cambien de color.
  *
- * Todo lo demás son mezclas de esos cuatro con blanco. Añadir un tono nuevo
- * aquí es exactamente lo que rompió el sistema la vez anterior.
+ * Los tintes y los pasteles son mezclas de esos cuatro con blanco. Un tono
+ * nuevo aquí es lo que rompió el sistema las veces anteriores.
  */
 :root {
-  --c-ink: #18336b;
-  --c-accent: #f2679a;
-  --c-highlight: #ffd166;
-  --c-surface: #fffcf8;
+  --c-ink: #262626; /* gris oscuro: titulos, texto, contornos */
+  --c-purple: #a78bfa;
+  --c-pink: #ff9fe0;
+  --c-gray: #cbc6c1;
+  --c-green: #90ee8f;
+  --c-surface: #f5f4f2;
 
   /**
-   * Versiones legibles. El rosa a plena saturación se queda en ~2,9:1 sobre
-   * blanco y el amarillo aún peor: como superficie funcionan, como texto no
-   * llegan al 4,5:1 de WCAG AA. Superficie y texto son dos trabajos distintos
-   * y necesitan dos valores.
+   * Roles. El resto del código habla de acento y destacado, no de morado y
+   * rosa: si mañana cambia la paleta, cambia aquí y no en cuarenta ficheros.
    */
-  --c-accent-ink: #b02f5f;
-  --c-highlight-ink: #8a5a00;
+  --c-accent: var(--c-purple); /* acción, selección, estado activo */
+  --c-highlight: var(--c-pink); /* precio, promo, adornos cálidos */
+  --c-neutral: var(--c-gray);
+  --c-positive: var(--c-green);
+
+  /**
+   * Antes estos `-ink` eran versiones oscurecidas de cada color para poder
+   * usarlos como texto. Con esta paleta no hacen falta dos valores: sobre
+   * cualquiera de los cuatro fondos el texto legible es siempre el mismo gris
+   * oscuro, y eso da una jerarquía más limpia que cuatro tonos de texto.
+   */
+  --c-accent-ink: var(--c-ink);
+  --c-highlight-ink: var(--c-ink);
 
   --c-text: var(--c-ink);
   /**
-   * 74 % y no menos: al 58 % el gris azulado se queda en 3,5:1 sobre blanco y
-   * es texto corrido, no decoracion. A 74 % da 5,6:1 sobre blanco y 5,0:1
-   * sobre el tinte de seccion, que son los dos fondos donde aparece.
+   * 76 % del gris oscuro. El texto secundario aparece sobre cuatro fondos
+   * distintos (crema, tinte gris, tinte rosa y tinte morado) y el peor de los
+   * cuatro manda: a 76 % da 5,4:1 sobre el tinte gris, que es el más oscuro.
+   * Medido en el navegador, no estimado sobre blanco — el fondo crema ya resta
+   * medio punto de ratio por si solo.
    */
-  --c-muted: color-mix(in srgb, var(--c-ink) 74%, #ffffff);
-  --c-border: color-mix(in srgb, var(--c-ink) 12%, #ffffff);
+  --c-muted: color-mix(in srgb, var(--c-ink) 76%, #ffffff);
+  --c-border: color-mix(in srgb, var(--c-ink) 16%, #ffffff);
 
-  --c-tint-accent: color-mix(in srgb, var(--c-accent) 12%, #ffffff);
+  --c-tint-accent: color-mix(in srgb, var(--c-accent) 22%, #ffffff);
   --c-tint-highlight: color-mix(in srgb, var(--c-highlight) 22%, #ffffff);
-  --c-tint-ink: color-mix(in srgb, var(--c-ink) 6%, #ffffff);
+  --c-tint-ink: color-mix(in srgb, var(--c-neutral) 45%, #ffffff);
+  --c-tint-positive: color-mix(in srgb, var(--c-positive) 28%, #ffffff);
 
-  --c-pastel-accent: color-mix(in srgb, var(--c-accent) 45%, #ffffff);
-  --c-pastel-highlight: color-mix(in srgb, var(--c-highlight) 45%, #ffffff);
-  --c-pastel-ink: color-mix(in srgb, var(--c-ink) 28%, #ffffff);
+  --c-pastel-accent: color-mix(in srgb, var(--c-accent) 55%, #ffffff);
+  --c-pastel-highlight: color-mix(in srgb, var(--c-highlight) 55%, #ffffff);
+  --c-pastel-ink: color-mix(in srgb, var(--c-neutral) 85%, #ffffff);
+  --c-pastel-positive: color-mix(in srgb, var(--c-positive) 65%, #ffffff);
 
   /**
-   * Excepción declarada: verde de canal, no de marca. Vive solo dentro del
-   * botón de WhatsApp. Si el CTA deja de ser verde deja de reconocerse como
-   * "esto abre el chat", y esa es la única acción de la página.
+   * El CTA de chat también sale de la paleta: verde de reposo con el gris
+   * oscuro encima (13,9:1) y relleno de gris oscuro con blanco al hacer hover
+   * (14,8:1). Se pierde el verde de marca de WhatsApp, pero el icono sigue
+   * identificando el canal y la página gana un único sistema de color.
    */
-  --c-whatsapp: #25d366;
-  /**
-   * Verde oscurecido respecto al #128c7e de marca: con blanco encima aquel se
-   * quedaba en 4,14:1 y el texto del CTA principal no puede fallar AA.
-   */
-  --c-whatsapp-ink: #0f7a6c;
+  --c-whatsapp: var(--c-positive);
+  --c-whatsapp-ink: var(--c-ink);
 
   --c-radius: 28px;
 
@@ -131,13 +147,7 @@ section[id] {
 
 @media (min-width: 1024px) {
   .container-page {
-    width: min(100% - 48px, 1280px);
-  }
-}
-
-@media (min-width: 1440px) {
-  .container-page {
-    width: min(100% - 48px, 1320px);
+    width: min(100% - 48px, 1260px);
   }
 }
 
@@ -213,6 +223,10 @@ section[id] {
   background: var(--c-tint-highlight);
 }
 
+.surface-positive {
+  background: var(--c-tint-positive);
+}
+
 /* Tipografía ------------------------------------------------------------ */
 
 .font-display {
@@ -249,9 +263,16 @@ h5 {
 
 /* Interacción ----------------------------------------------------------- */
 
+/**
+ * Anillo de foco en gris oscuro y no en morado: el foco tiene que verse sobre
+ * los cuatro colores de la paleta, y el morado sobre la tarjeta morada
+ * desaparece. El halo blanco interior lo separa de los fondos oscuros.
+ */
 .focus-ring:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--c-accent) 55%, transparent);
+  box-shadow:
+    0 0 0 2px #ffffff,
+    0 0 0 4px var(--c-ink);
 }
 
 /**
@@ -334,7 +355,14 @@ h5 {
 
 .fluid-btn:hover .fluid-btn__stack,
 .fluid-btn:focus-visible .fluid-btn__stack {
-  transform: translateY(-100%);
+  /* La pila contiene dos líneas: -50 % desplaza exactamente una línea. */
+  transform: translateY(-50%);
+}
+
+/* El relleno oscuro del hover necesita su copia de texto clara encima. */
+.fluid-btn:hover .fluid-btn__stack > :last-child,
+.fluid-btn:focus-visible .fluid-btn__stack > :last-child {
+  color: #ffffff !important;
 }
 
 /**
@@ -428,8 +456,8 @@ h5 {
   align-items: center;
   padding: 7px 12px;
   border-radius: 999px;
-  background: var(--c-tint-accent);
-  color: var(--c-accent-ink);
+  background: var(--c-highlight);
+  color: var(--c-ink);
   font-size: 12.5px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -437,28 +465,114 @@ h5 {
   line-height: 1;
 }
 
-/** Subrayado animado de los enlaces del menú. */
-.nav-link::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: 3px;
-  width: 0;
-  height: 2px;
-  border-radius: 999px;
-  background: var(--c-accent);
+/** Iconos sociales: cambio claro de superficie, con movimiento breve. */
+/**
+ * Enlaces del pie: sobre el morado no se puede bajar el gris del texto (2,4:1),
+ * así que el estado de reposo y el de hover se distinguen por el subrayado y no
+ * por el color. Aparece la línea, no se aclara la letra.
+ */
+.footer-link {
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
   transition:
-    width 220ms ease,
-    left 220ms ease;
+    text-decoration-color 180ms cubic-bezier(0.23, 1, 0.32, 1),
+    transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.nav-link:hover::after {
-  width: 60%;
-  left: 20%;
+.footer-link:active {
+  transform: scale(0.98);
 }
 
-.nav-link[aria-current]::after {
-  width: 0;
+@media (hover: hover) and (pointer: fine) {
+  .footer-link:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
+/**
+ * Título de columna del pie: en pastilla y no suelto sobre el morado. El
+ * fondo claro le da el contraste que el color del texto no puede dar aquí, y
+ * de paso separa los rótulos de los enlaces sin una línea más.
+ */
+.footer-pill-title {
+  display: inline-block;
+  border-radius: 999px;
+  background: var(--c-ink);
+  padding: 5px 14px;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  /* Gris oscuro relleno: el rótulo pasa a blanco (14,8:1) y deja de competir
+     con las pastillas blancas de teléfono, que sí son pulsables. */
+  color: #ffffff;
+}
+
+/** Pastilla pulsable (teléfonos): mismo gesto de presión que los botones. */
+.footer-pill {
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.footer-pill:active {
+  transform: scale(0.97);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .footer-pill:hover {
+    background: var(--c-ink);
+    color: #ffffff;
+  }
+}
+
+.footer-social-link {
+  transition:
+    color 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease,
+    transform 180ms cubic-bezier(0.23, 1, 0.32, 1),
+    box-shadow 180ms ease;
+}
+
+.footer-social-link:active {
+  transform: scale(0.96);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .footer-social-link:hover {
+    color: var(--c-highlight);
+    background: var(--c-ink);
+    border-color: var(--c-ink);
+    transform: translateY(-3px) scale(1.06);
+    box-shadow: 0 10px 22px -12px rgb(38 38 38 / 70%);
+  }
+}
+
+/** Comparativa: apilada al leer, ordenada al explorar con el puntero. */
+@media (min-width: 768px) and (hover: hover) and (pointer: fine) {
+  .comparison-card {
+    transition: transform 260ms cubic-bezier(0.23, 1, 0.32, 1);
+    transform-origin: center;
+  }
+
+  .comparison-card--bad {
+    z-index: 1;
+    transform: translateX(12px) rotate(-2deg);
+  }
+
+  .comparison-card--good {
+    z-index: 2;
+    transform: translateX(-34px) rotate(2.25deg);
+    box-shadow: 0 18px 36px -24px rgb(38 38 38 / 55%);
+  }
+
+  .comparison-pair:hover .comparison-card {
+    transform: translateX(0) rotate(0);
+  }
 }
 
 .card-shadow,
@@ -575,6 +689,15 @@ h5 {
     padding-inline: 16px;
     margin-inline: -16px;
     scrollbar-width: none;
+    /**
+     * `overflow-x: auto` fuerza a `overflow-y` a calcularse como `auto`
+     * también (no puede quedar en `visible` si el otro eje no lo está), así
+     * que la fila recorta cualquier cosa que sobresalga por arriba de sus
+     * tarjetas — el sticker girado de precio, que sube por encima de la
+     * tarjeta con `-top-3`. El padding le da a la fila la altura que ese
+     * sticker necesita antes de que el scroll la recorte.
+     */
+    padding-top: 16px;
   }
 
   .snap-row::-webkit-scrollbar {

@@ -48,6 +48,17 @@ export function formatPhone(raw: string) {
   return `+593 ${digits.slice(0, 2)} ${digits.slice(2, 5)} ${digits.slice(5, 9)}`;
 }
 
+/**
+ * Formato local: sin prefijo internacional y con el 0 de marcación nacional,
+ * que es como el cliente marca desde Ecuador. El `+593` solo hace falta si
+ * llamas desde fuera, y quien llama desde fuera no lee el número: pulsa.
+ */
+export function formatPhoneLocal(raw: string) {
+  const digits = (raw ?? "").replace(/\D/g, "").replace(/^593/, "");
+  if (digits.length !== 9) return raw;
+  return `0${digits.slice(0, 2)} ${digits.slice(2, 5)} ${digits.slice(5, 9)}`;
+}
+
 export function slugify(value: string) {
   return value
     .normalize("NFD")

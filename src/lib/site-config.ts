@@ -34,3 +34,10 @@ export const waMessageForSize = (title: string, count: string) =>
 
 export const waMessageForDesign = (title: string) =>
   `Hola, me interesan las etiquetas con diseño de ${title}.`;
+
+/**
+ * Tienda online (Kyte). No vive en WordPress porque no es contenido editable
+ * sino el destino fijo del canal de venta alternativo al chat: si la tienda
+ * cambia de proveedor, cambia el flujo entero, no una etiqueta.
+ */
+export const SHOP_URL = "https://pro-organizer-shop.kyte.site/es";

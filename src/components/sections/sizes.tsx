@@ -16,6 +16,20 @@ import { cn } from "@/lib/utils";
 import type { Settings, SizeItem, UsageItem } from "@/lib/types";
 
 
+/**
+ * Un color de la paleta por tarjeta, en el orden del listado. Aqui el color no
+ * es decoracion: son cuatro opciones entre las que hay que elegir una, y darle
+ * a cada una su propia superficie las hace distinguibles de un vistazo y
+ * faciles de senalar ("la verde"). El texto va en gris oscuro sobre las
+ * cuatro, asi que la legibilidad no depende de cual toque.
+ */
+const cardTints = [
+  "var(--c-pink)",
+  "var(--c-purple)",
+  "var(--c-gray)",
+  "var(--c-green)",
+];
+
 /** Los usos llegan como frase suelta; se leen mejor separados por puntos. */
 const useList = (uses: string) =>
   uses
@@ -72,23 +86,23 @@ export function Sizes({
                   whileHover="hover"
                   variants={cardHover}
                   className="focus-ring group flex h-full w-full flex-col items-center rounded-[24px] border-2 px-4 py-5 text-center"
-                  // Cuatro tamanos no necesitan cuatro colores: se distinguen
-                  // por nombre y por muestra. El color queda libre para decir
-                  // lo unico que el usuario tiene que ver, que es cual ha
-                  // elegido.
+                  // Seleccionada: borde de gris oscuro grueso sobre su propio
+                  // color. El estado no cambia el fondo — si lo cambiara, la
+                  // tarjeta elegida dejaria de ser reconocible como la que el
+                  // usuario acaba de mirar.
                   style={{
-                    background: selected ? "var(--c-tint-accent)" : "#fff",
-                    borderColor: selected ? "var(--c-accent)" : "var(--c-border)",
+                    background: cardTints[index % cardTints.length],
+                    borderColor: selected ? "var(--c-ink)" : "transparent",
                   }}
                 >
                   <h3
                     className="font-[family-name:var(--font-heading)] text-[22px] leading-tight font-semibold"
-                    style={{ color: selected ? "var(--c-accent-ink)" : "var(--c-ink)" }}
+                    style={{ color: "var(--c-ink)" }}
                   >
                     {size.title}
                   </h3>
                   <p className="mt-1 text-[13px] font-bold text-[var(--c-text)]">{size.count}</p>
-                  <p className="text-[13px] text-[var(--c-muted)]">{size.dims}</p>
+                  <p className="text-[13px] text-[var(--c-ink)]/75">{size.dims}</p>
 
                   {/* Muestra de etiqueta: nombre + personaje, con borde blanco
                       interior y sombra para que tenga profundidad. */}
@@ -103,7 +117,7 @@ export function Sizes({
                     ) : (
                       <span
                         className="card-shadow mx-auto flex w-full max-w-[230px] items-center justify-center gap-2 rounded-[18px] border-[3px] border-white px-3 py-2.5 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-0.5 group-hover:scale-[1.04]"
-                        style={{ background: "var(--c-tint-highlight)" }}
+                        style={{ background: "#fff" }}
                       >
                         <span className="font-[family-name:var(--font-heading)] text-[17px] font-semibold text-[var(--c-ink)]">
                           {settings.sizes.sampleName}
@@ -113,10 +127,10 @@ export function Sizes({
                     )}
                   </div>
 
-                  <p className="text-[12px] font-bold text-[var(--c-muted)]">
+                  <p className="text-[12px] font-bold text-[var(--c-ink)]/75">
                     {settings.sizes.usesLabel}
                   </p>
-                  <p className="mt-0.5 text-[13px] leading-snug text-pretty text-[var(--c-muted)]">
+                  <p className="mt-0.5 text-[13px] leading-snug text-pretty text-[var(--c-ink)]/85">
                     {useList(size.uses)}
                   </p>
 
@@ -124,10 +138,10 @@ export function Sizes({
                     className={cn(
                       "mt-3 inline-flex min-h-[26px] items-center gap-1.5 rounded-full px-3 text-[12px] font-extrabold transition-opacity duration-200",
                       selected
-                        ? "bg-[var(--c-accent)] text-white"
+                        ? "bg-[var(--c-ink)] text-white"
                         // En táctil no hay hover: la llamada a la acción se ve
                         // siempre y solo se esconde donde sí hay puntero.
-                        : "text-[var(--c-muted)] sm:opacity-0 sm:group-hover:opacity-100",
+                        : "text-[var(--c-ink)]/80 sm:opacity-0 sm:group-hover:opacity-100",
                     )}
                   >
                     {selected ? (

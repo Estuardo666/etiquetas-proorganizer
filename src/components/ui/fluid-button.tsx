@@ -30,10 +30,20 @@ import { cn } from "@/lib/utils";
  * bloque de `prefers-reduced-motion` ya las neutraliza.
  */
 
+/**
+ * Escala reducida ~15 % respecto a la anterior (52 → 44, 58 → 49) y con menos
+ * relleno lateral (px-7 → px-5, px-9 → px-6).
+ *
+ * El alto se queda en 44 px como suelo y no baja mas, ni siquiera en la
+ * variante pequena: 44 px es el objetivo tactil minimo recomendado, y un CTA
+ * que se falla al pulsar en movil no es un CTA. Lo que encoge en `xs` es el
+ * texto y el relleno, no la zona pulsable.
+ */
 const sizes = {
-  sm: "min-h-[44px] px-5 text-[15px]",
-  md: "min-h-[52px] px-7 text-[16px]",
-  lg: "min-h-[58px] px-9 text-[17px]",
+  xs: "min-h-[44px] px-4 text-[14px]",
+  sm: "min-h-[44px] px-4 text-[14.5px]",
+  md: "min-h-[44px] px-5 text-[15px]",
+  lg: "min-h-[49px] px-6 text-[16px]",
 } as const;
 
 type FluidButtonProps = {
@@ -67,9 +77,9 @@ export function FluidButton({
   rel,
   onClick,
   size = "md",
-  background = "var(--c-whatsapp-ink)",
-  overlayColor = "var(--c-whatsapp)",
-  textColor = "#ffffff",
+  background = "var(--c-accent)",
+  overlayColor = "var(--c-ink)",
+  textColor = "var(--c-ink)",
   secondTextColor = "#ffffff",
   borderColor = "transparent",
   pulse = true,

@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Truck } from "lucide-react";
-import { TextArrowCta } from "@/components/ui/text-arrow-cta";
+import { SecondaryButton } from "@/components/ui/secondary-button";
 import { WhatsAppButton } from "@/components/ui/whatsapp-button";
 import { Media } from "@/components/ui/media";
 import { OrderNote } from "@/components/ui/order-note";
@@ -83,12 +83,14 @@ export function Hero({ settings }: { settings: Settings }) {
                     // "por WhatsApp": el aria no lo repite.
                     ariaLabel={`${hero.ctaPrimary}: abrir WhatsApp con tu pedido`}
                   />
-                  {/* Secundario en texto, no en botón: dos píldoras del mismo
-                      tamaño una al lado de otra reparten la atención en vez de
-                      jerarquizarla. */}
-                  <TextArrowCta href="#disenos" ariaLabel={`${hero.ctaSecondary}: ir a la sección de diseños`}>
+                  {/* Misma píldora que el principal, un escalón mas pequeña y
+                      en morado: la jerarquia la marcan tamaño y color. */}
+                  <SecondaryButton
+                    href="#disenos"
+                    ariaLabel={`${hero.ctaSecondary}: ir a la sección de diseños`}
+                  >
                     {hero.ctaSecondary}
-                  </TextArrowCta>
+                  </SecondaryButton>
                 </motion.div>
 
               </div>

@@ -64,7 +64,10 @@ export function Pricing({ settings, promos }: { settings: Settings; promos: Prom
             >
               {/* Precio base ------------------------------------------- */}
               <RevealItem variants={fadeScaleIn} className="relative flex">
-                <div className="card-base relative flex h-full w-full flex-col items-center justify-center border-white bg-white px-5 py-6 text-center">
+                <div
+                  className="card-base relative flex h-full w-full flex-col items-center justify-center border-white px-5 py-6 text-center"
+                  style={{ background: "var(--c-pink)" }}
+                >
                   <Sticker label={pricing.priceSticker} color="var(--c-ink)" />
                   <p className="font-[family-name:var(--font-heading)] text-[19px] leading-none font-medium text-[var(--c-ink)]">
                     {pricing.priceTitle}
@@ -73,11 +76,11 @@ export function Pricing({ settings, promos }: { settings: Settings; promos: Prom
                     <span className="font-[family-name:var(--font-heading)] text-[52px] leading-none font-semibold text-[var(--c-ink)]">
                       {pricing.priceValue}
                     </span>
-                    <span className="pb-1.5 text-[15px] font-bold text-[var(--c-muted)]">
+                    <span className="pb-1.5 text-[15px] font-bold text-[var(--c-ink)]">
                       {pricing.priceSuffix}
                     </span>
                   </p>
-                  <p className="mt-2 text-[13px] text-[var(--c-muted)]">{pricing.priceSub}</p>
+                  <p className="mt-2 text-[13px] text-[var(--c-ink)]">{pricing.priceSub}</p>
                 </div>
               </RevealItem>
 
@@ -92,7 +95,10 @@ export function Pricing({ settings, promos }: { settings: Settings; promos: Prom
                       animate="rest"
                       whileHover="hover"
                       variants={cardHover}
-                      className="card-base relative flex h-full w-full flex-col items-center justify-center border-white bg-white px-5 py-6 text-center"
+                      className="card-base relative flex h-full w-full flex-col items-center justify-center border-white px-5 py-6 text-center"
+                      style={{
+                        background: index % 2 === 0 ? "var(--c-purple)" : "var(--c-green)",
+                      }}
                     >
                       <Sticker
                         label={promo.title}
@@ -120,7 +126,7 @@ export function Pricing({ settings, promos }: { settings: Settings; promos: Prom
                         {promo.highlight}
                       </p>
 
-                      <p className="mt-2 max-w-[15rem] text-[13px] leading-snug text-[var(--c-muted)]">
+                      <p className="mt-2 max-w-[15rem] text-[13px] leading-snug text-[var(--c-ink)]">
                         {promo.pre}
                       </p>
                     </motion.article>

@@ -2,7 +2,14 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion, useMotionValue, useSpring } from "framer-motion";
+import {
+  AnimatePresence,
+  LayoutGroup,
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+} from "framer-motion";
 import { ArrowUp, Menu, X } from "lucide-react";
 import { WhatsAppButton } from "@/components/ui/whatsapp-button";
 import { brandParts, cn, pipes } from "@/lib/utils";
@@ -70,7 +77,7 @@ export function BackToTop() {
           initial={{ opacity: 0, scale: 0.85 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.85 }}
-          className="focus-ring card-shadow fixed bottom-[104px] left-5 z-40 grid size-11 place-items-center rounded-full border border-[var(--c-border)] bg-white text-[var(--c-ink)] transition-transform hover:-translate-y-0.5 md:bottom-8"
+          className="focus-ring card-shadow fixed bottom-5 left-5 z-40 grid size-11 place-items-center rounded-full border border-[var(--c-border)] bg-white text-[var(--c-ink)] transition-transform hover:-translate-y-0.5 md:bottom-8"
           aria-label="Volver arriba"
         >
           <ArrowUp className="size-5" aria-hidden="true" />
@@ -89,6 +96,20 @@ export function Header({ settings }: { settings: Settings }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(nav[0]?.anchor ?? "");
+  // Al hacer scroll la barra se contrae a la seccion activa; el puntero o el
+  // foco de teclado la vuelven a abrir. El componente de Framer solo tiene las
+  // variantes, pero sin esto la navegacion queda inaccesible una vez colapsada.
+  const [hovered, setHovered] = useState(false);
+  const reduced = useReducedMotion();
+
+  const collapsed = scrolled && !hovered;
+  // Muelles del original: contenedor bounce .2 / .4 s, texto bounce 0 / .4 s.
+  const shellSpring = reduced
+    ? { duration: 0 }
+    : ({ type: "spring", bounce: 0.2, duration: 0.4 } as const);
+  const itemSpring = reduced
+    ? { duration: 0 }
+    : ({ type: "spring", bounce: 0, duration: 0.4, delay: 0.05 } as const);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -129,74 +150,105 @@ export function Header({ settings }: { settings: Settings }) {
     <motion.header
       className={cn(
         "sticky top-0 z-50 transition-[padding] duration-300",
-        scrolled ? "py-1.5" : "py-2",
+        scrolled ? "py-2" : "py-3",
       )}
     >
-      <div className="container-page">
+      <div className="mx-auto w-[min(100%-48px,1260px)]">
         <motion.div
           layout
-          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          transition={shellSpring}
           className={cn(
-            "flex items-center justify-between gap-3 rounded-[28px] border px-4 transition-[height,background-color,box-shadow] duration-300 sm:px-5",
+            "mx-auto flex w-full items-center justify-between gap-3 overflow-hidden rounded-full border border-white/10 bg-[var(--c-ink)] pl-4 text-white shadow-[0_14px_36px_-20px_rgba(38,38,38,0.72)] transition-[height,box-shadow] duration-300 sm:pl-5 lg:w-fit",
             scrolled
-              ? "card-shadow h-[58px] border-[var(--c-border)] bg-white/90 backdrop-blur-md"
-              : "h-[64px] border-white/60 bg-white/75 shadow-[0_10px_30px_-24px_rgba(24,51,107,0.6)] backdrop-blur-md",
+              ? "h-[56px] pr-1.5 shadow-[0_16px_40px_-18px_rgba(38,38,38,0.82)] sm:pr-2"
+              : "h-[64px] pr-2.5 sm:pr-3",
           )}
         >
-          <a
-            href="#inicio"
-            className="focus-ring flex items-center gap-1.5 rounded-full pr-2"
-            aria-label={settings.brand.logoText}
+          {/* El hover/foco que expande la barra colapsada vive solo aqui:
+              logo + nav. El boton de WhatsApp y el de menu quedan fuera para
+              que pasar el mouse por el CTA no dispare la expansion. */}
+          <div
+            className="flex items-center gap-3"
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+            onFocusCapture={() => setHovered(true)}
+            onBlurCapture={(event) => {
+              if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                setHovered(false);
+              }
+            }}
           >
-            {settings.brand.logo?.url ? (
-              <Image
-                src={settings.brand.logo.url}
-                alt={settings.brand.logo.alt || settings.brand.logoText}
-                width={150}
-                height={44}
-                className={cn(
-                  "w-auto object-contain transition-all duration-300",
-                  scrolled ? "h-9" : "h-10",
-                )}
-                priority
-              />
-            ) : (
-              <>
-                <span
+            <a
+              href="#inicio"
+              className="focus-ring flex items-center gap-1.5 rounded-full pr-2"
+              aria-label={settings.brand.logoText}
+            >
+              {settings.brand.logo?.url ? (
+                <Image
+                  src={settings.brand.logo.url}
+                  alt={settings.brand.logo.alt || settings.brand.logoText}
+                  width={150}
+                  height={44}
                   className={cn(
-                    "font-[family-name:var(--font-heading)] leading-none font-medium text-[var(--c-ink)] transition-all duration-300",
-                    scrolled ? "text-[21px]" : "text-[23px]",
+                    "w-auto object-contain transition-all duration-300",
+                    scrolled ? "h-9" : "h-10",
                   )}
-                >
-                  {brandWords[0]}{" "}
-                  {brandWords[1] ? (
-                    <span className="text-[var(--c-accent)]">{brandWords[1]}</span>
-                  ) : null}
-                </span>
-              </>
-            )}
-          </a>
-
-          <nav aria-label="Principal" className="hidden lg:block">
-            <ul className="flex items-center">
-              {nav.map(({ label, anchor }) => (
-                <li key={anchor}>
-                  <a
-                    href={`#${anchor}`}
-                    aria-current={active === anchor ? "true" : undefined}
+                  priority
+                />
+              ) : (
+                <>
+                  <span
                     className={cn(
-                      "nav-link focus-ring relative inline-flex h-11 items-center rounded-full px-3 text-[14.5px] font-medium",
-                      active === anchor
-                        ? "bg-[var(--c-pastel-accent)]/60 text-[var(--c-ink)]"
-                        : "text-[var(--c-muted)] hover:text-[var(--c-ink)]",
+                      "font-[family-name:var(--font-heading)] leading-none font-medium text-white transition-all duration-300",
+                      scrolled ? "text-[21px]" : "text-[23px]",
                     )}
                   >
-                    {label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
+                    {brandWords[0]}{" "}
+                    {brandWords[1] ? (
+                      <span className="text-[var(--c-highlight)]">{brandWords[1]}</span>
+                    ) : null}
+                  </span>
+                </>
+              )}
+            </a>
+
+            <nav aria-label="Principal" className="hidden lg:block">
+              <LayoutGroup id="nav-dinamica">
+                {/* `layout="position"` y no `layout`: al encoger la barra, el
+                    layout animation escala la caja y el texto de los enlaces salia
+                    aplastado en horizontal. Solo animamos la posicion. */}
+                <motion.ul layout="position" transition={shellSpring} className="flex items-center">
+                  <AnimatePresence initial={false} mode="popLayout">
+                    {nav
+                      .filter(({ anchor }) => !collapsed || active === anchor)
+                      .map(({ label, anchor }) => (
+                        <motion.li
+                          key={anchor}
+                          layout="position"
+                          transition={{ layout: shellSpring, ...itemSpring }}
+                          initial={{ opacity: 0.001, filter: "blur(10px)", y: 10 }}
+                          animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+                          exit={{ opacity: 0.001, filter: "blur(10px)", y: 10 }}
+                        >
+                          <a
+                            href={`#${anchor}`}
+                            aria-current={active === anchor ? "true" : undefined}
+                            className={cn(
+                              "focus-ring relative inline-flex h-10 items-center rounded-full px-3 text-[14.5px] font-medium transition-colors duration-200",
+                              active === anchor
+                                ? "bg-white/10 text-[var(--c-highlight)]"
+                                : "text-white/82 hover:text-[var(--c-highlight)]",
+                            )}
+                          >
+                            {label}
+                          </a>
+                        </motion.li>
+                      ))}
+                  </AnimatePresence>
+                </motion.ul>
+              </LayoutGroup>
+            </nav>
+          </div>
 
           <div className="flex items-center gap-2">
             {/* Nunca se colapsa dentro del menú: el CTA es el único objetivo
@@ -218,7 +270,7 @@ export function Header({ settings }: { settings: Settings }) {
               aria-expanded={open}
               aria-controls="menu-movil"
               aria-label={open ? "Cerrar menú" : "Abrir menú"}
-              className="focus-ring grid size-11 place-items-center rounded-full border border-[var(--c-border)] bg-white text-[var(--c-ink)] lg:hidden"
+              className="focus-ring grid size-11 place-items-center rounded-full border border-white/20 bg-white/10 text-white active:scale-[0.97] lg:hidden"
             >
               {open ? <X className="size-5" /> : <Menu className="size-5" />}
             </button>
@@ -234,11 +286,11 @@ export function Header({ settings }: { settings: Settings }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className="container-page lg:hidden"
+            className="mx-auto w-[min(100%-48px,1260px)] lg:hidden"
           >
             <nav
               aria-label="Menú móvil"
-              className="card-shadow-lg mt-2 rounded-[28px] border border-[var(--c-border)] bg-white p-4"
+              className="card-shadow-lg mt-2 rounded-[28px] border border-white/10 bg-[var(--c-ink)] p-4 text-white"
             >
               <ul className="flex flex-col">
                 {nav.map(({ label, anchor }) => (
@@ -249,8 +301,8 @@ export function Header({ settings }: { settings: Settings }) {
                       className={cn(
                         "focus-ring flex min-h-[48px] items-center rounded-2xl px-4 text-[17px] font-medium",
                         active === anchor
-                          ? "bg-[var(--c-pastel-accent)]/50 text-[var(--c-ink)]"
-                          : "text-[var(--c-muted)]",
+                          ? "bg-white/10 text-[var(--c-highlight)]"
+                          : "text-white/82 hover:text-[var(--c-highlight)]",
                       )}
                     >
                       {label}

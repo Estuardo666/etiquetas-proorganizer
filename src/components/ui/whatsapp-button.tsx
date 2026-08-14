@@ -15,23 +15,25 @@ import type { WaSource } from "@/lib/site-config";
  * `source` decide el mensaje precargado; `message` lo sobrescribe cuando el
  * CTA es de una tarjeta concreta (un tamaño, un diseño).
  *
- * Todas las variantes salvo `link` son `FluidButton`: el relleno verde sube
- * desde abajo al hacer hover, de verde oscuro a verde WhatsApp. Se queda verde
- * en los dos estados a propósito — el color es la señal de "esto abre el
- * chat", y una inversión a blanco la borraría justo en el momento de decidir.
+ * Todas las variantes salvo `link` son `FluidButton`. El relleno gris oscuro
+ * sube sobre el verde de la paleta: verde con texto en gris oscuro en reposo
+ * (13,9:1) y gris oscuro con texto blanco al hacer hover (14,8:1). El icono
+ * sigue identificando el canal aunque el verde ya no sea el de la marca de
+ * WhatsApp — la pagina tiene un solo sistema de color y el icono basta para
+ * saber que esto abre un chat.
  *
- * `link` es `TextArrowCta`: dentro de una rejilla de tarjetas, tres botones
- * verdes seguidos compiten entre sí y con el CTA principal de la sección.
+ * `link` es `TextArrowCta`: dentro de una rejilla de tarjetas, un boton solido
+ * por tarjeta compite con el CTA principal de la seccion.
  */
 type Variant = "primary" | "hero" | "nav" | "float" | "footer" | "inline" | "link";
 
-const sizeFor: Record<Exclude<Variant, "link">, "sm" | "md" | "lg"> = {
+const sizeFor: Record<Exclude<Variant, "link">, "xs" | "sm" | "md" | "lg"> = {
   primary: "md",
   hero: "lg",
   nav: "sm",
-  float: "md",
-  footer: "sm",
-  inline: "md",
+  float: "sm",
+  footer: "xs",
+  inline: "sm",
 };
 
 export function WhatsAppButton({
@@ -72,9 +74,9 @@ export function WhatsAppButton({
         ariaLabel={ariaLabel}
         dataWaSource={source}
         onClick={onClick}
-        color="var(--c-whatsapp-ink)"
-        lineColor="var(--c-whatsapp-ink)"
-        className={cn("text-[13px]", className)}
+        color="var(--c-ink)"
+        lineColor="var(--c-accent)"
+        className={cn("text-[13.5px]", className)}
       >
         {content}
       </TextArrowCta>
@@ -90,13 +92,13 @@ export function WhatsAppButton({
       dataWaSource={source}
       onClick={onClick}
       size={sizeFor[variant]}
-      background="var(--c-whatsapp-ink)"
-      overlayColor="var(--c-whatsapp)"
-      textColor="#ffffff"
-      secondTextColor="var(--c-ink)"
+      background="var(--c-whatsapp)"
+      overlayColor="var(--c-whatsapp-ink)"
+      textColor="var(--c-ink)"
+      secondTextColor="#ffffff"
       className={className}
     >
-      <WhatsAppIcon className="size-[19px] shrink-0" />
+      <WhatsAppIcon className="size-[17px] shrink-0" />
       {content}
     </FluidButton>
   );

@@ -199,7 +199,7 @@ export const fallbackContent: SiteContent = {
       seasonDeadline: "",
     },
     footer: {
-      quote: "",
+      quote: "Porque cuando todo tiene un nombre, es más fácil que vuelva a casa.",
       col1Title: "Productos",
       // `galeria` y `personalizacion` ya no son secciones: son tabs dentro de
       // Diseños. El ancla sigue funcionando y abre su panel.
@@ -208,10 +208,10 @@ export const fallbackContent: SiteContent = {
       col2Title: "Ayuda",
       col2Links:
         "Preguntas frecuentes|preguntas-frecuentes\nCómo funciona|como-funciona\nPolíticas de envío|preguntas-frecuentes",
-      waTitle: "",
-      waCta: "",
-      waText: "",
-      closing: "",
+      waTitle: "¿Listo para personalizar?",
+      waCta: "Comprar por WhatsApp",
+      waText: "Escríbanos y le ayudamos a armar el pedido.",
+      closing: "Pro Organizer By Daniella Silva",
       copyright: "© {year} Pro Organizer. Todos los derechos reservados.",
       legalLinks: "",
     },

@@ -1,13 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { SectionHeader } from "@/components/ui/section-header";
 import { DecorativeBackground } from "@/components/ui/decor";
+import { PillNav } from "@/components/ui/pill-nav";
 import { DesignsPanel } from "@/components/sections/designs";
 import { GalleryPanel } from "@/components/sections/gallery";
 import { PersonalizationPanel } from "@/components/sections/design-love";
-import { cn } from "@/lib/utils";
 import type { DesignItem, GalleryItem, Settings } from "@/lib/types";
 
 /**
@@ -24,10 +24,10 @@ import type { DesignItem, GalleryItem, Settings } from "@/lib/types";
  */
 type TabId = "disenos" | "galeria" | "personalizacion";
 
-const TABS: Array<{ id: TabId; label: string }> = [
-  { id: "disenos", label: "Categorías" },
-  { id: "galeria", label: "Muestras reales" },
-  { id: "personalizacion", label: "Cómo personalizamos" },
+const TABS: Array<{ id: TabId; label: string; tone: "pink" | "purple" | "green" }> = [
+  { id: "disenos", label: "Categorías", tone: "pink" },
+  { id: "galeria", label: "Muestras reales", tone: "purple" },
+  { id: "personalizacion", label: "Cómo personalizamos", tone: "green" },
 ];
 
 export function Showcase({
@@ -41,7 +41,6 @@ export function Showcase({
 }) {
   const { designs: copy } = settings;
   const [active, setActive] = useState<TabId>("disenos");
-  const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const reduced = useReducedMotion();
 
   // Los tabs sin contenido no se pintan: el cliente puede vaciar la galería
@@ -67,18 +66,8 @@ export function Showcase({
   if (!available.length) return null;
   const current = available.some((tab) => tab.id === active) ? active : available[0].id;
 
-  /** Flechas para moverse entre tabs, como pide el patrón ARIA. */
-  const onKeyDown = (event: React.KeyboardEvent, index: number) => {
-    const delta = event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
-    if (!delta) return;
-    event.preventDefault();
-    const next = (index + delta + available.length) % available.length;
-    setActive(available[next].id);
-    tabRefs.current[next]?.focus();
-  };
-
   return (
-    <section id="disenos" className="surface-tint section-y relative overflow-hidden">
+    <section id="disenos" className="section-y relative overflow-hidden bg-white">
       <DecorativeBackground variant="designs" />
 
       {/*
@@ -103,43 +92,14 @@ export function Showcase({
       <div className="container-page relative z-10">
         <SectionHeader eyebrow={copy.eyebrow} eyebrowIcon="sparkles" title={copy.title} />
 
-        {/* En móvil la fila se desliza en vez de partirse en dos líneas: tres
-            tabs apilados parecen un menú, no un selector. */}
-        <div
-          role="tablist"
-          aria-label="Ver los diseños"
-          className="no-scrollbar mb-7 flex snap-x gap-2 overflow-x-auto pb-1 md:justify-center"
-        >
-          {available.map((tab, index) => {
-            const selected = tab.id === current;
-
-            return (
-              <button
-                key={tab.id}
-                ref={(node) => {
-                  tabRefs.current[index] = node;
-                }}
-                type="button"
-                role="tab"
-                id={`tab-${tab.id}`}
-                aria-selected={selected}
-                aria-controls={`panel-${tab.id}`}
-                tabIndex={selected ? 0 : -1}
-                onClick={() => setActive(tab.id)}
-                onKeyDown={(event) => onKeyDown(event, index)}
-                className={cn(
-                  "focus-ring min-h-[44px] shrink-0 snap-start rounded-full border-2 px-5 text-[14.5px] font-bold whitespace-nowrap",
-                  selected
-                    // Fondo en el tono oscuro del acento: el rosa a plena
-                    // saturacion con texto blanco se queda en 2,9:1.
-                    ? "border-[var(--c-accent-ink)] bg-[var(--c-accent-ink)] text-white"
-                    : "border-[var(--c-border)] bg-white text-[var(--c-muted)] hover:border-[var(--c-accent)] hover:text-[var(--c-ink)]",
-                )}
-              >
-                {tab.label}
-              </button>
-            );
-          })}
+        <div className="mb-7 flex justify-center">
+          <PillNav
+            items={available.map((tab) => ({ id: tab.id, label: tab.label, tone: tab.tone }))}
+            active={current}
+            onChange={(id) => setActive(id as TabId)}
+            label="Ver los diseños"
+            idPrefix="showcase"
+          />
         </div>
 
         {/*
@@ -149,9 +109,9 @@ export function Showcase({
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={current}
-            id={`panel-${current}`}
+            id={`showcase-panel-${current}`}
             role="tabpanel"
-            aria-labelledby={`tab-${current}`}
+            aria-labelledby={`showcase-tab-${current}`}
             tabIndex={-1}
             initial={reduced ? false : { opacity: 0, scale: 0.98, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}

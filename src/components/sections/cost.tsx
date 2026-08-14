@@ -27,21 +27,13 @@ function PriceArt({ art }: { art: string }) {
 
 function ComparisonFace({ happy }: { happy: boolean }) {
   return (
-    <svg viewBox="0 0 56 56" className="size-12" role="img" aria-label={happy ? "Carita feliz" : "Carita triste"}>
-      <circle cx="28" cy="28" r="24" fill={happy ? "var(--c-highlight)" : "var(--c-border)"} />
-      {happy ? (
-        <>
-          <path d="m18 20 2-3 2 3-2 3-2-3Zm16 0 2-3 2 3-2 3-2-3Z" fill="var(--c-accent-ink)" />
-          <path d="M18 35c3 5 17 5 20 0" fill="none" stroke="var(--c-ink)" strokeWidth="3" strokeLinecap="round" />
-          <circle cx="14" cy="29" r="3" fill="var(--c-pastel-accent)" /><circle cx="42" cy="29" r="3" fill="var(--c-pastel-accent)" />
-        </>
-      ) : (
-        <>
-          <path d="m17 20 5 3m0-3-5 3m12-3 5 3m0-3-5 3" stroke="var(--c-muted)" strokeWidth="2.5" strokeLinecap="round" />
-          <path d="M18 39c3-5 17-5 20 0" fill="none" stroke="var(--c-ink)" strokeWidth="3" strokeLinecap="round" />
-        </>
-      )}
-    </svg>
+    <span
+      className="inline-grid size-12 place-items-center text-[38px] leading-none drop-shadow-[0_3px_4px_rgb(38_38_38/0.16)]"
+      role="img"
+      aria-label={happy ? "Muy feliz" : "Muy triste"}
+    >
+      {happy ? "😁" : "😭"}
+    </span>
   );
 }
 
@@ -168,7 +160,10 @@ export function Cost({ settings }: { settings: Settings }) {
           </div>
         </div>
 
-        <RevealGroup className="mt-5 grid gap-4 md:mt-10 md:grid-cols-2 lg:gap-5" gap={0.06}>
+        <RevealGroup
+          className="comparison-pair mx-auto mt-5 grid max-w-[844px] gap-4 md:mt-10 md:grid-cols-2 lg:gap-5"
+          gap={0.06}
+        >
           {columns.map((column, index) => (
             <RevealItem
               key={column.title}
@@ -177,31 +172,28 @@ export function Cost({ settings }: { settings: Settings }) {
             >
               <div
                 className={cn(
-                  "h-full rounded-[24px] border-2 px-5 py-6",
+                  "comparison-card relative h-full rounded-[24px] border-2 px-5 py-6",
                   column.good
-                    ? "border-[var(--c-accent)] bg-white"
-                    : "border-[var(--c-border)] bg-[var(--c-tint-ink)]",
+                    ? "comparison-card--good border-[var(--c-highlight)] bg-[var(--c-highlight)]"
+                    : "comparison-card--bad border-[var(--c-border)] bg-[var(--c-tint-ink)]",
                 )}
               >
                 <h3
-                  className={cn(
-                    "font-[family-name:var(--font-heading)] text-[20px] leading-tight font-semibold",
-                    column.good ? "text-[var(--c-ink)]" : "text-[var(--c-muted)]",
-                  )}
+                  className="font-[family-name:var(--font-heading)] text-[32px] leading-[1.05] font-bold tracking-[-0.025em] text-[var(--c-ink)]"
                 >
                   <span className="mb-2 block" aria-hidden="true">
                     <ComparisonFace happy={column.good} />
                   </span>
                   {column.title}
                 </h3>
-                <ul className="mt-4 space-y-2.5">
+                <ul className="mt-5 space-y-2.5">
                   {column.items.map((item) => (
                     <li
                       key={item}
                       className={cn(
                         "flex items-start gap-2.5 text-[14.5px] leading-snug",
                         column.good
-                          ? "font-semibold text-[var(--c-text)]"
+                          ? "font-medium text-[var(--c-text)]"
                           : "text-[var(--c-muted)]",
                       )}
                     >

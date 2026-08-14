@@ -10,28 +10,33 @@ function FamilyHouseIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 64 64" className={className} aria-hidden="true">
       <path
-        d="M32 6 58 26v30a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V26Z"
-        fill="var(--c-pastel-ink)"
+        d="M7 29 32 7l25 22"
+        fill="none"
         stroke="var(--c-ink)"
-        strokeWidth="2.5"
+        strokeWidth="3.2"
+        strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
-        d="M16 30v26M48 30v26"
-        stroke="var(--c-ink)"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-      />
-      <path
-        d="M32 24c-3.5 0-6.3 2.7-6.3 6 0 4.3 6.3 9.4 6.3 9.4s6.3-5.1 6.3-9.4c0-3.3-2.8-6-6.3-6Z"
+        d="M13 25v32h38V25"
         fill="var(--c-pastel-accent)"
         stroke="var(--c-ink)"
-        strokeWidth="2"
+        strokeWidth="3"
         strokeLinejoin="round"
       />
-      <circle cx="21" cy="45" r="5" fill="var(--c-pastel-accent)" stroke="var(--c-ink)" strokeWidth="2" />
-      <circle cx="32" cy="41" r="6" fill="var(--c-pastel-ink)" stroke="var(--c-ink)" strokeWidth="2" />
-      <circle cx="43" cy="45" r="5" fill="var(--c-pastel-accent)" stroke="var(--c-ink)" strokeWidth="2" />
+      <rect
+        x="26"
+        y="38"
+        width="12"
+        height="19"
+        rx="2"
+        fill="var(--c-highlight)"
+        stroke="var(--c-ink)"
+        strokeWidth="2.4"
+      />
+      <rect x="18" y="32" width="7" height="8" rx="1.5" fill="#fff" stroke="var(--c-ink)" strokeWidth="2" />
+      <rect x="39" y="32" width="7" height="8" rx="1.5" fill="#fff" stroke="var(--c-ink)" strokeWidth="2" />
+      <circle cx="34.5" cy="48" r="1.2" fill="var(--c-ink)" />
     </svg>
   );
 }
