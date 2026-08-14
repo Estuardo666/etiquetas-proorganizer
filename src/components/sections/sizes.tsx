@@ -10,24 +10,11 @@ import { Media } from "@/components/ui/media";
 import { UsageStrip } from "@/components/sections/usage";
 import { WhatsAppButton } from "@/components/ui/whatsapp-button";
 import { useOrder } from "@/components/order-provider";
-import { cardHover, fadeUp } from "@/lib/motion";
+import { cardHover, fadeScaleIn } from "@/lib/motion";
 import { waMessageForSize } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
 import type { Settings, SizeItem, UsageItem } from "@/lib/types";
 
-/**
- * Tono pastel por tarjeta, en el orden del listado.
- *
- * `title` es una versión oscurecida del color de la tarjeta, no el color
- * pastel: el pastel sobre su propio fondo se queda en 2-3:1 y el nombre del
- * tamaño es justo el dato que hay que poder leer. El pastel sigue mandando en
- * fondo, borde y etiqueta.
- */
-const palette = [
-  { card: "#FFF1F5", border: "#FFD3E2", label: "#EBD9FB", title: "#C33C6D" },
-  { card: "#FFFBEF", border: "#FFE6A8", label: "#FFD9E4", title: "#965D00" },
-  { card: "#F7F4FF", border: "#DCD7FF", label: "#E3D5FA", title: "#5A48C7" },
-];
 
 /** Los usos llegan como frase suelta; se leen mejor separados por puntos. */
 const useList = (uses: string) =>
@@ -51,7 +38,7 @@ export function Sizes({
 
   return (
     // `pb-fab`: sin ese respiro la fila de usos queda debajo del botón flotante.
-    <section id="tamanos" className="section-y pb-fab relative overflow-hidden bg-[var(--c-bg)]">
+    <section id="tamanos" className="surface-base section-y pb-fab relative overflow-hidden">
       <DecorativeBackground variant="sizes" />
 
       <div className="container-page relative z-10">
@@ -65,15 +52,16 @@ export function Sizes({
         {/* Cuatro tamaños: la muestra se ve a tamaño real y cada opción
             conserva espacio suficiente para sus usos. */}
         <RevealGroup
-          className="mx-auto grid max-w-[1180px] gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5"
+          // Movil: fila deslizable. Cuatro tarjetas altas apiladas convertian
+          // la seccion en 2,2 pantallas de scroll para una sola decision.
+          className="snap-row sm:mx-auto sm:grid sm:max-w-[1180px] sm:grid-cols-2 sm:gap-4 sm:overflow-visible sm:p-0 sm:[margin-inline:auto] lg:grid-cols-4 lg:gap-5"
           gap={0.05}
         >
           {sizes.map((size, index) => {
-            const tone = palette[index % palette.length];
             const selected = selectedSize?.title === size.title;
 
             return (
-              <RevealItem key={size.id} variants={fadeUp} className="flex flex-col">
+              <RevealItem key={size.id} variants={fadeScaleIn} className="flex flex-col">
                 <motion.button
                   type="button"
                   onClick={() => selectSize({ title: size.title, count: size.count })}
@@ -84,15 +72,18 @@ export function Sizes({
                   whileHover="hover"
                   variants={cardHover}
                   className="focus-ring group flex h-full w-full flex-col items-center rounded-[24px] border-2 px-4 py-5 text-center"
+                  // Cuatro tamanos no necesitan cuatro colores: se distinguen
+                  // por nombre y por muestra. El color queda libre para decir
+                  // lo unico que el usuario tiene que ver, que es cual ha
+                  // elegido.
                   style={{
-                    background: tone.card,
-                    // Seleccionado: borde lavanda fino, sin halo ni sombra.
-                    borderColor: selected ? "#7C6CF2" : tone.border,
+                    background: selected ? "var(--c-tint-accent)" : "#fff",
+                    borderColor: selected ? "var(--c-accent)" : "var(--c-border)",
                   }}
                 >
                   <h3
                     className="font-[family-name:var(--font-heading)] text-[22px] leading-tight font-semibold"
-                    style={{ color: selected ? "var(--c-primary)" : tone.title }}
+                    style={{ color: selected ? "var(--c-accent-ink)" : "var(--c-ink)" }}
                   >
                     {size.title}
                   </h3>
@@ -112,9 +103,9 @@ export function Sizes({
                     ) : (
                       <span
                         className="card-shadow mx-auto flex w-full max-w-[230px] items-center justify-center gap-2 rounded-[18px] border-[3px] border-white px-3 py-2.5 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-0.5 group-hover:scale-[1.04]"
-                        style={{ background: tone.label }}
+                        style={{ background: "var(--c-tint-highlight)" }}
                       >
-                        <span className="font-[family-name:var(--font-heading)] text-[17px] font-semibold text-[var(--c-primary)]">
+                        <span className="font-[family-name:var(--font-heading)] text-[17px] font-semibold text-[var(--c-ink)]">
                           {settings.sizes.sampleName}
                         </span>
                         <SizeArt title={size.title} index={index} size={24} />
@@ -133,7 +124,7 @@ export function Sizes({
                     className={cn(
                       "mt-3 inline-flex min-h-[26px] items-center gap-1.5 rounded-full px-3 text-[12px] font-extrabold transition-opacity duration-200",
                       selected
-                        ? "bg-[var(--c-lavender)] text-white"
+                        ? "bg-[var(--c-accent)] text-white"
                         // En táctil no hay hover: la llamada a la acción se ve
                         // siempre y solo se esconde donde sí hay puntero.
                         : "text-[var(--c-muted)] sm:opacity-0 sm:group-hover:opacity-100",

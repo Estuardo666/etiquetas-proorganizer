@@ -9,8 +9,8 @@ import { Media } from "@/components/ui/media";
 import { cn } from "@/lib/utils";
 import type { Settings, TestimonialItem } from "@/lib/types";
 
-/** Fondo del avatar cuando todavía no hay foto. */
-const avatarTints = ["#FFE1EC", "#E3F1FF", "#E7FBEF", "#EFE8FF"];
+/** Fondo del avatar cuando todavia no hay foto. */
+const avatarTint = "var(--c-tint-accent)";
 
 function Card({
   testimonial,
@@ -37,14 +37,14 @@ function Card({
       />
       <Quote
         aria-hidden="true"
-        className="absolute top-3 right-3 size-4 text-[var(--c-lilac)]"
+        className="absolute top-3 right-3 size-4 text-[var(--c-pastel-accent)]"
         strokeWidth={2.4}
       />
 
       <div className="flex items-center gap-3">
         <span
           className="card-art grid size-[52px] shrink-0 place-items-center overflow-hidden rounded-full border-2 border-white"
-          style={{ background: avatarTints[index % avatarTints.length] }}
+          style={{ background: avatarTint }}
         >
           {testimonial.avatar?.url ? (
             <Media
@@ -54,7 +54,7 @@ function Card({
               sizes="44px"
             />
           ) : (
-            <span className="font-[family-name:var(--font-heading)] text-[17px] font-semibold text-[var(--c-primary)]">
+            <span className="font-[family-name:var(--font-heading)] text-[17px] font-semibold text-[var(--c-ink)]">
               {testimonial.title.slice(0, 1)}
             </span>
           )}
@@ -62,7 +62,7 @@ function Card({
         <div>
           {/* Nombre y ciudad en la misma línea: la ciudad da credibilidad sin
               pedir una foto que no tenemos. */}
-          <p className="text-[14px] font-extrabold text-[var(--c-primary)]">
+          <p className="text-[14px] font-extrabold text-[var(--c-ink)]">
             {testimonial.title}
             {testimonial.city ? (
               <span className="font-semibold text-[var(--c-muted)]"> · {testimonial.city}</span>
@@ -72,7 +72,7 @@ function Card({
             {Array.from({ length: Number(testimonial.rating) || 5 }).map((_, star) => (
               <Star
                 key={star}
-                className="size-3.5 fill-[var(--c-yellow)] text-[var(--c-yellow)] transition-transform duration-200 group-hover:scale-110"
+                className="size-3.5 fill-[var(--c-highlight)] text-[var(--c-highlight)] transition-transform duration-200 group-hover:scale-110"
                 aria-hidden="true"
               />
             ))}
@@ -127,14 +127,17 @@ export function Testimonials({
   if (!testimonials.length) return null;
   // Con cuatro reseñas o menos caben todas en desktop: rejilla centrada en
   // lugar de un carrusel que dejaría hueco a la derecha.
-  const grid = testimonials.length <= 4;
+  // Con cuatro resenas o menos la fila entra completa desde `sm`: no hay nada
+  // que deslizar, asi que flechas y puntos sobran a partir de ahi.
+  const fits = testimonials.length <= 4;
+  const arrowClass = cn(
+    "focus-ring card-shadow absolute top-1/2 z-10 hidden size-10 -translate-y-1/2 place-items-center rounded-full border border-[var(--c-border)] bg-white text-[var(--c-accent)] transition-transform hover:-translate-y-[calc(50%+2px)] sm:grid",
+    fits && "sm:hidden",
+  );
   const pages = Math.max(1, Math.ceil(testimonials.length / 2));
 
   return (
-    <section
-      id="testimonios"
-      className="section-y relative overflow-hidden bg-[var(--c-bg-alt)]"
-    >
+    <section id="testimonios" className="surface-tint section-y relative overflow-hidden">
       <DecorativeBackground variant="testimonials" />
 
       <div className="container-page relative z-10">
@@ -148,72 +151,63 @@ export function Testimonials({
         {/* Sin badge de cifra: la prueba social numérica vive en la fila de
             stats del hero. Un segundo número aquí decía otra cosa y dos cifras
             que no cuadran destruyen las dos. Queda la nota media. */}
-        {grid ? (
-          // Tantas columnas como reseñas: con tres tarjetas y cuatro columnas
-          // quedaría un hueco muerto a la derecha.
-          <div
-            className={cn(
-              "grid gap-4 sm:grid-cols-2 lg:gap-6",
-              testimonials.length >= 4
-                ? "lg:grid-cols-4"
-                : testimonials.length === 3
-                  ? "lg:grid-cols-3"
-                  : "lg:grid-cols-2",
-            )}
-          >
-            {testimonials.map((testimonial, index) => (
-              <Card key={testimonial.id} testimonial={testimonial} index={index} />
-            ))}
-          </div>
-        ) : (
-          <>
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => scrollBy(-1)}
-                aria-label="Testimonios anteriores"
-                className="focus-ring card-shadow absolute top-1/2 -left-2 z-10 hidden size-10 -translate-y-1/2 place-items-center rounded-full border border-[var(--c-border)] bg-white text-[var(--c-lavender)] transition-transform hover:-translate-y-[calc(50%+2px)] sm:grid"
-              >
-                <ChevronLeft className="size-5" aria-hidden="true" />
-              </button>
+        {/*
+          Siempre el carrusel, tambien con cuatro resenas o menos: en
+          escritorio las tarjetas miden 25 % y llenan la fila, asi que se ve
+          igual que la rejilla que habia antes, y en movil deja de apilar
+          cuatro tarjetas (945 px) para deslizarlas.
+        */}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => scrollBy(-1)}
+              aria-label="Testimonios anteriores"
+              className={cn(arrowClass, "-left-2")}
+            >
+              <ChevronLeft className="size-5" aria-hidden="true" />
+            </button>
 
-              <div
-                ref={trackRef}
-                className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-1 pb-3 lg:gap-5"
-              >
-                {testimonials.map((testimonial, index) => (
-                  <Card
-                    key={testimonial.id}
-                    testimonial={testimonial}
-                    index={index}
-                    className="w-[80%] shrink-0 snap-center sm:w-[calc(50%-8px)] lg:w-[calc(25%-15px)]"
-                  />
-                ))}
-              </div>
-
-              <button
-                type="button"
-                onClick={() => scrollBy(1)}
-                aria-label="Testimonios siguientes"
-                className="focus-ring card-shadow absolute top-1/2 -right-2 z-10 hidden size-10 -translate-y-1/2 place-items-center rounded-full border border-[var(--c-border)] bg-white text-[var(--c-lavender)] transition-transform hover:-translate-y-[calc(50%+2px)] sm:grid"
-              >
-                <ChevronRight className="size-5" aria-hidden="true" />
-              </button>
-            </div>
-
-            <ul className="mt-4 flex justify-center gap-2" aria-hidden="true">
-              {Array.from({ length: pages }).map((_, index) => (
-                <li
-                  key={index}
-                  className={cn(
-                    "size-2 rounded-full transition-colors",
-                    index === page ? "bg-[var(--c-lavender)]" : "bg-[var(--c-border)]",
-                  )}
+            <div
+              ref={trackRef}
+              className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-1 pb-3 lg:gap-5"
+            >
+              {testimonials.map((testimonial, index) => (
+                <Card
+                  key={testimonial.id}
+                  testimonial={testimonial}
+                  index={index}
+                  className="w-[80%] shrink-0 snap-center sm:w-[calc(50%-8px)] lg:w-[calc(25%-15px)]"
                 />
               ))}
-            </ul>
-          </>
-        )}
+            </div>
+
+            <button
+              type="button"
+              onClick={() => scrollBy(1)}
+              aria-label="Testimonios siguientes"
+              className={cn(arrowClass, "-right-2")}
+            >
+              <ChevronRight className="size-5" aria-hidden="true" />
+            </button>
+          </div>
+
+          {/* Puntos y flechas solo donde queda algo que deslizar: con cuatro
+              resenas la fila ya se ve entera desde `sm`. */}
+          <ul
+            className={cn("mt-4 flex justify-center gap-2", fits && "sm:hidden")}
+            aria-hidden="true"
+          >
+            {Array.from({ length: pages }).map((_, index) => (
+              <li
+                key={index}
+                className={cn(
+                  "size-2 rounded-full transition-colors",
+                  index === page ? "bg-[var(--c-accent)]" : "bg-[var(--c-border)]",
+                )}
+              />
+            ))}
+          </ul>
+
       </div>
     </section>
   );

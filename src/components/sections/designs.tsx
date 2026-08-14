@@ -2,21 +2,16 @@
 
 import { motion, type Variants } from "framer-motion";
 import { ArrowRight, Check } from "lucide-react";
-import { SectionHeader } from "@/components/ui/section-header";
 import { RevealGroup, RevealItem, Reveal } from "@/components/ui/reveal";
-import { DecorativeBackground } from "@/components/ui/decor";
 import { DesignArt } from "@/components/ui/illustrations";
 import { Media } from "@/components/ui/media";
 import { WhatsAppButton } from "@/components/ui/whatsapp-button";
 import { useOrder } from "@/components/order-provider";
-import { fadeUp } from "@/lib/motion";
+import { fadeScaleIn } from "@/lib/motion";
 import { waMessageForDesign } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
 import type { DesignItem, Settings } from "@/lib/types";
 
-/** Fondo temático de cada categoría, en el orden del listado. */
-const tints = ["#E7F7EC", "#E7E0FF", "#E2F0FF", "#FFF6DA", "#FFEAF3", "#EDE6FF"];
-const borders = ["#BFE7CD", "#CFC2FA", "#BEDDF7", "#FFE5A6", "#FFCBE0", "#D5C9FA"];
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -34,7 +29,13 @@ const artVariants: Variants = {
 /** La foto personalizada es el producto más diferenciado: se detecta aquí. */
 const isFeatured = (title: string) => /foto/i.test(title);
 
-export function Designs({ settings, designs }: { settings: Settings; designs: DesignItem[] }) {
+/**
+ * Panel de categorías. Ya no es una sección propia: vive dentro del primer tab
+ * de `Showcase`, junto a las muestras reales y a la explicación de cómo se
+ * personaliza. Los tres bloques respondían a la misma pregunta ("¿cómo se ve
+ * esto?") y ocupaban 3,3 pantallas de móvil seguidas.
+ */
+export function DesignsPanel({ settings, designs }: { settings: Settings; designs: DesignItem[] }) {
   const { selectedDesign, selectDesign } = useOrder();
   const { designs: copy } = settings;
   if (!designs.length) return null;
@@ -44,16 +45,12 @@ export function Designs({ settings, designs }: { settings: Settings; designs: De
   const ordered = [...designs.filter((d) => !isFeatured(d.title)), ...designs.filter((d) => isFeatured(d.title))];
 
   return (
-    <section id="disenos" className="grad-designs section-y relative overflow-hidden">
-      <DecorativeBackground variant="designs" />
-
-      <div className="container-page relative z-10">
-        <SectionHeader
-          eyebrow={copy.eyebrow}
-          eyebrowIcon="sparkles"
-          title={copy.title}
-          subtitle={copy.subtitle}
-        />
+    <>
+      {copy.subtitle ? (
+        <Reveal className="mx-auto mb-6 max-w-2xl text-center text-[16px] leading-relaxed text-pretty text-[var(--c-muted)]">
+          {copy.subtitle}
+        </Reveal>
+      ) : null}
 
         {/* 3 columnas: con 7 diseños la última fila queda con una sola
             tarjeta, centrada por el propio grid. `max-w` evita que, al ser
@@ -73,7 +70,7 @@ export function Designs({ settings, designs }: { settings: Settings; designs: De
             return (
             <RevealItem
               key={design.id}
-              variants={fadeUp}
+              variants={fadeScaleIn}
               className={
                 featured
                   ? // `flex-col`: sin esto el botón se estira a toda la altura
@@ -98,13 +95,13 @@ export function Designs({ settings, designs }: { settings: Settings; designs: De
                   "focus-ring group h-full w-full overflow-hidden rounded-[24px] border-2 p-1.5 text-left transition-[border-color,box-shadow] duration-[260ms]",
                   featured && "sm:flex sm:items-center sm:gap-7 sm:p-3",
                 )}
+                // Una tarjeta blanca por categoría en vez de seis pasteles
+                // distintos: el color ahora solo significa "esta es la que has
+                // elegido", que es la única diferencia que el usuario tiene que
+                // ver de un vistazo.
                 style={{
-                  background: tints[index % tints.length],
-                  borderColor: selected
-                    ? "#7C6CF2"
-                    : featured
-                      ? "var(--c-lavender)"
-                      : borders[index % borders.length],
+                  background: selected ? "var(--c-tint-accent)" : "#fff",
+                  borderColor: selected || featured ? "var(--c-accent)" : "var(--c-border)",
                   boxShadow: "none",
                 }}
               >
@@ -151,7 +148,7 @@ export function Designs({ settings, designs }: { settings: Settings; designs: De
                 <div className={cn(featured && "sm:min-w-0 sm:flex-1 sm:pr-2")}>
                   <h3
                     className={cn(
-                      "flex items-center justify-center gap-1 pt-2 pb-0.5 text-center font-extrabold text-[var(--c-primary)] transition-transform duration-[260ms] group-hover:-translate-y-0.5",
+                      "flex items-center justify-center gap-1 pt-2 pb-0.5 text-center font-extrabold text-[var(--c-ink)] transition-transform duration-[260ms] group-hover:-translate-y-0.5",
                       featured
                         ? "font-[family-name:var(--font-heading)] text-[22px] font-semibold sm:justify-start sm:pt-0 sm:text-left"
                         : "text-[12.5px]",
@@ -160,13 +157,13 @@ export function Designs({ settings, designs }: { settings: Settings; designs: De
                     {design.title}
                     {selected ? (
                       <Check
-                        className="size-3.5 text-[var(--c-lavender)]"
+                        className="size-3.5 text-[var(--c-accent)]"
                         strokeWidth={3}
                         aria-hidden="true"
                       />
                     ) : (
                       <ArrowRight
-                        className="size-3.5 -translate-x-1 text-[var(--c-lavender)] opacity-0 transition-[translate,opacity] duration-[260ms] group-hover:translate-x-0 group-hover:opacity-100"
+                        className="size-3.5 -translate-x-1 text-[var(--c-accent)] opacity-0 transition-[translate,opacity] duration-[260ms] group-hover:translate-x-0 group-hover:opacity-100"
                         strokeWidth={2.6}
                         aria-hidden="true"
                       />
@@ -202,7 +199,6 @@ export function Designs({ settings, designs }: { settings: Settings; designs: De
             }
           />
         </Reveal>
-      </div>
-    </section>
+    </>
   );
 }

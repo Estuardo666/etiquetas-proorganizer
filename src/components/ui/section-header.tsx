@@ -42,7 +42,7 @@ export function SectionHeader({
       ) : null}
 
       <div className={cn("flex items-center", centered && "justify-center")}>
-        <h2 className={cn("h2-display text-balance text-[var(--c-primary)]", titleClassName)}>
+        <h2 className={cn("h2-display text-balance text-[var(--c-ink)]", titleClassName)}>
           {title}
         </h2>
       </div>

@@ -5,10 +5,11 @@ import { SectionHeader } from "@/components/ui/section-header";
 import { RevealGroup, RevealItem } from "@/components/ui/reveal";
 import { DecorativeBackground, DecorativeSparkle } from "@/components/ui/decor";
 import { Icon } from "@/components/ui/icon";
-import { fadeUp, viewportOnce } from "@/lib/motion";
+import { fadeScaleIn, viewportOnce } from "@/lib/motion";
 import type { Settings, StepItem } from "@/lib/types";
 
-const tints = ["var(--c-pink)", "var(--c-yellow)", "var(--c-mint)", "var(--c-lilac)"];
+/** Los circulos alternan acento y destacado: cuatro pasos, dos tonos. */
+const tints = ["var(--c-pastel-accent)", "var(--c-pastel-highlight)"];
 
 /**
  * Pasos flotantes, sin panel contenedor: la línea pasa por el centro de los
@@ -18,10 +19,7 @@ export function Process({ settings, steps }: { settings: Settings; steps: StepIt
   if (!steps.length) return null;
 
   return (
-    <section
-      id="como-funciona"
-      className="process-section section-y relative overflow-hidden bg-[var(--c-bg)]"
-    >
+    <section id="como-funciona" className="surface-base process-section section-y relative overflow-hidden">
       <DecorativeBackground variant="process" />
 
       <div className="container-page relative z-10">
@@ -43,7 +41,7 @@ export function Process({ settings, steps }: { settings: Settings; steps: StepIt
             <motion.path
               d="M120 48C270 4 350 92 500 48s240-44 380 0"
               fill="none"
-              stroke="var(--c-lilac)"
+              stroke="var(--c-pastel-accent)"
               strokeWidth="3"
               strokeLinecap="round"
               strokeDasharray="2 12"
@@ -56,17 +54,17 @@ export function Process({ settings, steps }: { settings: Settings; steps: StepIt
           <DecorativeSparkle
             className="absolute top-[18px] left-[31%] hidden lg:block"
             size={16}
-            color="var(--c-yellow)"
+            color="var(--c-highlight)"
           />
           <DecorativeSparkle
             className="absolute top-[78px] right-[30%] hidden lg:block"
             size={14}
-            color="var(--c-pink)"
+            color="var(--c-pastel-accent)"
           />
 
           <div
             aria-hidden="true"
-            className="absolute top-[40px] bottom-[40px] left-[40px] w-[2px] bg-[var(--c-lilac)]/75 lg:hidden"
+            className="absolute top-[40px] bottom-[40px] left-[40px] w-[2px] bg-[var(--c-pastel-accent)]/75 lg:hidden"
           />
 
           <RevealGroup
@@ -76,7 +74,7 @@ export function Process({ settings, steps }: { settings: Settings; steps: StepIt
             {steps.map((step, index) => (
               <RevealItem
                 key={step.id}
-                variants={fadeUp}
+                variants={fadeScaleIn}
                 className="group flex items-start gap-4 text-left lg:flex-col lg:items-center lg:gap-0 lg:text-center"
               >
                 <span className="relative">
@@ -90,17 +88,17 @@ export function Process({ settings, steps }: { settings: Settings; steps: StepIt
                   >
                     <Icon
                       name={step.icon}
-                      className="size-7 text-[var(--c-primary)] lg:size-8"
+                      className="size-7 text-[var(--c-ink)] lg:size-8"
                       strokeWidth={1.9}
                     />
                   </motion.span>
-                  <span className="card-shadow absolute -top-1 -right-1 grid size-7 place-items-center rounded-full bg-white font-[family-name:var(--font-heading)] text-[14px] font-semibold text-[var(--c-primary)]">
+                  <span className="card-shadow absolute -top-1 -right-1 grid size-7 place-items-center rounded-full bg-white font-[family-name:var(--font-heading)] text-[14px] font-semibold text-[var(--c-ink)]">
                     {index + 1}
                   </span>
                 </span>
 
                 <div className="min-w-0 lg:contents">
-                  <h3 className="mt-0 font-[family-name:var(--font-heading)] text-[17px] font-semibold text-balance text-[var(--c-primary)] lg:mt-2.5">
+                  <h3 className="mt-0 font-[family-name:var(--font-heading)] text-[17px] font-semibold text-balance text-[var(--c-ink)] lg:mt-2.5">
                     {step.title}
                   </h3>
                   <p className="mt-0.5 max-w-[15rem] text-[14px] leading-snug text-pretty text-[var(--c-muted)] lg:mt-0">

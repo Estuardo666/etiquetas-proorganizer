@@ -162,10 +162,12 @@ export const fallbackContent: SiteContent = {
       ctaText: "Aprovechar promoción",
       note: "Las promociones aplican a hojas de igual o menor valor. Confirma las condiciones al realizar tu pedido.",
     },
-    // Apagada: el diseño aprobado no la incluye. Se enciende desde el admin
-    // cuando haya fotos reales que enseñar.
+    // Encendida: como sección propia costaba una pantalla entera de scroll
+    // para repetir lo que ya decían las categorías, así que estaba apagada.
+    // Ahora es un tab dentro de Diseños y no cuesta scroll, y las fotos de
+    // producto real son la prueba que ninguna ilustración da.
     gallery: {
-      enabled: false,
+      enabled: true,
       title: "Etiquetas reales, tal como se imprimen",
       subtitle: "Muestras de la colección de personajes. Toca una para verla en grande.",
     },
@@ -199,7 +201,10 @@ export const fallbackContent: SiteContent = {
     footer: {
       quote: "",
       col1Title: "Productos",
-      col1Links: "Tamaños|tamanos\nDiseños|disenos\nPromociones|promociones",
+      // `galeria` y `personalizacion` ya no son secciones: son tabs dentro de
+      // Diseños. El ancla sigue funcionando y abre su panel.
+      col1Links:
+        "Tamaños|tamanos\nDiseños|disenos\nMuestras reales|galeria\nPromociones|promociones",
       col2Title: "Ayuda",
       col2Links:
         "Preguntas frecuentes|preguntas-frecuentes\nCómo funciona|como-funciona\nPolíticas de envío|preguntas-frecuentes",

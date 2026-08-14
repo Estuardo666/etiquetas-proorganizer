@@ -5,12 +5,12 @@ import { BenefitArt } from "@/components/ui/illustrations";
 import { SectionHeader } from "@/components/ui/section-header";
 import { StatsRow } from "@/components/sections/stats";
 import { RevealGroup, RevealItem } from "@/components/ui/reveal";
-import { cardHover, fadeUp } from "@/lib/motion";
+import { cardHover, fadeScaleIn } from "@/lib/motion";
 import { cn, pipes } from "@/lib/utils";
 import type { Settings } from "@/lib/types";
 
-/** Fondo del círculo del icono, uno por tarjeta. */
-const tints = ["var(--c-sky)", "var(--c-lilac)", "var(--c-mint)", "var(--c-pink)", "var(--c-yellow)"];
+/** El circulo del icono alterna los dos tintes de la paleta, nada mas. */
+const tints = ["var(--c-tint-accent)", "var(--c-tint-highlight)"];
 
 /**
  * Franja de beneficios: cinco tarjetas bajas con icono ilustrado y texto muy
@@ -30,7 +30,9 @@ export function TrustBar({ settings }: { settings: Settings }) {
             tarjetas dejarían un hueco a la derecha. */}
         <RevealGroup
           className={cn(
-            "grid grid-cols-2 gap-4 sm:grid-cols-3",
+            // Movil: fila deslizable. Cinco tarjetas en rejilla de dos columnas
+            // eran tres filas de confianza antes de ver un solo producto.
+            "snap-row snap-row-sm sm:grid sm:grid-cols-3 sm:gap-4 sm:overflow-visible sm:p-0 sm:[margin-inline:0]",
             items.length >= 5 ? "lg:grid-cols-5" : items.length === 4 ? "lg:grid-cols-4" : "lg:grid-cols-3",
           )}
           gap={0.05}
@@ -38,16 +40,17 @@ export function TrustBar({ settings }: { settings: Settings }) {
           {items.map(([icon, title, desc], index) => (
             <RevealItem
               key={index}
-              variants={fadeUp}
+              variants={fadeScaleIn}
               className={cn(
+                "w-[62%] shrink-0 sm:w-auto",
                 index === items.length - 1 && items.length % 2 === 1
-                  ? "col-span-2 sm:col-span-1"
+                  ? "sm:col-span-1"
                   : undefined,
               )}
             >
               {/* Hover en su propio motion.div: separado de la animación de
                   entrada, para que el gesto de hover siempre tenga su propia
-                  transición sin depender de en qué punto va el fadeUp. */}
+                  transición sin depender de en qué punto va el fadeScaleIn. */}
               <motion.div
                 initial="rest"
                 animate="rest"
@@ -61,7 +64,7 @@ export function TrustBar({ settings }: { settings: Settings }) {
                 >
                   <BenefitArt name={icon} size={34} />
                 </span>
-                <h3 className="text-[14.5px] leading-tight font-extrabold text-balance text-[var(--c-primary)]">
+                <h3 className="text-[14.5px] leading-tight font-extrabold text-balance text-[var(--c-ink)]">
                   {title}
                 </h3>
                 {desc ? (

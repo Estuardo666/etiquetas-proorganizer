@@ -24,7 +24,7 @@ export function Footer({ settings }: { settings: Settings }) {
   ].filter((social) => Boolean(social.href));
 
   return (
-    <footer className="border-t border-[#EFE9FA] bg-[#FBF8FF] pt-10 pb-28 md:pt-14 md:pb-7">
+    <footer className="surface-tint border-t border-[var(--c-border)] pt-10 pb-28 md:pt-14 md:pb-7">
       <div className="container-page">
         <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-[1.35fr_0.85fr_0.85fr] lg:gap-10">
           {/* Marca */}
@@ -38,19 +38,19 @@ export function Footer({ settings }: { settings: Settings }) {
                 className="h-10 w-auto object-contain"
               />
             ) : (
-              <p className="flex items-center gap-1.5 font-[family-name:var(--font-heading)] text-[22px] font-semibold text-[var(--c-primary)]">
+              <p className="flex items-center gap-1.5 font-[family-name:var(--font-heading)] text-[22px] font-semibold text-[var(--c-ink)]">
                 {/* Sin logo subido, el nombre de la marca se escribe a dos
                     tonos: la primera palabra en azul, el resto en lavanda. */}
                 {brandWords[0]}{" "}
                 {brandWords[1] ? (
-                  <span className="text-[var(--c-lavender)]">{brandWords[1]}</span>
+                  <span className="text-[var(--c-accent)]">{brandWords[1]}</span>
                 ) : null}
                 <DecorativeStarFace size={24} />
               </p>
             )}
             {/* Único resto útil de la columna "Compra online": una dirección
                 es dato de confianza, no un enlace de navegación. */}
-            <p className="mt-1.5 text-[13.5px] font-semibold text-[var(--c-primary)]">
+            <p className="mt-1.5 text-[13.5px] font-semibold text-[var(--c-ink)]">
               {brand.address}
             </p>
 
@@ -63,7 +63,7 @@ export function Footer({ settings }: { settings: Settings }) {
                       target="_blank"
                       rel="noopener"
                       aria-label={label}
-                      className="focus-ring grid size-11 place-items-center rounded-xl border border-[#E9E1F8] bg-white text-[var(--c-primary)] transition-[translate,color,border-color] duration-200 hover:-translate-y-0.5 hover:border-[var(--c-lilac)] hover:text-[var(--c-lavender)]"
+                      className="focus-ring grid size-11 place-items-center rounded-xl border border-[var(--c-border)] bg-white text-[var(--c-ink)] transition-[translate,color,border-color] duration-200 hover:-translate-y-0.5 hover:border-[var(--c-pastel-accent)] hover:text-[var(--c-accent)]"
                     >
                       <Social className="size-[17px]" />
                     </a>
@@ -76,7 +76,7 @@ export function Footer({ settings }: { settings: Settings }) {
           {/* Columnas de navegación */}
           {navColumns.map((column) => (
             <nav key={column.title} aria-label={column.title}>
-              <h2 className="text-[14px] font-extrabold text-[var(--c-primary)]">
+              <h2 className="text-[14px] font-extrabold text-[var(--c-ink)]">
                 {column.title}
               </h2>
               <ul className="mt-3 space-y-2 text-[14px] text-[var(--c-muted)]">
@@ -84,7 +84,7 @@ export function Footer({ settings }: { settings: Settings }) {
                   <li key={`${label}-${index}`}>
                     <a
                       href={`#${(anchor ?? "").replace(/^#/, "")}`}
-                      className="focus-ring rounded-full transition-colors duration-200 hover:text-[var(--c-primary)]"
+                      className="focus-ring rounded-full transition-colors duration-200 hover:text-[var(--c-ink)]"
                     >
                       {label}
                     </a>

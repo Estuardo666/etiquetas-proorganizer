@@ -1,17 +1,23 @@
 "use client";
 
+import { useState } from "react";
 import { CheckCircle2, XCircle } from "lucide-react";
 import { SectionHeader } from "@/components/ui/section-header";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
 import { DecorativeBackground } from "@/components/ui/decor";
 import { ArtSheets, UsageArt } from "@/components/ui/illustrations";
 import { WhatsAppButton } from "@/components/ui/whatsapp-button";
-import { fadeUp } from "@/lib/motion";
+import { fadeScaleIn } from "@/lib/motion";
 import { cn, lines, pipes } from "@/lib/utils";
 import type { Settings } from "@/lib/types";
 
-/** Fondo del círculo de cada cifra; la nuestra rompe la serie fría a propósito. */
-const tints = ["var(--c-sky)", "var(--c-lilac)", "var(--c-peach)", "var(--c-mint)"];
+/**
+ * El circulo de las tres perdidas va en neutro y solo el nuestro se colorea:
+ * el contraste *es* el argumento de la seccion, y cuatro pasteles distintos lo
+ * borraban.
+ */
+const lossTint = "var(--c-tint-ink)";
+const oursTint = "var(--c-tint-accent)";
 
 /** Objeto ilustrado de cada cifra. Reusa las piezas de la fila de usos. */
 function PriceArt({ art }: { art: string }) {
@@ -22,17 +28,17 @@ function PriceArt({ art }: { art: string }) {
 function ComparisonFace({ happy }: { happy: boolean }) {
   return (
     <svg viewBox="0 0 56 56" className="size-12" role="img" aria-label={happy ? "Carita feliz" : "Carita triste"}>
-      <circle cx="28" cy="28" r="24" fill={happy ? "#FFE27A" : "#D9DDE8"} />
+      <circle cx="28" cy="28" r="24" fill={happy ? "var(--c-highlight)" : "var(--c-border)"} />
       {happy ? (
         <>
-          <path d="m18 20 2-3 2 3-2 3-2-3Zm16 0 2-3 2 3-2 3-2-3Z" fill="#6F5BE8" />
-          <path d="M18 35c3 5 17 5 20 0" fill="none" stroke="#173A7A" strokeWidth="3" strokeLinecap="round" />
-          <circle cx="14" cy="29" r="3" fill="#FF9DB5" opacity=".8" /><circle cx="42" cy="29" r="3" fill="#FF9DB5" opacity=".8" />
+          <path d="m18 20 2-3 2 3-2 3-2-3Zm16 0 2-3 2 3-2 3-2-3Z" fill="var(--c-accent-ink)" />
+          <path d="M18 35c3 5 17 5 20 0" fill="none" stroke="var(--c-ink)" strokeWidth="3" strokeLinecap="round" />
+          <circle cx="14" cy="29" r="3" fill="var(--c-pastel-accent)" /><circle cx="42" cy="29" r="3" fill="var(--c-pastel-accent)" />
         </>
       ) : (
         <>
-          <path d="m17 20 5 3m0-3-5 3m12-3 5 3m0-3-5 3" stroke="#68738A" strokeWidth="2.5" strokeLinecap="round" />
-          <path d="M18 39c3-5 17-5 20 0" fill="none" stroke="#173A7A" strokeWidth="3" strokeLinecap="round" />
+          <path d="m17 20 5 3m0-3-5 3m12-3 5 3m0-3-5 3" stroke="var(--c-muted)" strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M18 39c3-5 17-5 20 0" fill="none" stroke="var(--c-ink)" strokeWidth="3" strokeLinecap="round" />
         </>
       )}
     </svg>
@@ -45,6 +51,7 @@ function ComparisonFace({ happy }: { happy: boolean }) {
  * lo quiere) y justo antes de Promos (llega el ahorro).
  */
 export function Cost({ settings }: { settings: Settings }) {
+  const [compare, setCompare] = useState(0);
   const { cost } = settings;
   const title = cost.title.includes("Un termo perdido")
     ? cost.title.replace(" cuesta más que ", " cuesta\nmás que ")
@@ -67,7 +74,7 @@ export function Cost({ settings }: { settings: Settings }) {
   ].filter((column) => column.title && column.items.length);
 
   return (
-    <section id="costo" className="section-y relative overflow-hidden bg-[var(--c-bg-alt)]">
+    <section id="costo" className="surface-base section-y relative overflow-hidden">
       <DecorativeBackground variant="testimonials" />
 
       <div className="container-page relative z-10">
@@ -82,24 +89,24 @@ export function Cost({ settings }: { settings: Settings }) {
         {/* Bloque A — lo que cuesta reponer ---------------------------- */}
         <RevealGroup className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-5" gap={0.05}>
           {prices.map((price, index) => (
-            <RevealItem key={price.id} variants={fadeUp}>
+            <RevealItem key={price.id} variants={fadeScaleIn}>
               <div
                 className={cn(
                   "card-base flex h-full flex-col items-center px-4 pt-6 pb-5 text-center",
-                  price.ours && "border-[var(--c-lavender)] bg-white",
+                  price.ours && "border-[var(--c-accent)] bg-white",
                 )}
                 style={{ boxShadow: "none" }}
               >
                 <span
                   className="card-art mb-3 grid size-[58px] place-items-center rounded-full"
-                  style={{ background: tints[index % tints.length] }}
+                  style={{ background: price.ours ? oursTint : lossTint }}
                 >
                   <PriceArt art={price.art} />
                 </span>
                 <p
                   className={cn(
                     "font-[family-name:var(--font-heading)] text-[30px] leading-none font-semibold",
-                    price.ours ? "text-[var(--c-lavender-ink)]" : "text-[var(--c-muted)]",
+                    price.ours ? "text-[var(--c-accent-ink)]" : "text-[var(--c-muted)]",
                   )}
                 >
                   {price.value}
@@ -108,7 +115,7 @@ export function Cost({ settings }: { settings: Settings }) {
                   className={cn(
                     "mt-1.5 text-[13.5px] leading-snug text-balance",
                     price.ours
-                      ? "font-extrabold text-[var(--c-primary)]"
+                      ? "font-extrabold text-[var(--c-ink)]"
                       : "font-semibold text-[var(--c-muted)]",
                   )}
                 >
@@ -121,7 +128,7 @@ export function Cost({ settings }: { settings: Settings }) {
 
         <Reveal className="mt-5 text-center">
           {cost.closing ? (
-            <p className="font-[family-name:var(--font-heading)] text-[19px] leading-snug font-semibold text-balance text-[var(--c-primary)]">
+            <p className="font-[family-name:var(--font-heading)] text-[19px] leading-snug font-semibold text-balance text-[var(--c-ink)]">
               {cost.closing}
             </p>
           ) : null}
@@ -131,21 +138,55 @@ export function Cost({ settings }: { settings: Settings }) {
         </Reveal>
 
         {/* Bloque B — contra el marcador permanente -------------------- */}
-        <RevealGroup className="mt-10 grid gap-4 md:grid-cols-2 lg:gap-5" gap={0.06}>
-          {columns.map((column) => (
-            <RevealItem key={column.title} variants={fadeUp}>
+        {/*
+          Movil: un panel a la vez con un switch. La comparacion necesita verse
+          junta, pero apilada deja de ser comparacion: son dos listas separadas
+          por media pantalla de scroll. Desde `md` vuelven lado a lado.
+        */}
+        <div className="mt-10 flex justify-center md:hidden">
+          <div
+            role="group"
+            aria-label="Comparar marcador y etiquetas"
+            className="inline-flex rounded-full border border-[var(--c-border)] bg-white p-1"
+          >
+            {columns.map((column, index) => (
+              <button
+                key={column.title}
+                type="button"
+                onClick={() => setCompare(index)}
+                aria-pressed={compare === index}
+                className={cn(
+                  "min-h-[40px] rounded-full px-4 text-[13.5px] font-bold",
+                  compare === index
+                    ? "bg-[var(--c-accent)] text-white"
+                    : "text-[var(--c-muted)]",
+                )}
+              >
+                {column.good ? "Con etiquetas" : "Con marcador"}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <RevealGroup className="mt-5 grid gap-4 md:mt-10 md:grid-cols-2 lg:gap-5" gap={0.06}>
+          {columns.map((column, index) => (
+            <RevealItem
+              key={column.title}
+              variants={fadeScaleIn}
+              className={cn(compare === index ? "block" : "hidden", "md:block")}
+            >
               <div
                 className={cn(
                   "h-full rounded-[24px] border-2 px-5 py-6",
                   column.good
-                    ? "border-[var(--c-lilac)] bg-white"
-                    : "border-[var(--c-border)] bg-[#F4F5F8]",
+                    ? "border-[var(--c-accent)] bg-white"
+                    : "border-[var(--c-border)] bg-[var(--c-tint-ink)]",
                 )}
               >
                 <h3
                   className={cn(
                     "font-[family-name:var(--font-heading)] text-[20px] leading-tight font-semibold",
-                    column.good ? "text-[var(--c-primary)]" : "text-[var(--c-muted)]",
+                    column.good ? "text-[var(--c-ink)]" : "text-[var(--c-muted)]",
                   )}
                 >
                   <span className="mb-2 block" aria-hidden="true">
@@ -166,13 +207,13 @@ export function Cost({ settings }: { settings: Settings }) {
                     >
                       {column.good ? (
                         <CheckCircle2
-                          className="mt-px size-[18px] shrink-0 text-[var(--c-lavender)]"
+                          className="mt-px size-[18px] shrink-0 text-[var(--c-accent)]"
                           strokeWidth={2}
                           aria-hidden="true"
                         />
                       ) : (
                         <XCircle
-                          className="mt-px size-[18px] shrink-0 text-[#A3AAB8]"
+                          className="mt-px size-[18px] shrink-0 text-[var(--c-muted)]"
                           strokeWidth={2}
                           aria-hidden="true"
                         />

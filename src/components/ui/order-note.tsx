@@ -19,7 +19,7 @@ export function OrderNote({ text, className }: { text: string; className?: strin
         className,
       )}
     >
-      <Eye className="size-4 shrink-0 text-[var(--c-lavender)]" aria-hidden="true" />
+      <Eye className="size-4 shrink-0 text-[var(--c-accent)]" aria-hidden="true" />
       {text}
     </p>
   );

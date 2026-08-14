@@ -3,10 +3,19 @@ import type { Variants } from "framer-motion";
 const ease = [0.22, 1, 0.36, 1] as const;
 
 /**
- * Duraciones cortas a propósito: el reveal por scroll ocurre cuando el ojo ya
- * está sobre el elemento, así que por encima de ~350 ms el contenido se
- * percibe como que "llega tarde" en vez de como una entrada elegante.
+ * Entrada por defecto de todo el contenido: opacidad + escala + un
+ * desplazamiento corto, con la curva del sistema.
+ *
+ * La escala arranca en 0,94 y no más abajo: por debajo de ~0,9 el texto
+ * reescala lo suficiente para verse borroso mientras entra, y una tarjeta que
+ * "crece" demasiado parece un modal abriéndose en vez de contenido que ya
+ * estaba ahí.
  */
+export const fadeScaleIn: Variants = {
+  hidden: { opacity: 0, scale: 0.94, y: 18 },
+  show: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.55, ease } },
+};
+
 export const fadeUp: Variants = {
   hidden: { opacity: 0, y: 12 },
   show: { opacity: 1, y: 0, transition: { duration: 0.35, ease } },
@@ -33,10 +42,11 @@ export const scaleIn: Variants = {
 };
 
 /**
- * `staggerChildren` corto: en rejillas de 5-8 tarjetas, 0,08 s por item hace
- * que la última tarde más de medio segundo en aparecer.
+ * Secuencia de los hijos de un grupo. 0,08 s es el punto donde la cascada se
+ * percibe como orden de lectura; por debajo entran a la vez y por encima la
+ * última tarjeta de una rejilla de ocho llega con casi un segundo de retraso.
  */
-export const stagger = (staggerChildren = 0.05, delayChildren = 0): Variants => ({
+export const stagger = (staggerChildren = 0.08, delayChildren = 0.05): Variants => ({
   hidden: {},
   show: { transition: { staggerChildren, delayChildren } },
 });
@@ -48,7 +58,25 @@ export const floating = (distance = 6, duration = 6) =>
     transition: { duration, repeat: Infinity, ease: "easeInOut" },
   }) as const;
 
-export const viewportOnce = { once: true, amount: 0.2 } as const;
+/**
+ * `margin` negativo abajo: el revelado arranca cuando al elemento le falta un
+ * 10 % de pantalla para entrar, así que termina de animar justo cuando el ojo
+ * llega. Disparar al 20 % de visibilidad, como antes, hacía que el contenido
+ * se viera aparecer *después* de estar en pantalla.
+ */
+export const viewportOnce = {
+  once: true,
+  amount: 0.15,
+  margin: "0px 0px -10% 0px",
+} as const;
+
+/** Pop de entrada de los adornos: muelle corto con rebote, no un fundido. */
+export const decorPop = {
+  type: "spring",
+  stiffness: 320,
+  damping: 18,
+  mass: 0.6,
+} as const;
 
 /**
  * Hover de tarjeta grande: par `rest`/`hover` en vez de `whileHover` suelto.

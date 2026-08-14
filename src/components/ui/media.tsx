@@ -27,7 +27,7 @@ export function Media({
     return (
       <div
         className={cn(
-          "relative flex items-center justify-center overflow-hidden bg-[var(--c-bg-light)]",
+          "relative flex items-center justify-center overflow-hidden bg-[var(--c-tint-accent)]",
           className,
         )}
         role="img"
@@ -38,7 +38,7 @@ export function Media({
           className="absolute inset-0 opacity-70"
           style={{
             backgroundImage:
-              "radial-gradient(circle at 25% 20%, color-mix(in srgb, var(--c-primary) 12%, transparent) 0, transparent 45%), radial-gradient(circle at 80% 75%, color-mix(in srgb, var(--c-accent) 12%, transparent) 0, transparent 45%)",
+              "radial-gradient(circle at 25% 20%, color-mix(in srgb, var(--c-ink) 12%, transparent) 0, transparent 45%), radial-gradient(circle at 80% 75%, color-mix(in srgb, var(--c-accent) 12%, transparent) 0, transparent 45%)",
           }}
         />
         <span className="relative z-10 px-4 text-center text-xs font-semibold tracking-wide text-[var(--c-muted)] uppercase">

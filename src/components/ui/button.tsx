@@ -17,16 +17,16 @@ export const buttonVariants = cva(
         whatsapp:
           "bg-[var(--c-whatsapp-ink)] text-white shadow-none hover:-translate-y-0.5 hover:brightness-100 active:shadow-none",
         primary:
-          "bg-[var(--c-primary)] text-white shadow-[0_10px_24px_-14px_rgba(24,51,107,0.9)] hover:-translate-y-0.5 hover:brightness-110 hover:shadow-[0_16px_32px_-14px_rgba(24,51,107,0.95)]",
+          "bg-[var(--c-ink)] text-white shadow-[0_10px_24px_-14px_rgba(24,51,107,0.9)] hover:-translate-y-0.5 hover:brightness-110 hover:shadow-[0_16px_32px_-14px_rgba(24,51,107,0.95)]",
         lavender:
-          "bg-[var(--c-lavender)] text-white shadow-[0_10px_24px_-14px_rgba(139,124,246,0.95)] hover:-translate-y-0.5 hover:brightness-105 hover:shadow-[0_16px_32px_-14px_rgba(139,124,246,0.95)]",
+          "bg-[var(--c-accent)] text-white shadow-[0_10px_24px_-14px_rgba(139,124,246,0.95)] hover:-translate-y-0.5 hover:brightness-105 hover:shadow-[0_16px_32px_-14px_rgba(139,124,246,0.95)]",
         accent:
           "bg-[var(--c-accent)] text-white shadow-[0_10px_24px_-14px_rgba(255,107,107,0.95)] hover:-translate-y-0.5 hover:brightness-105",
         outline:
-          "border-2 border-[var(--c-border)] bg-white text-[var(--c-primary)] hover:-translate-y-0.5 hover:border-[var(--c-lavender)] hover:bg-[var(--c-bg-light)]",
-        ghost: "text-[var(--c-primary)] hover:bg-[var(--c-bg-light)]",
+          "border-2 border-[var(--c-border)] bg-white text-[var(--c-ink)] hover:-translate-y-0.5 hover:border-[var(--c-accent)] hover:bg-[var(--c-tint-accent)]",
+        ghost: "text-[var(--c-ink)] hover:bg-[var(--c-tint-accent)]",
         light:
-          "bg-white text-[var(--c-primary)] shadow-[0_10px_24px_-16px_rgba(24,51,107,0.8)] hover:-translate-y-0.5 hover:bg-[var(--c-bg-light)]",
+          "bg-white text-[var(--c-ink)] shadow-[0_10px_24px_-16px_rgba(24,51,107,0.8)] hover:-translate-y-0.5 hover:bg-[var(--c-tint-accent)]",
       },
       size: {
         sm: "min-h-[44px] px-5 py-2 text-[15px]",

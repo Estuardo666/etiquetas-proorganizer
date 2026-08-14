@@ -1,7 +1,7 @@
 "use client";
 
 import { RevealGroup, RevealItem } from "@/components/ui/reveal";
-import { fadeUp } from "@/lib/motion";
+import { fadeScaleIn } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import type { Settings } from "@/lib/types";
 
@@ -11,27 +11,27 @@ function FamilyHouseIcon({ className }: { className?: string }) {
     <svg viewBox="0 0 64 64" className={className} aria-hidden="true">
       <path
         d="M32 6 58 26v30a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V26Z"
-        fill="var(--c-sky)"
-        stroke="var(--c-primary)"
+        fill="var(--c-pastel-ink)"
+        stroke="var(--c-ink)"
         strokeWidth="2.5"
         strokeLinejoin="round"
       />
       <path
         d="M16 30v26M48 30v26"
-        stroke="var(--c-primary)"
+        stroke="var(--c-ink)"
         strokeWidth="2.5"
         strokeLinecap="round"
       />
       <path
         d="M32 24c-3.5 0-6.3 2.7-6.3 6 0 4.3 6.3 9.4 6.3 9.4s6.3-5.1 6.3-9.4c0-3.3-2.8-6-6.3-6Z"
-        fill="var(--c-pink)"
-        stroke="var(--c-primary)"
+        fill="var(--c-pastel-accent)"
+        stroke="var(--c-ink)"
         strokeWidth="2"
         strokeLinejoin="round"
       />
-      <circle cx="21" cy="45" r="5" fill="var(--c-lilac)" stroke="var(--c-primary)" strokeWidth="2" />
-      <circle cx="32" cy="41" r="6" fill="var(--c-mint)" stroke="var(--c-primary)" strokeWidth="2" />
-      <circle cx="43" cy="45" r="5" fill="var(--c-lilac)" stroke="var(--c-primary)" strokeWidth="2" />
+      <circle cx="21" cy="45" r="5" fill="var(--c-pastel-accent)" stroke="var(--c-ink)" strokeWidth="2" />
+      <circle cx="32" cy="41" r="6" fill="var(--c-pastel-ink)" stroke="var(--c-ink)" strokeWidth="2" />
+      <circle cx="43" cy="45" r="5" fill="var(--c-pastel-accent)" stroke="var(--c-ink)" strokeWidth="2" />
     </svg>
   );
 }
@@ -41,24 +41,24 @@ function RibbonBadgeIcon({ className }: { className?: string }) {
     <svg viewBox="0 0 64 64" className={className} aria-hidden="true">
       <path
         d="M20 34 12 56l10-3 6 9 8-24"
-        fill="var(--c-sky)"
-        stroke="var(--c-primary)"
+        fill="var(--c-pastel-ink)"
+        stroke="var(--c-ink)"
         strokeWidth="2.5"
         strokeLinejoin="round"
       />
       <path
         d="M44 34 52 56l-10-3-6 9-8-24"
-        fill="var(--c-sky)"
-        stroke="var(--c-primary)"
+        fill="var(--c-pastel-ink)"
+        stroke="var(--c-ink)"
         strokeWidth="2.5"
         strokeLinejoin="round"
       />
-      <circle cx="32" cy="24" r="18" fill="var(--c-sky)" stroke="var(--c-primary)" strokeWidth="2.5" />
-      <circle cx="32" cy="24" r="12.5" fill="#fff" stroke="var(--c-primary)" strokeWidth="2" strokeDasharray="2.5 3.5" />
+      <circle cx="32" cy="24" r="18" fill="var(--c-pastel-ink)" stroke="var(--c-ink)" strokeWidth="2.5" />
+      <circle cx="32" cy="24" r="12.5" fill="#fff" stroke="var(--c-ink)" strokeWidth="2" strokeDasharray="2.5 3.5" />
       <path
         d="M32 16.5 34.5 21.8 40.3 22.6 36.1 26.7 37.1 32.5 32 29.8 26.9 32.5 27.9 26.7 23.7 22.6 29.5 21.8Z"
-        fill="var(--c-yellow)"
-        stroke="var(--c-primary)"
+        fill="var(--c-highlight)"
+        stroke="var(--c-ink)"
         strokeWidth="1.6"
         strokeLinejoin="round"
       />
@@ -107,11 +107,11 @@ export function StatsRow({
       {items.map(({ Icon, value, label }) => (
         <RevealItem
           key={label}
-          variants={fadeUp}
+          variants={fadeScaleIn}
           className="flex flex-col items-center gap-2 text-center"
         >
           <Icon className="size-14" />
-          <p className="font-[family-name:var(--font-heading)] text-[clamp(28px,4vw,36px)] leading-none font-semibold text-[var(--c-primary)]">
+          <p className="font-[family-name:var(--font-heading)] text-[clamp(28px,4vw,36px)] leading-none font-semibold text-[var(--c-ink)]">
             {value}
           </p>
           <p className="max-w-[12rem] text-[14px] leading-tight font-semibold text-balance text-[var(--c-muted)]">

@@ -1,70 +1,78 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-brand: var(--c-primary);
-  --color-brand-dark: var(--c-primary-dark);
+  --color-ink: var(--c-ink);
   --color-accent: var(--c-accent);
+  --color-accent-ink: var(--c-accent-ink);
+  --color-highlight: var(--c-highlight);
+  --color-highlight-ink: var(--c-highlight-ink);
+  --color-surface: var(--c-surface);
   --color-whatsapp: var(--c-whatsapp);
   --color-whatsapp-ink: var(--c-whatsapp-ink);
-  --color-accent-ink: var(--c-accent-ink);
-  --color-surface: var(--c-bg);
-  --color-surface-alt: var(--c-bg-alt);
-  --color-surface-light: var(--c-bg-light);
-  --color-promo: var(--c-promo);
-  --color-ink: var(--c-text);
   --color-muted: var(--c-muted);
   --color-line: var(--c-border);
-  --color-lavender: var(--c-lavender);
-  --color-lavender-ink: var(--c-lavender-ink);
-  --color-lilac: var(--c-lilac);
-  --color-sky: var(--c-sky);
-  --color-pink: var(--c-pink);
-  --color-yellow: var(--c-yellow);
-  --color-peach: var(--c-peach);
-  --color-mint: var(--c-mint);
   --font-sans: var(--font-body);
   --font-display: var(--font-heading);
   --radius-card: var(--c-radius);
 }
 
+/**
+ * Paleta: cuatro roles y nada más.
+ *
+ * La página llegó a tener ~125 hex distintos porque cada sección se inventaba
+ * su propia fila de tintes pastel. Con cuatro roles la jerarquía la marca el
+ * *papel* de cada color, no su tono: tinta para leer, acento para actuar,
+ * destacado para el dinero, superficie para respirar.
+ *
+ * Todo lo demás son mezclas de esos cuatro con blanco. Añadir un tono nuevo
+ * aquí es exactamente lo que rompió el sistema la vez anterior.
+ */
 :root {
-  /* Editables desde WordPress (Ajustes → Colores) */
-  --c-primary: #18336b;
-  --c-primary-dark: #0f2454;
-  --c-accent: #ff6b6b;
+  --c-ink: #18336b;
+  --c-accent: #f2679a;
+  --c-highlight: #ffd166;
+  --c-surface: #fffcf8;
+
   /**
-   * Los tonos `-ink` son la versión legible de cada color de marca: el coral y
-   * el verde pastel funcionan como superficie, pero sobre fondo claro (o con
-   * texto blanco encima) se quedan en 2-3:1 y no llegan al 4,5:1 de WCAG AA.
-   * Superficie y texto son dos trabajos distintos y necesitan dos valores.
+   * Versiones legibles. El rosa a plena saturación se queda en ~2,9:1 sobre
+   * blanco y el amarillo aún peor: como superficie funcionan, como texto no
+   * llegan al 4,5:1 de WCAG AA. Superficie y texto son dos trabajos distintos
+   * y necesitan dos valores.
    */
-  --c-accent-ink: #d23f3f;
+  --c-accent-ink: #b02f5f;
+  --c-highlight-ink: #8a5a00;
+
+  --c-text: var(--c-ink);
+  /**
+   * 74 % y no menos: al 58 % el gris azulado se queda en 3,5:1 sobre blanco y
+   * es texto corrido, no decoracion. A 74 % da 5,6:1 sobre blanco y 5,0:1
+   * sobre el tinte de seccion, que son los dos fondos donde aparece.
+   */
+  --c-muted: color-mix(in srgb, var(--c-ink) 74%, #ffffff);
+  --c-border: color-mix(in srgb, var(--c-ink) 12%, #ffffff);
+
+  --c-tint-accent: color-mix(in srgb, var(--c-accent) 12%, #ffffff);
+  --c-tint-highlight: color-mix(in srgb, var(--c-highlight) 22%, #ffffff);
+  --c-tint-ink: color-mix(in srgb, var(--c-ink) 6%, #ffffff);
+
+  --c-pastel-accent: color-mix(in srgb, var(--c-accent) 45%, #ffffff);
+  --c-pastel-highlight: color-mix(in srgb, var(--c-highlight) 45%, #ffffff);
+  --c-pastel-ink: color-mix(in srgb, var(--c-ink) 28%, #ffffff);
+
+  /**
+   * Excepción declarada: verde de canal, no de marca. Vive solo dentro del
+   * botón de WhatsApp. Si el CTA deja de ser verde deja de reconocerse como
+   * "esto abre el chat", y esa es la única acción de la página.
+   */
   --c-whatsapp: #25d366;
-  --c-whatsapp-ink: #128c7e;
-  --c-bg: #fffcf8;
-  --c-bg-alt: #f5f8fc;
-  --c-bg-light: #eaf7ff;
-  --c-promo: #fff8dd;
-  --c-text: #16213e;
-  --c-muted: #667085;
-  --c-border: #e5e9f2;
+  /**
+   * Verde oscurecido respecto al #128c7e de marca: con blanco encima aquel se
+   * quedaba en 4,14:1 y el texto del CTA principal no puede fallar AA.
+   */
+  --c-whatsapp-ink: #0f7a6c;
+
   --c-radius: 28px;
 
-  /* Paleta kids premium (fija, base del sistema visual) */
-  --c-lavender: #8b7cf6;
-  --c-lavender-ink: #5a48c7;
-  --c-lilac: #dcd7ff;
-  --c-sky: #bfe8ff;
-  --c-pink: #ffb5d2;
-  --c-yellow: #ffd966;
-  --c-peach: #ffd1a8;
-  --c-mint: #bdeed8;
-
-  /**
-   * Alto real de la barra sticky: 64 px de barra + 8 px de aire arriba y
-   * abajo. Sin la franja superior de beneficios el header ya no arrastra sus
-   * 38 px, así que el ancla dejaba un hueco muerto sobre cada título.
-   */
   --header-h: 80px;
 }
 
@@ -73,7 +81,7 @@ html {
 }
 
 body {
-  background: var(--c-bg);
+  background: var(--c-surface);
   color: var(--c-text);
   font-family: var(--font-body), system-ui, sans-serif;
   font-size: 17px;
@@ -87,7 +95,7 @@ section[id] {
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--c-lavender) 24%, transparent);
+  background: color-mix(in srgb, var(--c-accent) 24%, transparent);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -133,11 +141,6 @@ section[id] {
   }
 }
 
-/**
- * Separación vertical entre secciones: 56 → 104 px.
- * El diseño kids premium es compacto; el aire va dentro de las tarjetas, no
- * entre bloques.
- */
 .section-y {
   padding-block: 32px;
 }
@@ -154,11 +157,6 @@ section[id] {
   }
 }
 
-/**
- * Colchón para las secciones cuyo último elemento quedaba bajo el CTA
- * flotante: la fila de usos y el aviso legal de promociones. En móvil el CTA
- * es una barra fija de ~72 px; en escritorio, un botón de ~56 px.
- */
 .pb-fab {
   padding-bottom: 108px;
 }
@@ -169,18 +167,16 @@ section[id] {
   }
 }
 
-/** Variante aún más apretada para franjas de apoyo (usos, beneficios). */
 .section-y-sm {
   padding-block: 26px;
 }
 
 @media (min-width: 1024px) {
-.section-y-sm {
-  padding-block: 40px;
-}
+  .section-y-sm {
+    padding-block: 40px;
+  }
 }
 
-/* El CTA móvil y el botón volver arriba necesitan aire bajo el último paso. */
 .process-section {
   padding-bottom: 108px;
 }
@@ -195,6 +191,26 @@ section[id] {
   .process-section {
     padding-bottom: 58px;
   }
+}
+
+/* Superficies ----------------------------------------------------------- */
+
+/**
+ * Tres fondos sólidos que se alternan. Antes cada sección llevaba dos o tres
+ * degradados radiales superpuestos: el degradado sobre fondo claro ensucia el
+ * borde de las tarjetas y hace que ninguna sección se parezca a la anterior.
+ * Un color plano separa igual de bien y no compite con el contenido.
+ */
+.surface-base {
+  background: var(--c-surface);
+}
+
+.surface-tint {
+  background: var(--c-tint-ink);
+}
+
+.surface-warm {
+  background: var(--c-tint-highlight);
 }
 
 /* Tipografía ------------------------------------------------------------ */
@@ -231,11 +247,11 @@ h5 {
   font-family: var(--font-body), system-ui, sans-serif;
 }
 
-/* Superficies ----------------------------------------------------------- */
+/* Interacción ----------------------------------------------------------- */
 
 .focus-ring:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--c-lavender) 45%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--c-accent) 55%, transparent);
 }
 
 /**
@@ -245,17 +261,12 @@ h5 {
  * En `@layer base` a propósito: sin capa, esta regla ganaría siempre a las
  * utilidades de Tailwind (viven en `@layer utilities`) sin importar su
  * especificidad, y pisaría duraciones ya afinadas como la de los botones.
- * Dentro de la capa, sigue sirviendo de red para lo que no lleve su propia
- * clase `transition-*`.
  */
 @layer base {
   button,
   a,
   summary,
   .interactive {
-    /* Tailwind anima hover:-translate-y y hover:-scale con `translate` y
-       `scale`, propiedades separadas de `transform`: hace falta listarlas
-       aparte o ese movimiento salta sin transición. */
     transition:
       color 220ms ease,
       background-color 220ms ease,
@@ -268,15 +279,125 @@ h5 {
   }
 }
 
+/**
+ * Pulso del botón principal: sube al 65 % del recorrido y vuelve, tal como lo
+ * hace el componente original de Framer. No es un escalado sostenido — el
+ * botón devuelve el gesto y se queda quieto, que es lo que evita que un CTA
+ * grande vibre mientras el usuario lee lo que hay dentro.
+ */
+@keyframes fluid-pulse {
+  0% {
+    transform: scale(1);
+  }
+  65% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.fluid-pulse:hover,
+.fluid-pulse:focus-visible {
+  animation: fluid-pulse 500ms cubic-bezier(0.4, 0, 0, 1);
+}
+
+/**
+ * Las tres capas del botón principal. Van juntas y en CSS plano porque el
+ * efecto es uno solo: el óvalo sube, el texto rota y el botón pulsa, todo con
+ * la misma curva y disparado por el mismo hover. Repartirlo en utilidades por
+ * elemento hacía que las tres pudieran desincronizarse.
+ */
+.fluid-btn__fill {
+  position: absolute;
+  inset-inline: 0;
+  top: 100%;
+  height: 110%;
+  z-index: -1;
+  border-radius: 50%;
+  pointer-events: none;
+  transition:
+    top 500ms cubic-bezier(0.4, 0, 0, 1),
+    border-radius 500ms cubic-bezier(0.4, 0, 0, 1);
+}
+
+.fluid-btn__stack {
+  display: block;
+  transition: transform 500ms cubic-bezier(0.4, 0, 0, 1);
+}
+
+.fluid-btn:hover .fluid-btn__fill,
+.fluid-btn:focus-visible .fluid-btn__fill {
+  top: 0;
+  border-radius: 0;
+}
+
+.fluid-btn:hover .fluid-btn__stack,
+.fluid-btn:focus-visible .fluid-btn__stack {
+  transform: translateY(-100%);
+}
+
+/**
+ * Text Arrow CTA: la flecha abre hueco por la izquierda y el subrayado barre
+ * — el trazo de reposo se va por la derecha mientras el otro entra por la
+ * izquierda.
+ */
+.tac__arrow {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  width: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition:
+    width 400ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 400ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tac:hover .tac__arrow,
+.tac:focus-visible .tac__arrow {
+  width: 28px;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.tac__line {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 1px;
+  display: block;
+  transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tac__line--out {
+  transform-origin: right;
+  transform: scaleX(1);
+}
+
+.tac__line--in {
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+.tac:hover .tac__line--out,
+.tac:focus-visible .tac__line--out {
+  transform: scaleX(0);
+}
+
+.tac:hover .tac__line--in,
+.tac:focus-visible .tac__line--in {
+  transform: scaleX(1);
+}
+
 /** Base común de todas las tarjetas del sistema. */
 .card-base {
-  border: 1px solid rgb(105 91 220 / 0.14);
+  border: 1px solid var(--c-border);
   border-radius: 24px;
-  background: rgb(255 255 255 / 0.86);
+  background: #ffffff;
   box-shadow: none;
-  /* `translate` y `scale` cubren los hover:-translate-y y hover:scale de
-     Tailwind (testimonios usa esta ruta CSS pura); `transform` cubre lo que
-     mueva Framer Motion en el resto de tarjetas. */
   transition:
     transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
     translate 260ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -287,9 +408,7 @@ h5 {
 }
 
 .card-base:hover {
-  background: #fff;
-  border-color: rgb(124 103 238 / 0.32);
-  box-shadow: none;
+  border-color: color-mix(in srgb, var(--c-accent) 45%, transparent);
 }
 
 /** Ilustración e icono dentro de una tarjeta: reaccionan al hover del padre. */
@@ -309,8 +428,8 @@ h5 {
   align-items: center;
   padding: 7px 12px;
   border-radius: 999px;
-  background: rgb(139 124 246 / 0.1);
-  color: #7564e8;
+  background: var(--c-tint-accent);
+  color: var(--c-accent-ink);
   font-size: 12.5px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -327,7 +446,7 @@ h5 {
   width: 0;
   height: 2px;
   border-radius: 999px;
-  background: var(--c-lavender);
+  background: var(--c-accent);
   transition:
     width 220ms ease,
     left 220ms ease;
@@ -342,158 +461,12 @@ h5 {
   width: 0;
 }
 
-.card-shadow {
-  box-shadow: none;
-}
-
+.card-shadow,
 .card-shadow-lg {
   box-shadow: none;
 }
 
-.glass-card {
-  background: radial-gradient(
-    circle at top left,
-    rgb(255 255 255 / 0.95),
-    rgb(255 255 255 / 0.65)
-  );
-  backdrop-filter: blur(8px);
-}
-
-/* Degradados de sección: los halos radiales dan la profundidad pastel del
-   diseño; el lineal sostiene la base. */
-.grad-hero {
-  background:
-    radial-gradient(ellipse 78% 92% at 78% 46%, rgb(219 237 255 / 0.68) 0%, rgb(255 221 235 / 0.48) 48%, transparent 78%),
-    linear-gradient(112deg, var(--c-bg) 0%, rgb(255 248 228 / 0.72) 42%, rgb(255 231 241 / 0.7) 100%);
-}
-
-.hero-products {
-  isolation: isolate;
-}
-
-.hero-products-gradient {
-  position: absolute;
-  inset: -16% -28% -18% -26%;
-  z-index: -1;
-  background: radial-gradient(
-    ellipse 76% 68% at 50% 50%,
-    rgb(224 219 255 / 0.96) 0%,
-    rgb(219 237 255 / 0.88) 38%,
-    rgb(255 221 235 / 0.68) 64%,
-    transparent 84%
-  );
-  filter: blur(28px);
-}
-
-.hero-decor-cloud,
-.hero-decor-star,
-.hero-decor-heart {
-  position: absolute;
-  z-index: 2;
-  pointer-events: none;
-}
-
-.hero-decor-cloud {
-  top: 3%;
-  right: 30%;
-}
-
-.hero-decor-star {
-  top: 8%;
-  right: 3%;
-}
-
-.hero-decor-heart {
-  top: 42%;
-  right: 1%;
-}
-
-@media (max-width: 767px) {
-  .hero-decor-cloud,
-  .hero-decor-star,
-  .hero-decor-heart {
-    display: none;
-  }
-}
-
-/**
- * `.grad-designs`, `.grad-usage` y `.grad-faq` pintan su degradado en un
- * `::before` propio (no en el elemento de sección) para poder desvanecerlo
- * con `mask-image` cerca de los bordes sin tocar el contenido: enmascarar la
- * sección entera se comería el título o las tarjetas si quedan a menos de
- * `--edge-fade` del borde. El elemento de sección necesita `position:
- * relative` (ya lo trae `relative overflow-hidden` en cada componente).
- */
-:root {
-  --edge-fade: 72px;
-}
-
-.grad-designs,
-.grad-usage,
-.grad-faq {
-  position: relative;
-  background: #fffcf8;
-}
-
-.grad-designs::before,
-.grad-usage::before,
-.grad-faq::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  mask-image: linear-gradient(
-    to bottom,
-    transparent 0,
-    black var(--edge-fade),
-    black calc(100% - var(--edge-fade)),
-    transparent 100%
-  );
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    transparent 0,
-    black var(--edge-fade),
-    black calc(100% - var(--edge-fade)),
-    transparent 100%
-  );
-}
-
-.grad-designs::before {
-  background:
-    radial-gradient(circle at 12% 12%, rgb(255 255 255 / 0.85), transparent 34%),
-    radial-gradient(circle at 88% 78%, rgb(255 181 210 / 0.32), transparent 32%),
-    linear-gradient(180deg, #f5f1ff 0%, #eef8ff 100%);
-}
-
-.grad-usage::before {
-  background:
-    radial-gradient(circle at 8% 0%, rgb(220 215 255 / 0.45), transparent 30%),
-    radial-gradient(circle at 95% 90%, rgb(191 232 255 / 0.5), transparent 32%),
-    #fbfdff;
-}
-
-.grad-faq::before {
-  background:
-    radial-gradient(circle at 90% 5%, rgb(191 232 255 / 0.4), transparent 24%),
-    radial-gradient(circle at 10% 90%, rgb(220 215 255 / 0.28), transparent 26%),
-    #fffdf9;
-}
-
-.grad-promo {
-  background:
-    radial-gradient(circle at 20% 15%, rgb(255 255 255 / 0.9), transparent 38%),
-    radial-gradient(circle at 82% 85%, rgb(255 209 168 / 0.5), transparent 34%),
-    linear-gradient(160deg, #fff8dd 0%, #fff3e4 100%);
-}
-
-/* Personalización ------------------------------------------------------ */
-
-.grad-love {
-  background:
-    radial-gradient(circle at 8% 20%, rgb(220 215 255 / 0.52), transparent 30%),
-    radial-gradient(circle at 92% 72%, rgb(255 181 210 / 0.28), transparent 30%),
-    linear-gradient(180deg, #fbfaff 0%, #f8fbff 52%, #fffafd 100%);
-}
+/* Piezas con forma propia ----------------------------------------------- */
 
 .design-sheet-frame {
   isolation: isolate;
@@ -507,17 +480,13 @@ h5 {
 }
 
 .tutorial-ticket {
-  border: 2px solid rgb(255 255 255 / 0.9);
-  background:
-    radial-gradient(circle at 50% 0%, rgb(255 255 255 / 0.9), transparent 40%),
-    linear-gradient(180deg, #eeeaff 0%, #e8e3ff 100%);
-  box-shadow: 0 18px 44px rgb(90 72 199 / 0.14);
+  border: 2px solid #ffffff;
+  background: var(--c-tint-accent);
 }
 
 .approval-note {
   border-radius: 14px;
-  background: linear-gradient(120deg, #ffe58f 0%, #ffd966 100%);
-  box-shadow: 0 14px 28px rgb(150 93 0 / 0.14);
+  background: var(--c-highlight);
   transform: rotate(-1deg);
 }
 
@@ -528,7 +497,7 @@ h5 {
   top: -11px;
   width: 72px;
   height: 25px;
-  background: rgb(255 181 210 / 0.38);
+  background: color-mix(in srgb, var(--c-accent) 24%, transparent);
 }
 
 .approval-note::before {
@@ -548,7 +517,7 @@ h5 {
     top: 31px;
     right: calc(100% + 12px);
     width: clamp(28px, 4vw, 58px);
-    border-top: 3px dotted rgb(139 124 246 / 0.72);
+    border-top: 3px dotted color-mix(in srgb, var(--c-accent) 55%, transparent);
   }
 
   .design-feature::after {
@@ -559,32 +528,23 @@ h5 {
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background: var(--c-lavender);
-    box-shadow: 0 0 0 4px #f6f5ff;
+    background: var(--c-accent);
+    box-shadow: 0 0 0 4px var(--c-surface);
   }
 }
 
 @media (max-width: 639px) {
-  .design-sheet-frame {
-    border-radius: 22px;
-    box-shadow: 0 16px 36px rgb(24 51 107 / 0.1);
-  }
-
   .approval-note {
     transform: none;
   }
 }
 
-.grad-cta {
-  background:
-    radial-gradient(circle at 18% 25%, rgb(255 255 255 / 0.55), transparent 40%),
-    linear-gradient(90deg, #ffdd82 0%, #ffc9a2 45%, #ffb8d1 100%);
+/** Borde punteado del badge de precio. */
+.dotted-ring {
+  border: 2px dashed color-mix(in srgb, var(--c-accent) 55%, transparent);
 }
 
-/** Borde punteado lavanda del badge de precio. */
-.dotted-ring {
-  border: 2px dashed color-mix(in srgb, var(--c-lavender) 55%, transparent);
-}
+/* Carruseles ------------------------------------------------------------ */
 
 .no-scrollbar::-webkit-scrollbar {
   display: none;
@@ -593,16 +553,40 @@ h5 {
   scrollbar-width: none;
 }
 
-.snap-row {
-  display: flex;
-  gap: 18px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  padding-inline: 20px;
-  margin-inline: -20px;
-}
+/**
+ * Fila deslizable con snap. La usan tamaños, beneficios, usos y promociones en
+ * móvil: una rejilla de tarjetas altas apiladas convertía cada sección en dos
+ * o tres pantallas de scroll. El `flex-basis` deja asomar la siguiente
+ * tarjeta, que es lo que comunica "esto se desliza" sin un texto que lo
+ * explique.
+ *
+ * En `@layer components` a propósito. Sin capa, `display: flex` le gana a
+ * cualquier utilidad de Tailwind (viven en `@layer utilities`, que va después)
+ * por mucha especificidad que tenga: las secciones que vuelven a rejilla con
+ * `sm:grid` o `md:grid` se quedaban en carrusel también en tablet y
+ * escritorio.
+ */
+@layer components {
+  .snap-row {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-inline: 16px;
+    margin-inline: -16px;
+    scrollbar-width: none;
+  }
 
-.snap-row > * {
-  scroll-snap-align: center;
-  flex: 0 0 84%;
+  .snap-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .snap-row > * {
+    scroll-snap-align: center;
+    flex: 0 0 78%;
+  }
+
+  .snap-row-sm > * {
+    flex: 0 0 auto;
+  }
 }

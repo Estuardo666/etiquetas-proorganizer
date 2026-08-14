@@ -7,7 +7,7 @@ import { SectionHeader } from "@/components/ui/section-header";
 import { RevealGroup, RevealItem } from "@/components/ui/reveal";
 import { DecorativeBackground } from "@/components/ui/decor";
 import { LinkButton } from "@/components/ui/button";
-import { fadeUp } from "@/lib/motion";
+import { fadeScaleIn } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import type { FaqItem, Settings } from "@/lib/types";
 
@@ -32,12 +32,12 @@ export function Faq({ settings, faqs }: { settings: Settings; faqs: FaqItem[] })
     return (
       <RevealItem
         key={faq.id}
-        variants={fadeUp}
+        variants={fadeScaleIn}
         className={cn(
           "h-fit rounded-[18px] border bg-white/80 transition-[border-color,box-shadow,background-color] duration-[260ms] hover:border-[rgb(139_124_246/0.28)] hover:bg-white",
           expanded
-            ? "border-[var(--c-lilac)] bg-white"
-            : "border-[#DCE7F5]",
+            ? "border-[var(--c-accent)] bg-white"
+            : "border-[var(--c-border)]",
         )}
       >
         <h3>
@@ -46,12 +46,12 @@ export function Faq({ settings, faqs }: { settings: Settings; faqs: FaqItem[] })
             onClick={() => setOpen(expanded ? null : faq.id)}
             aria-expanded={expanded}
             aria-controls={panelId}
-            className="focus-ring flex min-h-[48px] w-full items-center justify-between gap-3 rounded-[17px] bg-transparent px-4 py-2.5 text-left text-[14.5px] font-extrabold text-[var(--c-primary)]"
+            className="focus-ring flex min-h-[48px] w-full items-center justify-between gap-3 rounded-[17px] bg-transparent px-4 py-2.5 text-left text-[14.5px] font-extrabold text-[var(--c-ink)]"
           >
             {faq.title}
             <ChevronDown
               className={cn(
-                "size-[18px] shrink-0 text-[var(--c-lavender)] transition-transform duration-300",
+                "size-[18px] shrink-0 text-[var(--c-accent)] transition-transform duration-300",
                 expanded && "rotate-180",
               )}
               aria-hidden="true"
@@ -81,7 +81,7 @@ export function Faq({ settings, faqs }: { settings: Settings; faqs: FaqItem[] })
   };
 
   return (
-    <section id="preguntas-frecuentes" className="grad-faq section-y relative overflow-hidden">
+    <section id="preguntas-frecuentes" className="surface-base section-y relative overflow-hidden">
       <DecorativeBackground variant="faq" />
 
       <div className="container-page relative z-10">
@@ -112,10 +112,10 @@ export function Faq({ settings, faqs }: { settings: Settings; faqs: FaqItem[] })
               href={settings.faq.linkUrl || "#preguntas-frecuentes"}
               variant="outline"
               size="sm"
-              className="border-[var(--c-lilac)]"
+              className="border-[var(--c-pastel-accent)]"
             >
               {settings.faq.linkText}
-              <ChevronDown className="size-[17px] text-[var(--c-lavender)]" aria-hidden="true" />
+              <ChevronDown className="size-[17px] text-[var(--c-accent)]" aria-hidden="true" />
             </LinkButton>
           </div>
         ) : null}

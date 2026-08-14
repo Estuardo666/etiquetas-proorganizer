@@ -36,10 +36,7 @@ export function ScrollProgress() {
     <motion.div
       aria-hidden="true"
       className="fixed inset-x-0 top-0 z-[60] h-[3px] origin-left"
-      style={{
-        scaleX,
-        background: "linear-gradient(90deg, var(--c-lavender), var(--c-accent))",
-      }}
+      style={{ scaleX, background: "var(--c-accent)" }}
     />
   );
 }
@@ -73,7 +70,7 @@ export function BackToTop() {
           initial={{ opacity: 0, scale: 0.85 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.85 }}
-          className="focus-ring card-shadow fixed bottom-[104px] left-5 z-40 grid size-11 place-items-center rounded-full border border-[var(--c-border)] bg-white text-[var(--c-primary)] transition-transform hover:-translate-y-0.5 md:bottom-8"
+          className="focus-ring card-shadow fixed bottom-[104px] left-5 z-40 grid size-11 place-items-center rounded-full border border-[var(--c-border)] bg-white text-[var(--c-ink)] transition-transform hover:-translate-y-0.5 md:bottom-8"
           aria-label="Volver arriba"
         >
           <ArrowUp className="size-5" aria-hidden="true" />
@@ -167,13 +164,13 @@ export function Header({ settings }: { settings: Settings }) {
               <>
                 <span
                   className={cn(
-                    "font-[family-name:var(--font-heading)] leading-none font-medium text-[var(--c-primary)] transition-all duration-300",
+                    "font-[family-name:var(--font-heading)] leading-none font-medium text-[var(--c-ink)] transition-all duration-300",
                     scrolled ? "text-[21px]" : "text-[23px]",
                   )}
                 >
                   {brandWords[0]}{" "}
                   {brandWords[1] ? (
-                    <span className="text-[var(--c-lavender)]">{brandWords[1]}</span>
+                    <span className="text-[var(--c-accent)]">{brandWords[1]}</span>
                   ) : null}
                 </span>
               </>
@@ -190,8 +187,8 @@ export function Header({ settings }: { settings: Settings }) {
                     className={cn(
                       "nav-link focus-ring relative inline-flex h-11 items-center rounded-full px-3 text-[14.5px] font-medium",
                       active === anchor
-                        ? "bg-[var(--c-lilac)]/60 text-[var(--c-primary)]"
-                        : "text-[var(--c-muted)] hover:text-[var(--c-primary)]",
+                        ? "bg-[var(--c-pastel-accent)]/60 text-[var(--c-ink)]"
+                        : "text-[var(--c-muted)] hover:text-[var(--c-ink)]",
                     )}
                   >
                     {label}
@@ -221,7 +218,7 @@ export function Header({ settings }: { settings: Settings }) {
               aria-expanded={open}
               aria-controls="menu-movil"
               aria-label={open ? "Cerrar menú" : "Abrir menú"}
-              className="focus-ring grid size-11 place-items-center rounded-full border border-[var(--c-border)] bg-white text-[var(--c-primary)] lg:hidden"
+              className="focus-ring grid size-11 place-items-center rounded-full border border-[var(--c-border)] bg-white text-[var(--c-ink)] lg:hidden"
             >
               {open ? <X className="size-5" /> : <Menu className="size-5" />}
             </button>
@@ -252,7 +249,7 @@ export function Header({ settings }: { settings: Settings }) {
                       className={cn(
                         "focus-ring flex min-h-[48px] items-center rounded-2xl px-4 text-[17px] font-medium",
                         active === anchor
-                          ? "bg-[var(--c-lilac)]/50 text-[var(--c-primary)]"
+                          ? "bg-[var(--c-pastel-accent)]/50 text-[var(--c-ink)]"
                           : "text-[var(--c-muted)]",
                       )}
                     >

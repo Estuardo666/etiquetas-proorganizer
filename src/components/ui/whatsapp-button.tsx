@@ -1,6 +1,7 @@
 "use client";
 
-import { LinkButton } from "@/components/ui/button";
+import { FluidButton } from "@/components/ui/fluid-button";
+import { TextArrowCta } from "@/components/ui/text-arrow-cta";
 import { WhatsAppIcon } from "@/components/ui/icon";
 import { useOrder } from "@/components/order-provider";
 import { cn } from "@/lib/utils";
@@ -13,30 +14,24 @@ import type { WaSource } from "@/lib/site-config";
  *
  * `source` decide el mensaje precargado; `message` lo sobrescribe cuando el
  * CTA es de una tarjeta concreta (un tamaño, un diseño).
+ *
+ * Todas las variantes salvo `link` son `FluidButton`: el relleno verde sube
+ * desde abajo al hacer hover, de verde oscuro a verde WhatsApp. Se queda verde
+ * en los dos estados a propósito — el color es la señal de "esto abre el
+ * chat", y una inversión a blanco la borraría justo en el momento de decidir.
+ *
+ * `link` es `TextArrowCta`: dentro de una rejilla de tarjetas, tres botones
+ * verdes seguidos compiten entre sí y con el CTA principal de la sección.
  */
 type Variant = "primary" | "hero" | "nav" | "float" | "footer" | "inline" | "link";
 
-const styles: Record<
-  Variant,
-  { size: "sm" | "md" | "lg" | "full"; className?: string; icon: string }
-> = {
-  primary: { size: "md", icon: "size-5" },
-  hero: { size: "md", icon: "size-5" },
-  nav: {
-    size: "sm",
-    className: "px-4 text-[14.5px] shadow-none hover:shadow-none active:shadow-none",
-    icon: "size-[19px]",
-  },
-  float: {
-    size: "lg",
-    className: "shadow-none hover:shadow-none active:shadow-none hover:-translate-y-[3px]",
-    icon: "size-5",
-  },
-  footer: { size: "sm", className: "px-4 text-[14px]", icon: "size-[17px]" },
-  inline: { size: "sm", icon: "size-[18px]" },
-  // Tres botones verdes seguidos en una rejilla de tarjetas compiten entre sí
-  // y con el CTA principal: dentro de una tarjeta el enlace va en texto.
-  link: { size: "sm", className: "min-h-[40px] gap-1.5 px-3 text-[13px]", icon: "size-[16px]" },
+const sizeFor: Record<Exclude<Variant, "link">, "sm" | "md" | "lg"> = {
+  primary: "md",
+  hero: "lg",
+  nav: "sm",
+  float: "md",
+  footer: "sm",
+  inline: "md",
 };
 
 export function WhatsAppButton({
@@ -46,7 +41,6 @@ export function WhatsAppButton({
   label,
   ariaLabel,
   variant = "primary",
-  size,
   className,
   children,
   onClick,
@@ -61,32 +55,49 @@ export function WhatsAppButton({
   /** Obligatorio cuando el texto visible no describe la acción por sí solo. */
   ariaLabel: string;
   variant?: Variant;
-  size?: "sm" | "md" | "lg" | "full";
   className?: string;
   children?: React.ReactNode;
   onClick?: () => void;
 }) {
   const { wa, waWith } = useOrder();
-  const style = styles[variant];
+  const href = message ? waWith(message) : wa(source, carrySelection);
+  const content = children ?? label;
+
+  if (variant === "link") {
+    return (
+      <TextArrowCta
+        href={href}
+        target="_blank"
+        rel="noopener"
+        ariaLabel={ariaLabel}
+        dataWaSource={source}
+        onClick={onClick}
+        color="var(--c-whatsapp-ink)"
+        lineColor="var(--c-whatsapp-ink)"
+        className={cn("text-[13px]", className)}
+      >
+        {content}
+      </TextArrowCta>
+    );
+  }
 
   return (
-    <LinkButton
-      href={message ? waWith(message) : wa(source, carrySelection)}
+    <FluidButton
+      href={href}
       target="_blank"
       rel="noopener"
-      variant={variant === "link" ? "ghost" : "whatsapp"}
-      size={size ?? style.size}
-      aria-label={ariaLabel}
-      data-wa-source={source}
-      className={cn(
-        style.className,
-        variant === "link" && "text-[var(--c-whatsapp-ink)] hover:bg-[var(--c-bg-light)]",
-        className,
-      )}
+      ariaLabel={ariaLabel}
+      dataWaSource={source}
       onClick={onClick}
+      size={sizeFor[variant]}
+      background="var(--c-whatsapp-ink)"
+      overlayColor="var(--c-whatsapp)"
+      textColor="#ffffff"
+      secondTextColor="var(--c-ink)"
+      className={className}
     >
-      <WhatsAppIcon className={style.icon} />
-      {children ?? label}
-    </LinkButton>
+      <WhatsAppIcon className="size-[19px] shrink-0" />
+      {content}
+    </FluidButton>
   );
 }

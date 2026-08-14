@@ -4,20 +4,9 @@ import { motion } from "framer-motion";
 import { RevealGroup, RevealItem } from "@/components/ui/reveal";
 import { UsageArt } from "@/components/ui/illustrations";
 import { Media } from "@/components/ui/media";
-import { cardHoverSm, fadeUp } from "@/lib/motion";
+import { cardHoverSm, fadeScaleIn } from "@/lib/motion";
 import type { Settings, UsageItem } from "@/lib/types";
 
-/** Fondo pastel del círculo del objeto, uno por tarjeta. */
-const tints = [
-  "#FFF4D6",
-  "#DFF2FF",
-  "#E9FBEF",
-  "#FFE8F1",
-  "#EFEAFF",
-  "#E4F1FF",
-  "#FFF0E0",
-  "#F3EEFF",
-];
 
 /**
  * Franja de usos. No es una sección propia: vive al pie de `Sizes`.
@@ -32,16 +21,21 @@ export function UsageStrip({ settings, usages }: { settings: Settings; usages: U
 
   return (
     <div id="usos" className="mt-12 border-t border-[var(--c-border)] pt-8">
-      <p className="mb-5 text-center text-[15px] font-extrabold text-[var(--c-primary)]">
+      <p className="mb-5 text-center text-[15px] font-extrabold text-[var(--c-ink)]">
         {settings.usage.title}
       </p>
 
+      {/*
+        Movil: dos filas que se deslizan en horizontal. Ocho chips envolviendo
+        ocupaban cuatro filas, y esto es el remate de la seccion de tamanos, no
+        un argumento nuevo que merezca media pantalla.
+      */}
       <RevealGroup
-        className="flex flex-wrap justify-center gap-2.5 lg:gap-3"
+        className="no-scrollbar grid auto-cols-max grid-flow-col grid-rows-2 gap-2.5 overflow-x-auto pb-1 md:flex md:flex-wrap md:justify-center md:overflow-visible lg:gap-3"
         gap={0.04}
       >
         {usages.map((usage, index) => (
-          <RevealItem key={usage.id} variants={fadeUp}>
+          <RevealItem key={usage.id} variants={fadeScaleIn}>
             <motion.span
               initial="rest"
               whileHover="hover"
@@ -58,7 +52,7 @@ export function UsageStrip({ settings, usages }: { settings: Settings; usages: U
               ) : (
                 <span
                   className="grid size-8 shrink-0 place-items-center rounded-full"
-                  style={{ background: tints[index % tints.length] }}
+                  style={{ background: "var(--c-tint-accent)" }}
                 >
                   <UsageArt title={usage.title} size={20} />
                 </span>

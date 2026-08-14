@@ -20,7 +20,7 @@ export function FinalCta({ settings }: { settings: Settings }) {
     <section id="cta-final" className="pt-4 pb-14 lg:pb-20">
       <div className="container-page">
         <Reveal>
-          <div className="grad-cta relative isolate overflow-hidden rounded-[32px] border border-white/75 px-5 py-7 sm:px-8 sm:py-9 lg:rounded-[40px] lg:px-12 lg:py-12">
+          <div className="surface-warm relative isolate overflow-hidden rounded-[32px] border-2 border-[var(--c-highlight)] px-5 py-7 sm:px-8 sm:py-9 lg:rounded-[40px] lg:px-12 lg:py-12">
             <DecorativeBackground variant="cta" parallax={false} />
 
             {/* Una sola pieza animada: firma lúdica sin competir con la acción. */}
@@ -39,7 +39,7 @@ export function FinalCta({ settings }: { settings: Settings }) {
 
             <div className="relative z-10">
               <div className="mx-auto max-w-[40rem] text-center">
-                <h2 className="max-w-[13ch] font-[family-name:var(--font-heading)] text-[clamp(38px,5.6vw,68px)] leading-[0.94] font-semibold tracking-[-0.035em] text-balance text-[var(--c-primary)]">
+                <h2 className="max-w-[13ch] font-[family-name:var(--font-heading)] text-[clamp(38px,5.6vw,68px)] leading-[0.94] font-semibold tracking-[-0.035em] text-balance text-[var(--c-ink)]">
                   {cta.title}{" "}
                   {cta.titleHighlight ? (
                     <span style={{ color: cta.highlightColor }}>{cta.titleHighlight}</span>
@@ -50,7 +50,7 @@ export function FinalCta({ settings }: { settings: Settings }) {
                 </p>
 
                 {guarantees.length ? (
-                  <ul className="mt-5 flex flex-wrap justify-center gap-x-6 gap-y-2 text-[14px] font-bold text-[var(--c-primary)] lg:justify-start">
+                  <ul className="mt-5 flex flex-wrap justify-center gap-x-6 gap-y-2 text-[14px] font-bold text-[var(--c-ink)] lg:justify-start">
                     {guarantees.map(([icon, label], index) => (
                       <li key={index} className="flex items-center gap-2">
                         <Icon name={icon} className="size-[18px]" strokeWidth={2.2} />

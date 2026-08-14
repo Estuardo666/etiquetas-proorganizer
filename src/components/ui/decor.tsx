@@ -1,12 +1,20 @@
 "use client";
 
 /**
- * Sistema de adornos del diseño kids premium.
+ * Sistema de adornos.
  *
  * Todos los elementos son SVG propios (ligeros, escalables y coloreables),
  * decorativos y por tanto `aria-hidden` + `pointer-events-none`.
- * Regla: máximo 5-9 adornos visibles por sección grande y nunca detrás de
- * párrafos o botones.
+ *
+ * Dos reglas del sistema visual viven aquí y no en cada sección:
+ *
+ * 1. **Color pastel desde el token.** Los adornos usan `--c-pastel-*`, que ya
+ *    son el acento y el destacado mezclados al 45 % con blanco. Nunca el color
+ *    a plena saturación: un adorno tan fuerte como un botón compite con él.
+ * 2. **Opacidad 50 % y entrada con pop.** Antes entraban ya visibles, así que
+ *    el ojo los registraba como parte del fondo estático. Con el muelle corto
+ *    aparecen cuando la sección entra y se leen como acompañamiento del
+ *    contenido, no como textura.
  */
 
 import {
@@ -17,6 +25,7 @@ import {
   type MotionValue,
 } from "framer-motion";
 import { useRef } from "react";
+import { decorPop } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 type DecorProps = {
@@ -29,7 +38,7 @@ const decorBase = "pointer-events-none absolute select-none";
 
 export function DecorativeStar({
   className,
-  color = "var(--c-yellow)",
+  color = "var(--c-pastel-highlight)",
   size = 44,
 }: DecorProps) {
   return (
@@ -41,18 +50,23 @@ export function DecorativeStar({
       viewBox="0 0 48 48"
       className={cn("pointer-events-none", className)}
     >
+      {/* Sin contorno blanco: sobre un relleno pastel el trazo grueso lo
+          convierte en pegatina y devuelve el peso que acabamos de quitar. */}
       <path
         d="M24 4.5c1.2 0 2.3.7 2.8 1.8l4 8.5 9.2 1.2c1.2.2 2.2 1 2.6 2.2.4 1.1.1 2.4-.8 3.2l-6.8 6.3 1.8 9.2c.2 1.2-.3 2.4-1.3 3.1-1 .7-2.3.8-3.3.2L24 35.8l-8.2 4.4c-1 .6-2.3.5-3.3-.2-1-.7-1.5-1.9-1.3-3.1l1.8-9.2-6.8-6.3c-.9-.8-1.2-2.1-.8-3.2.4-1.2 1.4-2 2.6-2.2l9.2-1.2 4-8.5c.5-1.1 1.6-1.8 2.8-1.8Z"
         fill={color}
-        stroke="#fff"
-        strokeWidth="3"
-        strokeLinejoin="round"
       />
     </svg>
   );
 }
 
-/** Estrella con carita: usar como mucho una vez por sección. */
+/**
+ * Estrella con carita: usar como mucho una vez por sección.
+ *
+ * Los ojos y la boca van en tinta plena a propósito: son los únicos trazos del
+ * sistema de adornos que no bajan de contraste, porque a 50 % una carita deja
+ * de leerse como cara y pasa a ser una mancha.
+ */
 export function DecorativeStarFace({ className, size = 96 }: DecorProps) {
   return (
     <svg
@@ -65,22 +79,19 @@ export function DecorativeStarFace({ className, size = 96 }: DecorProps) {
     >
       <path
         d="M24 4.5c1.2 0 2.3.7 2.8 1.8l4 8.5 9.2 1.2c1.2.2 2.2 1 2.6 2.2.4 1.1.1 2.4-.8 3.2l-6.8 6.3 1.8 9.2c.2 1.2-.3 2.4-1.3 3.1-1 .7-2.3.8-3.3.2L24 35.8l-8.2 4.4c-1 .6-2.3.5-3.3-.2-1-.7-1.5-1.9-1.3-3.1l1.8-9.2-6.8-6.3c-.9-.8-1.2-2.1-.8-3.2.4-1.2 1.4-2 2.6-2.2l9.2-1.2 4-8.5c.5-1.1 1.6-1.8 2.8-1.8Z"
-        fill="var(--c-yellow)"
-        stroke="#fff"
-        strokeWidth="3"
-        strokeLinejoin="round"
+        fill="var(--c-highlight)"
       />
-      <circle cx="20" cy="21" r="1.7" fill="#18336B" />
-      <circle cx="28.4" cy="21" r="1.7" fill="#18336B" />
+      <circle cx="20" cy="21" r="1.7" fill="var(--c-ink)" />
+      <circle cx="28.4" cy="21" r="1.7" fill="var(--c-ink)" />
       <path
         d="M20.4 25.6c1.9 1.7 5.3 1.7 7.2 0"
-        stroke="#18336B"
+        stroke="var(--c-ink)"
         strokeWidth="1.8"
         strokeLinecap="round"
         fill="none"
       />
-      <ellipse cx="17" cy="25" rx="2" ry="1.3" fill="#FFB5D2" opacity="0.75" />
-      <ellipse cx="31.6" cy="25" rx="2" ry="1.3" fill="#FFB5D2" opacity="0.75" />
+      <ellipse cx="17" cy="25" rx="2" ry="1.3" fill="var(--c-pastel-accent)" />
+      <ellipse cx="31.6" cy="25" rx="2" ry="1.3" fill="var(--c-pastel-accent)" />
     </svg>
   );
 }
@@ -98,7 +109,7 @@ export function DecorativeCloud({ className, size = 96 }: DecorProps) {
       <path
         d="M25 52c-9.9 0-18-7.4-18-16.5S15.1 19 25 19c1.6 0 3.2.2 4.7.6C33 12 40.6 6.5 49.6 6.5c11.6 0 21.1 9 21.7 20.3 8.2.6 14.7 7.1 14.7 15.1 0 8.4-7.1 15.1-15.9 15.1H25Z"
         fill="#fff"
-        stroke="var(--c-sky)"
+        stroke="var(--c-pastel-ink)"
         strokeWidth="3"
         strokeLinejoin="round"
       />
@@ -120,28 +131,28 @@ export function DecorativeCloudFace({ className, size = 120 }: DecorProps) {
       <path
         d="M25 52c-9.9 0-18-7.4-18-16.5S15.1 19 25 19c1.6 0 3.2.2 4.7.6C33 12 40.6 6.5 49.6 6.5c11.6 0 21.1 9 21.7 20.3 8.2.6 14.7 7.1 14.7 15.1 0 8.4-7.1 15.1-15.9 15.1H25Z"
         fill="#fff"
-        stroke="var(--c-sky)"
+        stroke="var(--c-pastel-ink)"
         strokeWidth="3"
         strokeLinejoin="round"
       />
-      <circle cx="41" cy="35" r="2.2" fill="#18336B" />
-      <circle cx="55" cy="35" r="2.2" fill="#18336B" />
+      <circle cx="41" cy="35" r="2.2" fill="var(--c-ink)" />
+      <circle cx="55" cy="35" r="2.2" fill="var(--c-ink)" />
       <path
         d="M41.5 41c2.6 2.6 10.4 2.6 13 0"
-        stroke="#18336B"
+        stroke="var(--c-ink)"
         strokeWidth="2.2"
         strokeLinecap="round"
         fill="none"
       />
-      <ellipse cx="35" cy="40" rx="3" ry="2" fill="#FFB5D2" opacity="0.8" />
-      <ellipse cx="61" cy="40" rx="3" ry="2" fill="#FFB5D2" opacity="0.8" />
+      <ellipse cx="35" cy="40" rx="3" ry="2" fill="var(--c-pastel-accent)" />
+      <ellipse cx="61" cy="40" rx="3" ry="2" fill="var(--c-pastel-accent)" />
     </svg>
   );
 }
 
 export function DecorativeSparkle({
   className,
-  color = "var(--c-lavender)",
+  color = "var(--c-pastel-accent)",
   size = 22,
 }: DecorProps) {
   return (
@@ -163,7 +174,7 @@ export function DecorativeSparkle({
 
 export function DecorativeHeart({
   className,
-  color = "var(--c-pink)",
+  color = "var(--c-pastel-accent)",
   size = 30,
 }: DecorProps) {
   return (
@@ -178,9 +189,6 @@ export function DecorativeHeart({
       <path
         d="M16 27.5S3.5 20.3 3.5 12.4C3.5 8 7 4.9 11 4.9c2.4 0 4.2 1.1 5 2.5.8-1.4 2.6-2.5 5-2.5 4 0 7.5 3.1 7.5 7.5 0 7.9-12.5 15.1-12.5 15.1Z"
         fill={color}
-        stroke="#fff"
-        strokeWidth="2.4"
-        strokeLinejoin="round"
       />
     </svg>
   );
@@ -188,7 +196,7 @@ export function DecorativeHeart({
 
 export function DecorativeCurvedArrow({
   className,
-  color = "var(--c-lavender)",
+  color = "var(--c-pastel-accent)",
   size = 72,
 }: DecorProps) {
   return (
@@ -221,7 +229,7 @@ export function DecorativeCurvedArrow({
 
 export function DoodleLine({
   className,
-  color = "var(--c-pink)",
+  color = "var(--c-pastel-accent)",
   size = 90,
 }: DecorProps) {
   return (
@@ -246,7 +254,7 @@ export function DoodleLine({
 
 export function DottedPath({
   className,
-  color = "var(--c-sky)",
+  color = "var(--c-pastel-ink)",
   size = 120,
 }: DecorProps) {
   return (
@@ -270,7 +278,7 @@ export function DottedPath({
   );
 }
 
-export function DecorativeDots({ className, color = "var(--c-lilac)" }: DecorProps) {
+export function DecorativeDots({ className, color = "var(--c-pastel-accent)" }: DecorProps) {
   return (
     <svg
       aria-hidden="true"
@@ -282,38 +290,40 @@ export function DecorativeDots({ className, color = "var(--c-lilac)" }: DecorPro
     >
       {[0, 1, 2, 3].map((row) =>
         [0, 1, 2, 3].map((col) => (
-          <circle
-            key={`${row}-${col}`}
-            cx={6 + col * 16}
-            cy={6 + row * 16}
-            r="3"
-            fill={color}
-          />
+          <circle key={`${row}-${col}`} cx={6 + col * 16} cy={6 + row * 16} r="3" fill={color} />
         )),
       )}
     </svg>
   );
 }
 
-/** Halo difuso de color; nunca detrás de texto de bajo contraste. */
-export function Glow({
+/**
+ * Pop de entrada para los adornos sueltos, los que una sección coloca a mano
+ * en vez de recibirlos de `DecorativeBackground`. Sin esto la mitad de los
+ * adornos de la página entraría con muelle y la otra mitad ya visible.
+ */
+export function DecorPop({
+  children,
   className,
-  color = "var(--c-lilac)",
-  size = 320,
-  opacity = 0.35,
-}: DecorProps & { opacity?: number }) {
+  delay = 0,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+}) {
+  const reduced = useReducedMotion();
+
   return (
-    <div
+    <motion.span
       aria-hidden="true"
-      className={cn("pointer-events-none absolute rounded-full", className)}
-      style={{
-        width: size,
-        height: size,
-        opacity,
-        background: `radial-gradient(circle, ${color} 0%, transparent 70%)`,
-        filter: "blur(60px)",
-      }}
-    />
+      className={cn("pointer-events-none block opacity-50", className)}
+      initial={reduced ? false : { opacity: 0, scale: 0.4 }}
+      whileInView={{ opacity: 0.5, scale: 1 }}
+      viewport={{ once: true, amount: 0.4 }}
+      transition={{ ...decorPop, delay }}
+    >
+      {children}
+    </motion.span>
   );
 }
 
@@ -345,11 +355,15 @@ type Item = {
  * Cada sección lleva entre tres y seis adornos pequeños y uno mediano, y
  * siempre acompañando al contenido (títulos, tarjetas, composición del hero):
  * nunca un único adorno suelto en una zona vacía.
+ *
+ * Los halos difusos (`Glow`) que había aquí se retiraron con el resto de
+ * degradados: eran doce manchas de color de 300-400 px sobre fondos que ahora
+ * son planos, y se leían como suciedad en el borde de las secciones.
  */
 const variants: Record<Variant, Item[]> = {
   hero: [
     { node: <DecorativeStar size={34} />, at: "left-[2%] top-[26%]", speed: 24, float: true },
-    { node: <DecorativeSparkle size={18} color="var(--c-pink)" />, at: "left-[7%] top-[14%]" },
+    { node: <DecorativeSparkle size={18} />, at: "left-[7%] top-[14%]" },
     {
       node: <DecorativeCloud size={104} />,
       at: "right-[30%] top-[4%]",
@@ -363,97 +377,167 @@ const variants: Record<Variant, Item[]> = {
       hideOnMobile: true,
     },
     {
-      node: <DecorativeHeart size={26} color="var(--c-sky)" />,
+      node: <DecorativeHeart size={26} color="var(--c-pastel-ink)" />,
       at: "right-[2%] top-[42%]",
       speed: 12,
       hideOnMobile: true,
     },
     {
-      node: <DecorativeSparkle size={22} color="var(--c-pink)" />,
+      node: <DecorativeSparkle size={22} />,
       at: "right-[46%] top-[10%]",
       speed: 14,
       hideOnMobile: true,
     },
     {
-      node: <DecorativeSparkle size={18} color="var(--c-yellow)" />,
+      node: <DecorativeSparkle size={18} color="var(--c-pastel-highlight)" />,
       at: "right-[16%] bottom-[26%]",
       float: true,
       hideOnMobile: true,
     },
     { node: <DottedPath size={130} />, at: "left-[4%] bottom-[18%]", speed: 10, hideOnMobile: true },
     { node: <DecorativeDots />, at: "right-[1%] bottom-[16%]", hideOnMobile: true },
-    { node: <DecorativeStar size={20} color="var(--c-accent)" />, at: "left-[38%] bottom-[12%]", hideOnMobile: true },
-    { node: <Glow color="var(--c-lilac)" size={420} />, at: "-left-24 top-0" },
-    { node: <Glow color="var(--c-sky)" size={380} opacity={0.3} />, at: "right-0 bottom-0" },
+    {
+      node: <DecorativeStar size={20} color="var(--c-pastel-accent)" />,
+      at: "left-[38%] bottom-[12%]",
+      hideOnMobile: true,
+    },
   ],
   soft: [
     { node: <DecorativeStar size={26} />, at: "left-[4%] top-[10%]", speed: 16 },
     {
-      node: <DecorativeSparkle size={20} color="var(--c-lavender)" />,
+      node: <DecorativeSparkle size={20} />,
       at: "right-[5%] top-[18%]",
       float: true,
       hideOnMobile: true,
     },
     { node: <DoodleLine size={96} />, at: "right-[12%] bottom-[8%]", hideOnMobile: true },
-    { node: <Glow color="var(--c-lilac)" size={340} opacity={0.28} />, at: "-right-20 top-10" },
   ],
   sizes: [
-    { node: <DecorativeStar size={22} color="var(--c-yellow)" />, at: "left-[30%] top-[4%]", float: true, hideOnMobile: true },
-    { node: <DecorativeSparkle size={20} color="var(--c-pink)" />, at: "right-[30%] top-[5%]", hideOnMobile: true },
+    {
+      node: <DecorativeStar size={22} />,
+      at: "left-[30%] top-[4%]",
+      float: true,
+      hideOnMobile: true,
+    },
+    { node: <DecorativeSparkle size={20} />, at: "right-[30%] top-[5%]", hideOnMobile: true },
     { node: <DecorativeStar size={28} />, at: "left-[3%] top-[24%]", speed: 14 },
-    { node: <DecorativeDots color="var(--c-lilac)" />, at: "right-[2%] bottom-[10%]", hideOnMobile: true },
-    { node: <DoodleLine size={90} color="var(--c-sky)" />, at: "left-[6%] bottom-[8%]", hideOnMobile: true },
-    { node: <Glow color="var(--c-lilac)" size={360} opacity={0.3} />, at: "-left-24 top-1/3" },
+    { node: <DecorativeDots />, at: "right-[2%] bottom-[10%]", hideOnMobile: true },
+    {
+      node: <DoodleLine size={90} color="var(--c-pastel-ink)" />,
+      at: "left-[6%] bottom-[8%]",
+      hideOnMobile: true,
+    },
   ],
   usage: [
-    { node: <DecorativeSparkle size={20} color="var(--c-lavender)" />, at: "left-[26%] top-[8%]", float: true, hideOnMobile: true },
-    { node: <DecorativeStar size={24} color="var(--c-pink)" />, at: "right-[6%] top-[16%]", speed: 12 },
-    { node: <DecorativeDots color="var(--c-sky)" />, at: "left-[2%] bottom-[12%]", hideOnMobile: true },
-    { node: <Glow color="var(--c-sky)" size={320} opacity={0.3} />, at: "right-0 top-0" },
+    {
+      node: <DecorativeSparkle size={20} />,
+      at: "left-[26%] top-[8%]",
+      float: true,
+      hideOnMobile: true,
+    },
+    { node: <DecorativeStar size={24} />, at: "right-[6%] top-[16%]", speed: 12 },
+    {
+      node: <DecorativeDots color="var(--c-pastel-ink)" />,
+      at: "left-[2%] bottom-[12%]",
+      hideOnMobile: true,
+    },
   ],
   designs: [
-    { node: <DecorativeCloud size={104} />, at: "left-[2%] top-[10%]", speed: -14, hideOnMobile: true },
-    { node: <DecorativeStar size={30} color="var(--c-pink)" />, at: "right-[4%] top-[14%]", float: true },
     {
-      node: <DecorativeSparkle size={22} color="var(--c-yellow)" />,
+      node: <DecorativeCloud size={104} />,
+      at: "left-[2%] top-[10%]",
+      speed: -14,
+      hideOnMobile: true,
+    },
+    { node: <DecorativeStar size={30} />, at: "right-[4%] top-[14%]", float: true },
+    {
+      node: <DecorativeSparkle size={22} color="var(--c-pastel-highlight)" />,
       at: "left-[12%] bottom-[12%]",
       speed: 12,
     },
-    { node: <DecorativeSparkle size={16} color="var(--c-lavender)" />, at: "right-[34%] top-[6%]", hideOnMobile: true },
-    { node: <DecorativeDots color="var(--c-sky)" />, at: "right-[8%] bottom-[10%]", hideOnMobile: true },
+    { node: <DecorativeSparkle size={16} />, at: "right-[34%] top-[6%]", hideOnMobile: true },
+    {
+      node: <DecorativeDots color="var(--c-pastel-ink)" />,
+      at: "right-[8%] bottom-[10%]",
+      hideOnMobile: true,
+    },
   ],
   process: [
     { node: <DecorativeSparkle size={20} />, at: "left-[6%] top-[14%]", float: true },
-    { node: <DecorativeStar size={24} />, at: "right-[6%] bottom-[16%]", speed: 14, hideOnMobile: true },
-    { node: <DecorativeSparkle size={16} color="var(--c-pink)" />, at: "right-[22%] top-[10%]", hideOnMobile: true },
-    { node: <DottedPath size={110} color="var(--c-lilac)" />, at: "left-[2%] bottom-[10%]", hideOnMobile: true },
-    { node: <Glow color="var(--c-sky)" size={320} opacity={0.25} />, at: "left-1/2 top-0" },
+    {
+      node: <DecorativeStar size={24} />,
+      at: "right-[6%] bottom-[16%]",
+      speed: 14,
+      hideOnMobile: true,
+    },
+    { node: <DecorativeSparkle size={16} />, at: "right-[22%] top-[10%]", hideOnMobile: true },
+    {
+      node: <DottedPath size={110} color="var(--c-pastel-accent)" />,
+      at: "left-[2%] bottom-[10%]",
+      hideOnMobile: true,
+    },
   ],
   promo: [
     { node: <DecorativeStar size={30} />, at: "right-[6%] top-[8%]", float: true },
-    { node: <DecorativeSparkle size={20} color="var(--c-yellow)" />, at: "left-[4%] bottom-[14%]" },
-    { node: <DecorativeSparkle size={16} color="var(--c-accent)" />, at: "right-[16%] bottom-[10%]", hideOnMobile: true },
-    { node: <DecorativeDots color="var(--c-peach)" />, at: "left-[42%] top-[6%]", hideOnMobile: true },
+    {
+      node: <DecorativeSparkle size={20} color="var(--c-pastel-highlight)" />,
+      at: "left-[4%] bottom-[14%]",
+    },
+    { node: <DecorativeSparkle size={16} />, at: "right-[16%] bottom-[10%]", hideOnMobile: true },
+    {
+      node: <DecorativeDots color="var(--c-pastel-highlight)" />,
+      at: "left-[42%] top-[6%]",
+      hideOnMobile: true,
+    },
   ],
   testimonials: [
-    { node: <DecorativeHeart size={26} />, at: "left-[4%] top-[16%]", float: true, hideOnMobile: true },
+    {
+      node: <DecorativeHeart size={26} />,
+      at: "left-[4%] top-[16%]",
+      float: true,
+      hideOnMobile: true,
+    },
     { node: <DecorativeStar size={22} />, at: "right-[5%] top-[12%]", speed: 12, hideOnMobile: true },
-    { node: <DecorativeSparkle size={18} color="var(--c-lavender)" />, at: "left-[30%] bottom-[8%]", hideOnMobile: true },
-    { node: <Glow color="var(--c-lilac)" size={300} opacity={0.25} />, at: "-right-16 bottom-0" },
+    { node: <DecorativeSparkle size={18} />, at: "left-[30%] bottom-[8%]", hideOnMobile: true },
   ],
   faq: [
-    { node: <DecorativeCloudFace size={116} />, at: "right-[3%] top-[8%]", speed: -12, hideOnMobile: true },
+    {
+      node: <DecorativeCloudFace size={116} />,
+      at: "right-[3%] top-[8%]",
+      speed: -12,
+      hideOnMobile: true,
+    },
     { node: <DecorativeStar size={24} />, at: "left-[5%] top-[22%]", float: true },
-    { node: <DottedPath size={130} color="var(--c-lilac)" />, at: "left-[2%] bottom-[10%]", hideOnMobile: true },
-    { node: <DecorativeSparkle size={18} color="var(--c-pink)" />, at: "right-[14%] bottom-[18%]" },
-    { node: <DecorativeSparkle size={16} color="var(--c-yellow)" />, at: "left-[28%] top-[6%]", hideOnMobile: true },
+    {
+      node: <DottedPath size={130} color="var(--c-pastel-accent)" />,
+      at: "left-[2%] bottom-[10%]",
+      hideOnMobile: true,
+    },
+    { node: <DecorativeSparkle size={18} />, at: "right-[14%] bottom-[18%]" },
+    {
+      node: <DecorativeSparkle size={16} color="var(--c-pastel-highlight)" />,
+      at: "left-[28%] top-[6%]",
+      hideOnMobile: true,
+    },
   ],
   cta: [
     { node: <DecorativeHeart size={34} />, at: "right-[8%] top-[14%]", float: true },
-    { node: <DecorativeHeart size={22} color="#FF8FB1" />, at: "right-[22%] top-[8%]", hideOnMobile: true },
+    {
+      node: <DecorativeHeart size={22} color="#fff" />,
+      at: "right-[22%] top-[8%]",
+      hideOnMobile: true,
+    },
     { node: <DecorativeSparkle size={20} color="#fff" />, at: "left-[40%] top-[14%]" },
-    { node: <DecorativeSparkle size={16} color="#fff" />, at: "left-[52%] bottom-[18%]", hideOnMobile: true },
-    { node: <DecorativeStar size={22} color="#fff" />, at: "right-[34%] bottom-[16%]", hideOnMobile: true },
+    {
+      node: <DecorativeSparkle size={16} color="#fff" />,
+      at: "left-[52%] bottom-[18%]",
+      hideOnMobile: true,
+    },
+    {
+      node: <DecorativeStar size={22} color="#fff" />,
+      at: "right-[34%] bottom-[16%]",
+      hideOnMobile: true,
+    },
   ],
 };
 
@@ -489,6 +573,7 @@ export function DecorativeBackground({
         <DecorItem
           key={index}
           item={item}
+          index={index}
           shift={shift}
           parallax={enableParallax}
           reduced={Boolean(reduced)}
@@ -500,11 +585,13 @@ export function DecorativeBackground({
 
 function DecorItem({
   item,
+  index,
   shift,
   parallax,
   reduced,
 }: {
   item: Item;
+  index: number;
   shift: MotionValue<number>;
   parallax: boolean;
   reduced: boolean;
@@ -516,25 +603,31 @@ function DecorItem({
 
   return (
     <motion.div
-      className={cn(
-        decorBase,
-        item.at,
-        "opacity-70 md:opacity-100",
-        item.hideOnMobile && "hidden md:block",
-      )}
+      className={cn(decorBase, item.at, "opacity-50", item.hideOnMobile && "hidden md:block")}
       style={{ y }}
     >
-      {/* La flotación va en un hijo para no competir con el parallax del padre. */}
-      {float ? (
-        <motion.div
-          animate={{ y: [0, -6, 0] }}
-          transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut" }}
-        >
-          {item.node}
-        </motion.div>
-      ) : (
-        item.node
-      )}
+      {/*
+        Tres capas anidadas y no una: el padre lleva el parallax en `y`, así que
+        el pop y la flotación tienen que vivir en hijos o se pisan entre ellos
+        escribiendo la misma propiedad.
+      */}
+      <motion.div
+        initial={reduced ? false : { opacity: 0, scale: 0.4 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true, amount: 0.4 }}
+        transition={{ ...decorPop, delay: index * 0.06 }}
+      >
+        {float ? (
+          <motion.div
+            animate={{ y: [0, -6, 0] }}
+            transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut" }}
+          >
+            {item.node}
+          </motion.div>
+        ) : (
+          item.node
+        )}
+      </motion.div>
     </motion.div>
   );
 }

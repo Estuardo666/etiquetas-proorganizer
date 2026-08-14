@@ -3,11 +3,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import { SectionHeader } from "@/components/ui/section-header";
-import { RevealGroup, RevealItem } from "@/components/ui/reveal";
-import { DecorativeBackground } from "@/components/ui/decor";
+import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
 import { Media } from "@/components/ui/media";
-import { fadeUp } from "@/lib/motion";
+import { fadeScaleIn } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import type { GalleryItem, Settings } from "@/lib/types";
 
@@ -17,19 +15,23 @@ import type { GalleryItem, Settings } from "@/lib/types";
  */
 const spans = ["sm:col-span-2 sm:row-span-2", "", "", "", "", "", ""];
 
-export function Gallery({ settings, items }: { settings: Settings; items: GalleryItem[] }) {
+/**
+ * Panel de muestras reales. Estaba apagado (`gallery.enabled: false`) porque
+ * como sección propia costaba una pantalla entera de scroll para repetir lo
+ * que ya decían las categorías. Dentro de un tab no cuesta nada, y las fotos
+ * de producto real son la prueba que ninguna ilustración da.
+ */
+export function GalleryPanel({ settings, items }: { settings: Settings; items: GalleryItem[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-  if (!settings.gallery.enabled || !items.length) return null;
+  if (!items.length) return null;
 
   return (
-    <section
-      id="galeria"
-      className="section-y relative overflow-hidden bg-[var(--c-bg-alt)]"
-    >
-      <DecorativeBackground variant="soft" />
-
-      <div className="container-page relative z-10">
-        <SectionHeader title={settings.gallery.title} subtitle={settings.gallery.subtitle} />
+    <>
+      {settings.gallery.subtitle ? (
+        <Reveal className="mx-auto mb-6 max-w-2xl text-center text-[16px] leading-relaxed text-pretty text-[var(--c-muted)]">
+          {settings.gallery.subtitle}
+        </Reveal>
+      ) : null}
 
         <RevealGroup
           className="grid auto-rows-[180px] grid-cols-2 gap-4 sm:grid-cols-4 sm:auto-rows-[200px] lg:gap-6"
@@ -38,7 +40,7 @@ export function Gallery({ settings, items }: { settings: Settings; items: Galler
           {items.map((item, index) => (
             <RevealItem
               key={item.id}
-              variants={fadeUp}
+              variants={fadeScaleIn}
               className={cn("h-full", spans[index % spans.length])}
             >
               <button
@@ -55,14 +57,13 @@ export function Gallery({ settings, items }: { settings: Settings; items: Galler
                   imgClassName="object-contain p-3 transition-transform duration-500 group-hover:scale-[1.06]"
                   sizes="(max-width: 640px) 50vw, 30vw"
                 />
-                <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[rgba(15,36,84,0.75)] to-transparent p-4 text-left text-[14px] font-bold text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                <span className="absolute inset-x-0 bottom-0 bg-[rgb(24_51_107/0.78)] p-4 text-left text-[14px] font-bold text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                   {item.title}
                 </span>
               </button>
             </RevealItem>
           ))}
-        </RevealGroup>
-      </div>
+      </RevealGroup>
 
       <Lightbox
         items={items}
@@ -70,7 +71,7 @@ export function Gallery({ settings, items }: { settings: Settings; items: Galler
         onClose={() => setOpenIndex(null)}
         onChange={setOpenIndex}
       />
-    </section>
+    </>
   );
 }
 
@@ -170,7 +171,7 @@ function Lightbox({
               type="button"
               onClick={onClose}
               aria-label="Cerrar"
-              className="focus-ring absolute -top-3 -right-3 grid size-11 place-items-center rounded-full bg-white text-[var(--c-primary)]"
+              className="focus-ring absolute -top-3 -right-3 grid size-11 place-items-center rounded-full bg-white text-[var(--c-ink)]"
             >
               <X className="size-5" />
             </button>
@@ -178,7 +179,7 @@ function Lightbox({
               type="button"
               onClick={() => go(-1)}
               aria-label="Anterior"
-              className="focus-ring absolute top-1/2 -left-4 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-white text-[var(--c-primary)] sm:-left-14"
+              className="focus-ring absolute top-1/2 -left-4 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-white text-[var(--c-ink)] sm:-left-14"
             >
               <ChevronLeft className="size-5" />
             </button>
@@ -186,7 +187,7 @@ function Lightbox({
               type="button"
               onClick={() => go(1)}
               aria-label="Siguiente"
-              className="focus-ring absolute top-1/2 -right-4 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-white text-[var(--c-primary)] sm:-right-14"
+              className="focus-ring absolute top-1/2 -right-4 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-white text-[var(--c-ink)] sm:-right-14"
             >
               <ChevronRight className="size-5" />
             </button>

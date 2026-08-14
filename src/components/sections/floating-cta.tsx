@@ -90,7 +90,7 @@ export function FloatingCta({ settings }: { settings: Settings }) {
         }}
       >
         <div className="container-page flex items-center gap-2 py-2">
-          <p className="text-[13px] leading-tight font-medium text-[var(--c-primary)]">
+          <p className="text-[13px] leading-tight font-medium text-[var(--c-ink)]">
             {floating.mobileText}
           </p>
           {/* Solo icono en pantallas estrechas: el botón con texto completo se

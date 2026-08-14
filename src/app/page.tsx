@@ -4,14 +4,13 @@ import { BackToTop, Header, ScrollProgress } from "@/components/sections/header"
 import { Hero } from "@/components/sections/hero";
 import { TrustBar } from "@/components/sections/trust-bar";
 import { Sizes } from "@/components/sections/sizes";
-import { Designs } from "@/components/sections/designs";
-import { DesignLove } from "@/components/sections/design-love";
+import { Showcase } from "@/components/sections/showcase";
 import { Cost } from "@/components/sections/cost";
 import { Process } from "@/components/sections/process";
 import { Pricing } from "@/components/sections/pricing";
-import { Gallery } from "@/components/sections/gallery";
 import { Testimonials } from "@/components/sections/testimonials";
 import { Faq } from "@/components/sections/faq";
+import { FinalCta } from "@/components/sections/final-cta";
 import { Footer } from "@/components/sections/footer";
 import { FloatingCta } from "@/components/sections/floating-cta";
 
@@ -77,14 +76,17 @@ export default async function Page() {
         <TrustBar settings={settings} />
         {/* La sección de tamaños incluye la franja de usos (UsageStrip). */}
         <Sizes settings={settings} sizes={content.sizes} usages={content.usages} />
-        <Designs settings={settings} designs={content.designs} />
-        <DesignLove />
-        <Gallery settings={settings} items={content.gallery} />
+        {/* Diseños, muestras reales y personalización comparten sección: son
+            tres respuestas a "¿cómo se ve esto?", no tres argumentos. */}
+        <Showcase settings={settings} designs={content.designs} gallery={content.gallery} />
         <Cost settings={settings} />
         <Pricing settings={settings} promos={content.promos} />
         <Process settings={settings} steps={content.steps} />
         <Testimonials settings={settings} testimonials={content.testimonials} />
         <Faq settings={settings} faqs={content.faqs} />
+        {/* El cierre existía como componente pero no estaba montado: el CTA
+            flotante ya observaba `#cta-final` para apartarse de él. */}
+        <FinalCta settings={settings} />
       </main>
 
       <Footer settings={settings} />

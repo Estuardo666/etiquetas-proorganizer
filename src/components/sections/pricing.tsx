@@ -7,7 +7,7 @@ import { DecorativeBackground } from "@/components/ui/decor";
 import { ArtGift, ArtSheets, Mascot } from "@/components/ui/illustrations";
 import { WhatsAppButton } from "@/components/ui/whatsapp-button";
 import { OrderNote } from "@/components/ui/order-note";
-import { cardHover, fadeUp, viewportOnce } from "@/lib/motion";
+import { cardHover, fadeScaleIn, viewportOnce } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import type { PromoItem, Settings } from "@/lib/types";
 
@@ -40,10 +40,7 @@ export function Pricing({ settings, promos }: { settings: Settings; promos: Prom
 
   return (
     // `pb-fab`: el aviso de condiciones cerraba justo bajo el botón flotante.
-    <section
-      id="promociones"
-      className="section-y pb-fab relative overflow-hidden bg-[var(--c-bg)]"
-    >
+    <section id="promociones" className="surface-base section-y pb-fab relative overflow-hidden">
       <div className="container-page relative z-10">
         <SectionHeader
           eyebrow={pricing.eyebrow}
@@ -52,7 +49,7 @@ export function Pricing({ settings, promos }: { settings: Settings; promos: Prom
         />
 
         <Reveal>
-          <div className="grad-promo relative overflow-hidden rounded-[30px] border-2 border-[#FFE6A8] px-5 py-7 sm:px-8 lg:px-10">
+          <div className="surface-warm relative overflow-hidden rounded-[30px] border-2 border-[var(--c-highlight)] px-5 py-7 sm:px-8 lg:px-10">
             <DecorativeBackground variant="promo" parallax={false} />
             <Mascot
               className="pointer-events-none absolute bottom-0 left-2 hidden opacity-90 lg:block"
@@ -60,18 +57,20 @@ export function Pricing({ settings, promos }: { settings: Settings; promos: Prom
             />
 
             <RevealGroup
-              className="relative z-10 grid gap-5 md:grid-cols-3"
+              // Movil: las tres tarjetas se deslizan. Apiladas eran 1,2
+              // pantallas para tres cifras que se leen de un vistazo.
+              className="snap-row relative z-10 md:grid md:grid-cols-3 md:gap-5 md:overflow-visible md:p-0 md:[margin-inline:0]"
               gap={0.06}
             >
               {/* Precio base ------------------------------------------- */}
-              <RevealItem variants={fadeUp} className="relative flex">
+              <RevealItem variants={fadeScaleIn} className="relative flex">
                 <div className="card-base relative flex h-full w-full flex-col items-center justify-center border-white bg-white px-5 py-6 text-center">
-                  <Sticker label={pricing.priceSticker} color="var(--c-primary)" />
-                  <p className="font-[family-name:var(--font-heading)] text-[19px] leading-none font-medium text-[var(--c-primary)]">
+                  <Sticker label={pricing.priceSticker} color="var(--c-ink)" />
+                  <p className="font-[family-name:var(--font-heading)] text-[19px] leading-none font-medium text-[var(--c-ink)]">
                     {pricing.priceTitle}
                   </p>
                   <p className="mt-2 flex items-end justify-center gap-2">
-                    <span className="font-[family-name:var(--font-heading)] text-[52px] leading-none font-semibold text-[var(--c-primary)]">
+                    <span className="font-[family-name:var(--font-heading)] text-[52px] leading-none font-semibold text-[var(--c-ink)]">
                       {pricing.priceValue}
                     </span>
                     <span className="pb-1.5 text-[15px] font-bold text-[var(--c-muted)]">
@@ -87,7 +86,7 @@ export function Pricing({ settings, promos }: { settings: Settings; promos: Prom
                 const Art = promoArt[index % promoArt.length];
 
                 return (
-                  <RevealItem key={promo.id} variants={fadeUp} className="relative flex">
+                  <RevealItem key={promo.id} variants={fadeScaleIn} className="relative flex">
                     <motion.article
                       initial="rest"
                       animate="rest"
@@ -97,7 +96,7 @@ export function Pricing({ settings, promos }: { settings: Settings; promos: Prom
                     >
                       <Sticker
                         label={promo.title}
-                        color={promo.featured ? "var(--c-lavender-ink)" : "var(--c-accent-ink)"}
+                        color="var(--c-accent-ink)"
                       />
 
                       <span className="card-art absolute top-3 right-3 opacity-90">
@@ -105,7 +104,7 @@ export function Pricing({ settings, promos }: { settings: Settings; promos: Prom
                       </span>
 
                       {promo.post ? (
-                        <p className="font-[family-name:var(--font-heading)] text-[19px] leading-none font-medium text-[var(--c-primary)]">
+                        <p className="font-[family-name:var(--font-heading)] text-[19px] leading-none font-medium text-[var(--c-ink)]">
                           {promo.post}
                         </p>
                       ) : null}
@@ -114,7 +113,7 @@ export function Pricing({ settings, promos }: { settings: Settings; promos: Prom
                         className={cn(
                           "mt-2 font-[family-name:var(--font-heading)] text-[38px] leading-none font-semibold",
                           promo.featured
-                            ? "text-[var(--c-lavender-ink)]"
+                            ? "text-[var(--c-accent-ink)]"
                             : "text-[var(--c-accent-ink)]",
                         )}
                       >
