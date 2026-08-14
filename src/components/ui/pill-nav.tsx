@@ -89,21 +89,45 @@ export function PillNav({
     };
   }, [items, syncOverflow]);
 
-  // Al cambiar de pestaña (teclado o hash) la activa tiene que quedar a la
-  // vista aunque esté fuera del scroll. Solo al *cambiar*: `items` es un array
-  // nuevo en cada render del padre, y reaccionar a él devolvía el scroll a la
-  // pestaña activa cada vez que el usuario deslizaba.
+  /**
+   * Al cambiar de pestaña el carril se recoloca para que *asome* la siguiente.
+   * Sin esto, tocar la segunda pestaña no movía nada y la tercera seguía
+   * invisible: el usuario solo la descubría si se le ocurría deslizar, y no a
+   * todos se les ocurre. Ahora cada selección deja un trozo de la siguiente a
+   * la vista, que es la pista de que la lista continúa.
+   *
+   * Solo al *cambiar*: `items` es un array nuevo en cada render del padre, y
+   * reaccionar a él devolvía el scroll a la pestaña activa cada vez que el
+   * usuario deslizaba.
+   */
   const previousActive = useRef(active);
   useEffect(() => {
     if (previousActive.current === active) return;
     previousActive.current = active;
+
+    const node = navRef.current;
     const index = items.findIndex((item) => item.id === active);
-    tabRefs.current[index]?.scrollIntoView({
-      behavior: reduced ? "auto" : "smooth",
-      inline: "nearest",
-      block: "nearest",
-    });
-  }, [active, items, reduced]);
+    const activeTab = tabRefs.current[index];
+    if (!node || !activeTab) return;
+
+    // Cuánto de la siguiente pestaña queremos ver. Suficiente para leer que
+    // hay algo más, poco para no comerse la activa.
+    const PEEK = 76;
+    const next = tabRefs.current[index + 1];
+    const target = next
+      ? Math.max(0, next.offsetLeft + PEEK - node.clientWidth)
+      : node.scrollWidth;
+
+    // La activa manda: si asomar la siguiente la dejaría fuera por la
+    // izquierda, se prioriza verla entera.
+    const left = Math.min(target, activeTab.offsetLeft - 6);
+
+    node.scrollTo({ left, behavior: reduced ? "auto" : "smooth" });
+    // `scrollTo` suave no siempre llega dentro de este carril; el valor
+    // directo garantiza la posición y `syncOverflow` actualiza la flecha.
+    node.scrollLeft = left;
+    syncOverflow();
+  }, [active, items, reduced, syncOverflow]);
 
   useEffect(() => {
     const update = () => {
@@ -131,9 +155,8 @@ export function PillNav({
   const scrollRight = () => {
     const node = navRef.current;
     if (!node) return;
-    // Asignación directa y no `scrollBy({ behavior: "smooth" })`: dentro de
-    // este contenedor con `snap-x` el desplazamiento suave no llega a
-    // aplicarse. El snap deja la pestaña alineada igual.
+    // Asignación directa y no `scrollBy({ behavior: "smooth" })`: el
+    // desplazamiento suave no llega a aplicarse dentro de este carril.
     node.scrollLeft += node.clientWidth * 0.7;
     syncOverflow();
   };
@@ -148,7 +171,7 @@ export function PillNav({
         className={cn(
           // `max-w-full` + scroll: en móvil tres pestañas no caben en 375 px y
           // sin esto la barra empuja el ancho de la página.
-          "no-scrollbar inline-flex max-w-full snap-x gap-2 overflow-x-auto p-1.5",
+          "no-scrollbar inline-flex max-w-full gap-2 overflow-x-auto p-1.5",
           className,
         )}
       >
@@ -171,7 +194,7 @@ export function PillNav({
               onClick={() => onChange(item.id)}
               onKeyDown={(event) => onKeyDown(event, index)}
               className={cn(
-                "focus-ring relative z-[1] min-h-[44px] w-[210px] shrink-0 snap-start rounded-full px-[22px] text-[14.5px] font-bold whitespace-nowrap text-[var(--c-ink)] transition-[transform,filter] duration-200 active:scale-[0.97]",
+                "focus-ring relative z-[1] min-h-[44px] w-[210px] shrink-0 rounded-full px-[22px] text-[14.5px] font-bold whitespace-nowrap text-[var(--c-ink)] transition-[transform,filter] duration-200 active:scale-[0.97]",
                 toneClass[item.tone ?? "pink"],
                 !selected && "hover:brightness-[0.96]",
               )}

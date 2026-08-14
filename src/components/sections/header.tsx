@@ -23,7 +23,11 @@ import type { Settings } from "@/lib/types";
  */
 export function ScrollProgress() {
   const progress = useMotionValue(0);
-  const scaleX = useSpring(progress, { stiffness: 120, damping: 26, mass: 0.3 });
+  const scaleX = useSpring(progress, {
+    stiffness: 120,
+    damping: 26,
+    mass: 0.3,
+  });
 
   useEffect(() => {
     const onScroll = () => {
@@ -89,7 +93,11 @@ export function BackToTop() {
 
 export function Header({ settings }: { settings: Settings }) {
   const nav = useMemo(
-    () => pipes(settings.header.navItems).map(([label, anchor]) => ({ label, anchor })),
+    () =>
+      pipes(settings.header.navItems).map(([label, anchor]) => ({
+        label,
+        anchor,
+      })),
     [settings.header.navItems],
   );
   const brandWords = brandParts(settings.brand.logoText);
@@ -173,7 +181,11 @@ export function Header({ settings }: { settings: Settings }) {
             onMouseLeave={() => setHovered(false)}
             onFocusCapture={() => setHovered(true)}
             onBlurCapture={(event) => {
-              if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+              if (
+                !event.currentTarget.contains(
+                  event.relatedTarget as Node | null,
+                )
+              ) {
                 setHovered(false);
               }
             }}
@@ -205,7 +217,9 @@ export function Header({ settings }: { settings: Settings }) {
                   >
                     {brandWords[0]}{" "}
                     {brandWords[1] ? (
-                      <span className="text-[var(--c-highlight)]">{brandWords[1]}</span>
+                      <span className="text-[var(--c-highlight)]">
+                        {brandWords[1]}
+                      </span>
                     ) : null}
                   </span>
                 </>
@@ -217,7 +231,11 @@ export function Header({ settings }: { settings: Settings }) {
                 {/* `layout="position"` y no `layout`: al encoger la barra, el
                     layout animation escala la caja y el texto de los enlaces salia
                     aplastado en horizontal. Solo animamos la posicion. */}
-                <motion.ul layout="position" transition={shellSpring} className="flex items-center">
+                <motion.ul
+                  layout="position"
+                  transition={shellSpring}
+                  className="flex items-center"
+                >
                   <AnimatePresence initial={false} mode="popLayout">
                     {nav
                       .filter(({ anchor }) => !collapsed || active === anchor)
@@ -226,13 +244,19 @@ export function Header({ settings }: { settings: Settings }) {
                           key={anchor}
                           layout="position"
                           transition={{ layout: shellSpring, ...itemSpring }}
-                          initial={{ opacity: 0.001, filter: "blur(10px)", y: 10 }}
+                          initial={{
+                            opacity: 0.001,
+                            filter: "blur(10px)",
+                            y: 10,
+                          }}
                           animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
                           exit={{ opacity: 0.001, filter: "blur(10px)", y: 10 }}
                         >
                           <a
                             href={`#${anchor}`}
-                            aria-current={active === anchor ? "true" : undefined}
+                            aria-current={
+                              active === anchor ? "true" : undefined
+                            }
                             className={cn(
                               "focus-ring relative inline-flex h-10 items-center rounded-full px-3 text-[14.5px] font-medium transition-colors duration-200",
                               active === anchor
@@ -260,7 +284,9 @@ export function Header({ settings }: { settings: Settings }) {
               ariaLabel={`${settings.header.ctaText}: escribir a ${brandWords.join(" ")}`}
               className="px-3 sm:px-4"
             >
-              <span className="hidden md:inline">{settings.header.ctaText}</span>
+              <span className="hidden md:inline">
+                {settings.header.ctaText}
+              </span>
               <span className="hidden sm:inline md:hidden">WhatsApp</span>
             </WhatsAppButton>
 
@@ -282,11 +308,27 @@ export function Header({ settings }: { settings: Settings }) {
         {open ? (
           <motion.div
             id="menu-movil"
-            initial={{ opacity: 0, y: -12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className="mx-auto w-[min(100%-48px,1260px)] lg:hidden"
+            /*
+              `absolute`: dentro del flujo el panel crecía dentro del header
+              sticky y empujaba toda la página hacia abajo al abrirlo. Como
+              capa sobre el contenido, abrir el menú no mueve nada.
+            */
+            initial={{ opacity: 0, y: -14, scaleY: 0.82 }}
+            animate={{ opacity: 1, y: 0, scaleY: 1 }}
+            exit={{
+              opacity: 0,
+              y: -10,
+              scaleY: 0.9,
+              transition: { duration: 0.2, ease: [0.36, 0, 0.66, -0.2] },
+            }}
+            transition={{
+              // Rebote al abrir (back-out) y salida rápida al cerrar.
+              duration: 0.34,
+              ease: [0.34, 1.56, 0.64, 1],
+              opacity: { duration: 0.18, ease: "linear" },
+            }}
+            style={{ transformOrigin: "top center" }}
+            className="absolute inset-x-0 top-full mx-auto w-[min(100%-48px,1260px)] lg:hidden"
           >
             <nav
               aria-label="Menú móvil"
