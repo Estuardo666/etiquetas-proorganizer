@@ -72,7 +72,7 @@ function Card({
             {Array.from({ length: Number(testimonial.rating) || 5 }).map((_, star) => (
               <Star
                 key={star}
-                className="size-3.5 fill-[var(--c-highlight)] text-[var(--c-highlight)] transition-transform duration-200 group-hover:scale-110"
+                className="size-3.5 fill-[var(--c-star)] text-[var(--c-star)] transition-transform duration-200 group-hover:scale-110"
                 aria-hidden="true"
               />
             ))}

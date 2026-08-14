@@ -97,7 +97,7 @@ export function Pricing({ settings, promos }: { settings: Settings; promos: Prom
                       variants={cardHover}
                       className="card-base relative flex h-full w-full flex-col items-center justify-center border-white px-5 py-6 text-center"
                       style={{
-                        background: index % 2 === 0 ? "var(--c-purple)" : "var(--c-green)",
+                        background: index % 2 === 0 ? "var(--c-purple)" : "var(--c-blue)",
                       }}
                     >
                       <Sticker

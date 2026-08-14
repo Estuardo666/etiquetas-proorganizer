@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -28,13 +29,13 @@ import { cn } from "@/lib/utils";
 export type PillNavItem = {
   id: string;
   label: string;
-  tone?: "pink" | "purple" | "green";
+  tone?: "pink" | "purple" | "blue";
 };
 
 const toneClass = {
   pink: "bg-[var(--c-pink)]",
   purple: "bg-[var(--c-purple)]",
-  green: "bg-[var(--c-green)]",
+  blue: "bg-[var(--c-blue)]",
 } as const;
 
 export function PillNav({
@@ -64,6 +65,46 @@ export function PillNav({
   const [navRadius, setNavRadius] = useState(50);
   const [itemRadius, setItemRadius] = useState(25);
 
+  // En móvil las pestañas no caben y el desbordamiento es invisible: sin una
+  // señal el usuario no sabe que hay una tercera. `overflow` marca si queda
+  // algo por la derecha para pintar la flecha y el degradado.
+  const [overflowRight, setOverflowRight] = useState(false);
+
+  const syncOverflow = useCallback(() => {
+    const node = navRef.current;
+    if (!node) return;
+    setOverflowRight(node.scrollLeft + node.clientWidth < node.scrollWidth - 4);
+  }, []);
+
+  useEffect(() => {
+    const node = navRef.current;
+    if (!node) return;
+    syncOverflow();
+    node.addEventListener("scroll", syncOverflow, { passive: true });
+    const observer = new ResizeObserver(syncOverflow);
+    observer.observe(node);
+    return () => {
+      node.removeEventListener("scroll", syncOverflow);
+      observer.disconnect();
+    };
+  }, [items, syncOverflow]);
+
+  // Al cambiar de pestaña (teclado o hash) la activa tiene que quedar a la
+  // vista aunque esté fuera del scroll. Solo al *cambiar*: `items` es un array
+  // nuevo en cada render del padre, y reaccionar a él devolvía el scroll a la
+  // pestaña activa cada vez que el usuario deslizaba.
+  const previousActive = useRef(active);
+  useEffect(() => {
+    if (previousActive.current === active) return;
+    previousActive.current = active;
+    const index = items.findIndex((item) => item.id === active);
+    tabRefs.current[index]?.scrollIntoView({
+      behavior: reduced ? "auto" : "smooth",
+      inline: "nearest",
+      block: "nearest",
+    });
+  }, [active, items, reduced]);
+
   useEffect(() => {
     const update = () => {
       if (navRef.current) setNavRadius(navRef.current.offsetHeight / 2);
@@ -78,7 +119,8 @@ export function PillNav({
   }, [items]);
 
   const onKeyDown = (event: React.KeyboardEvent, index: number) => {
-    const delta = event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
+    const delta =
+      event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
     if (!delta) return;
     event.preventDefault();
     const next = (index + delta + items.length) % items.length;
@@ -86,63 +128,107 @@ export function PillNav({
     tabRefs.current[next]?.focus();
   };
 
-  return (
-    <div
-      ref={navRef}
-      role="tablist"
-      aria-label={label}
-      style={{ borderRadius: navRadius }}
-      className={cn(
-        // `max-w-full` + scroll: en móvil tres pestañas no caben en 375 px y
-        // sin esto la barra empuja el ancho de la página.
-        "no-scrollbar inline-flex max-w-full snap-x gap-2 overflow-x-auto p-1.5",
-        className,
-      )}
-    >
-      {items.map((item, index) => {
-        const selected = item.id === active;
+  const scrollRight = () => {
+    const node = navRef.current;
+    if (!node) return;
+    // Asignación directa y no `scrollBy({ behavior: "smooth" })`: dentro de
+    // este contenedor con `snap-x` el desplazamiento suave no llega a
+    // aplicarse. El snap deja la pestaña alineada igual.
+    node.scrollLeft += node.clientWidth * 0.7;
+    syncOverflow();
+  };
 
-        return (
-          <button
-            key={item.id}
-            ref={(node) => {
-              tabRefs.current[index] = node;
-              if (index === 0) itemRef.current = node;
-            }}
+  return (
+    <div className="relative max-w-full">
+      <div
+        ref={navRef}
+        role="tablist"
+        aria-label={label}
+        style={{ borderRadius: navRadius }}
+        className={cn(
+          // `max-w-full` + scroll: en móvil tres pestañas no caben en 375 px y
+          // sin esto la barra empuja el ancho de la página.
+          "no-scrollbar inline-flex max-w-full snap-x gap-2 overflow-x-auto p-1.5",
+          className,
+        )}
+      >
+        {items.map((item, index) => {
+          const selected = item.id === active;
+
+          return (
+            <button
+              key={item.id}
+              ref={(node) => {
+                tabRefs.current[index] = node;
+                if (index === 0) itemRef.current = node;
+              }}
+              type="button"
+              role="tab"
+              id={`${idPrefix}-tab-${item.id}`}
+              aria-selected={selected}
+              aria-controls={`${idPrefix}-panel-${item.id}`}
+              tabIndex={selected ? 0 : -1}
+              onClick={() => onChange(item.id)}
+              onKeyDown={(event) => onKeyDown(event, index)}
+              className={cn(
+                "focus-ring relative z-[1] min-h-[44px] w-[210px] shrink-0 snap-start rounded-full px-[22px] text-[14.5px] font-bold whitespace-nowrap text-[var(--c-ink)] transition-[transform,filter] duration-200 active:scale-[0.97]",
+                toneClass[item.tone ?? "pink"],
+                !selected && "hover:brightness-[0.96]",
+              )}
+            >
+              {selected ? (
+                <motion.span
+                  // `layoutId`: al cambiar de pestaña la píldora viaja de una a
+                  // otra. Es lo único que hace especial a este componente — sin
+                  // esto es un botón que cambia de color.
+                  layoutId={`${idPrefix}-pill`}
+                  aria-hidden="true"
+                  style={{ borderRadius: itemRadius }}
+                  className="absolute inset-0 -z-10 border-2 border-[var(--c-ink)]"
+                  transition={
+                    reduced
+                      ? { duration: 0 }
+                      : { type: "spring", stiffness: 800, damping: 60, mass: 1 }
+                  }
+                />
+              ) : null}
+              {item.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/*
+        Degradado + flecha: la única pista de que la barra sigue. Se pinta solo
+        mientras quede algo a la derecha, así que en escritorio (donde caben
+        las tres) no aparece nunca.
+      */}
+      {overflowRight ? (
+        <div className="pointer-events-none absolute inset-y-0 right-0 flex w-16 items-center justify-end bg-gradient-to-l from-white via-white/85 to-transparent pr-0.5">
+          <motion.button
             type="button"
-            role="tab"
-            id={`${idPrefix}-tab-${item.id}`}
-            aria-selected={selected}
-            aria-controls={`${idPrefix}-panel-${item.id}`}
-            tabIndex={selected ? 0 : -1}
-            onClick={() => onChange(item.id)}
-            onKeyDown={(event) => onKeyDown(event, index)}
-            className={cn(
-              "focus-ring relative z-[1] min-h-[44px] w-[210px] shrink-0 snap-start rounded-full px-[22px] text-[14.5px] font-bold whitespace-nowrap text-[var(--c-ink)] transition-[transform,filter] duration-200 active:scale-[0.97]",
-              toneClass[item.tone ?? "pink"],
-              !selected && "hover:brightness-[0.96]",
-            )}
+            // `tabIndex={-1}`: el teclado ya recorre las pestañas con ←/→,
+            // un tab más solo sería ruido para lectores de pantalla.
+            tabIndex={-1}
+            aria-hidden="true"
+            onClick={scrollRight}
+            className="pointer-events-auto grid size-9 place-items-center rounded-full border-2 border-[var(--c-ink)] bg-white text-[var(--c-ink)] shadow-[0_2px_0_var(--c-ink)] active:translate-y-[1px] active:shadow-none"
+            animate={reduced ? undefined : { x: [0, 3, 0] }}
+            transition={
+              reduced
+                ? undefined
+                : {
+                    duration: 1.4,
+                    repeat: Infinity,
+                    repeatDelay: 1.2,
+                    ease: "easeInOut",
+                  }
+            }
           >
-            {selected ? (
-              <motion.span
-                // `layoutId`: al cambiar de pestaña la píldora viaja de una a
-                // otra. Es lo único que hace especial a este componente — sin
-                // esto es un botón que cambia de color.
-                layoutId={`${idPrefix}-pill`}
-                aria-hidden="true"
-                style={{ borderRadius: itemRadius }}
-                className="absolute inset-0 -z-10 border-2 border-[var(--c-ink)]"
-                transition={
-                  reduced
-                    ? { duration: 0 }
-                    : { type: "spring", stiffness: 800, damping: 60, mass: 1 }
-                }
-              />
-            ) : null}
-            {item.label}
-          </button>
-        );
-      })}
+            <ChevronRight className="size-5" strokeWidth={2.5} />
+          </motion.button>
+        </div>
+      ) : null}
     </div>
   );
 }

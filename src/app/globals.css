@@ -11,6 +11,8 @@
   --color-pink: var(--c-pink);
   --color-gray-warm: var(--c-gray);
   --color-green: var(--c-green);
+  --color-blue: var(--c-blue);
+  --color-star: var(--c-star);
   --color-whatsapp: var(--c-whatsapp);
   --color-whatsapp-ink: var(--c-whatsapp-ink);
   --color-muted: var(--c-muted);
@@ -36,7 +38,9 @@
   --c-purple: #a78bfa;
   --c-pink: #ff9fe0;
   --c-gray: #cbc6c1;
-  --c-green: #90ee8f;
+  --c-green: #90ee8f; /* solo botones de acción (WhatsApp) */
+  --c-blue: #8fd4ee; /* celeste suave: superficies que antes eran verdes */
+  --c-star: #ffcf3f; /* amarillo de las estrellas de valoración */
   --c-surface: #f5f4f2;
 
   /**
@@ -46,7 +50,7 @@
   --c-accent: var(--c-purple); /* acción, selección, estado activo */
   --c-highlight: var(--c-pink); /* precio, promo, adornos cálidos */
   --c-neutral: var(--c-gray);
-  --c-positive: var(--c-green);
+  --c-positive: var(--c-blue);
 
   /**
    * Antes estos `-ink` eran versiones oscurecidas de cada color para poder
@@ -79,12 +83,13 @@
   --c-pastel-positive: color-mix(in srgb, var(--c-positive) 65%, #ffffff);
 
   /**
-   * El CTA de chat también sale de la paleta: verde de reposo con el gris
+   * El CTA de chat conserva el verde: es el único sitio donde queda. Verde de
+   * reposo con el gris
    * oscuro encima (13,9:1) y relleno de gris oscuro con blanco al hacer hover
    * (14,8:1). Se pierde el verde de marca de WhatsApp, pero el icono sigue
    * identificando el canal y la página gana un único sistema de color.
    */
-  --c-whatsapp: var(--c-positive);
+  --c-whatsapp: var(--c-green);
   --c-whatsapp-ink: var(--c-ink);
 
   --c-radius: 28px;

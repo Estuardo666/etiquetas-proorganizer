@@ -27,7 +27,7 @@ const cardTints = [
   "var(--c-pink)",
   "var(--c-purple)",
   "var(--c-gray)",
-  "var(--c-green)",
+  "var(--c-blue)",
 ];
 
 /** Los usos llegan como frase suelta; se leen mejor separados por puntos. */

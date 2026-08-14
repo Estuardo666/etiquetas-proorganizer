@@ -24,10 +24,10 @@ import type { DesignItem, GalleryItem, Settings } from "@/lib/types";
  */
 type TabId = "disenos" | "galeria" | "personalizacion";
 
-const TABS: Array<{ id: TabId; label: string; tone: "pink" | "purple" | "green" }> = [
+const TABS: Array<{ id: TabId; label: string; tone: "pink" | "purple" | "blue" }> = [
   { id: "disenos", label: "Categorías", tone: "pink" },
   { id: "galeria", label: "Muestras reales", tone: "purple" },
-  { id: "personalizacion", label: "Cómo personalizamos", tone: "green" },
+  { id: "personalizacion", label: "Cómo personalizamos", tone: "blue" },
 ];
 
 export function Showcase({
