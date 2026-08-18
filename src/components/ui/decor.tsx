@@ -19,13 +19,13 @@
 
 import {
   motion,
-  useReducedMotion,
   useScroll,
   useTransform,
   type MotionValue,
 } from "framer-motion";
 import { useRef } from "react";
 import { decorPop } from "@/lib/motion";
+import { useHydratedReducedMotion } from "@/lib/use-hydrated-reduced-motion";
 import { cn } from "@/lib/utils";
 
 type DecorProps = {
@@ -311,7 +311,7 @@ export function DecorPop({
   className?: string;
   delay?: number;
 }) {
-  const reduced = useReducedMotion();
+  const reduced = useHydratedReducedMotion();
 
   return (
     <motion.span
@@ -555,7 +555,7 @@ export function DecorativeBackground({
   className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const reduced = useReducedMotion();
+  const reduced = useHydratedReducedMotion();
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],

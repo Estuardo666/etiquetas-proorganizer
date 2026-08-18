@@ -1,7 +1,8 @@
 "use client";
 
-import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { fadeScaleIn, stagger, viewportOnce } from "@/lib/motion";
+import { useHydratedReducedMotion } from "@/lib/use-hydrated-reduced-motion";
 import { cn } from "@/lib/utils";
 
 /**
@@ -11,7 +12,7 @@ import { cn } from "@/lib/utils";
  * menos movimiento seguía recibiendo todos los revelados por scroll.
  */
 function useRevealState() {
-  const reduced = useReducedMotion();
+  const reduced = useHydratedReducedMotion();
   return reduced
     ? ({ initial: "show", animate: "show" } as const)
     : ({ initial: "hidden", whileInView: "show", viewport: viewportOnce } as const);

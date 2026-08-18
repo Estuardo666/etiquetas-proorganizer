@@ -7,16 +7,26 @@ import { StatsRow } from "@/components/sections/stats";
 import { RevealGroup, RevealItem } from "@/components/ui/reveal";
 import { cardHover, fadeScaleIn } from "@/lib/motion";
 import { cn, pipes } from "@/lib/utils";
-import type { Settings } from "@/lib/types";
+import type { Settings, StatItem } from "@/lib/types";
 
-/** Fondos con suficiente color para que los iconos no se vean lavados. */
-const tints = ["var(--c-pastel-accent)", "var(--c-pastel-highlight)"];
+/**
+ * Un tinte por beneficio y no dos alternos: cada icono ya trae su color (agua
+ * azul, escudo verde, corazón rojo) y el disco de detrás lo acompaña en vez de
+ * pelearse con él. Son los mismos tintes de las tarjetas de categoría.
+ */
+const tints = [
+  "var(--c-tint-positive)",
+  "var(--c-tint-ink)",
+  "color-mix(in srgb, var(--c-green) 16%, #ffffff)",
+  "var(--c-tint-highlight)",
+  "var(--c-tint-warm)",
+];
 
 /**
  * Franja de beneficios: cinco tarjetas bajas con icono ilustrado y texto muy
  * breve. Los envíos no van aquí: ya están en la barra superior.
  */
-export function TrustBar({ settings }: { settings: Settings }) {
+export function TrustBar({ settings, stats }: { settings: Settings; stats: StatItem[] }) {
   const { trust } = settings;
   const items = pipes(trust.items).slice(0, 5);
   if (!items.length) return null;
@@ -79,7 +89,7 @@ export function TrustBar({ settings }: { settings: Settings }) {
 
         {/* Las cifras cierran la misma sección: beneficio arriba, prueba
             abajo, un solo bloque de confianza en toda la página. */}
-        <StatsRow stats={settings.stats} />
+        <StatsRow items={stats} />
       </div>
     </section>
   );

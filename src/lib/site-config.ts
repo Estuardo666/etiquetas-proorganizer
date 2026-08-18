@@ -11,6 +11,25 @@
 
 import type { Settings } from "./types";
 
+/**
+ * La navegación describe la estructura de la landing, no su contenido.
+ * Se mantiene en código para que el cliente no pueda apuntar a anclas que no
+ * existen ni desordenar el recorrido de compra desde WordPress.
+ */
+export const sectionNavigation = [
+  { label: "Inicio", anchor: "inicio" },
+  { label: "Tamaños", anchor: "tamanos" },
+  { label: "Diseños", anchor: "disenos" },
+  { label: "Promociones", anchor: "promociones" },
+  { label: "Cómo funciona", anchor: "como-funciona" },
+  { label: "Preguntas frecuentes", anchor: "preguntas-frecuentes" },
+] as const;
+
+export const footerNavigation = [
+  { title: "Productos", links: sectionNavigation.slice(1, 4) },
+  { title: "Ayuda", links: sectionNavigation.slice(4) },
+] as const;
+
 /** Nombre del mensaje de WhatsApp de cada sección, tal como lo guarda el CMS. */
 export type WaSource = "nav" | "hero" | "sizes" | "designs" | "cost" | "promos" | "finalCta" | "footer";
 
@@ -29,11 +48,20 @@ export const waMessageKeys: Record<WaSource, keyof Settings["whatsapp"]> = {
 /** Secciones cuyo CTA arrastra el tamaño y el diseño ya elegidos. */
 export const waSourcesWithSelection: readonly WaSource[] = ["hero", "finalCta"];
 
-export const waMessageForSize = (title: string, count: string) =>
-  `Hola, quiero etiquetas tamaño ${title} (${count} por hoja).`;
+export const fillMessageTemplate = (
+  template: string,
+  values: Record<string, string>,
+) =>
+  Object.entries(values).reduce(
+    (message, [key, value]) => message.replaceAll(`{${key}}`, value),
+    template,
+  );
 
-export const waMessageForDesign = (title: string) =>
-  `Hola, me interesan las etiquetas con diseño de ${title}.`;
+export const waMessageForSize = (template: string, title: string, count: string) =>
+  fillMessageTemplate(template, { title, count });
+
+export const waMessageForDesign = (template: string, title: string) =>
+  fillMessageTemplate(template, { title });
 
 /**
  * Tienda online (Kyte). No vive en WordPress porque no es contenido editable

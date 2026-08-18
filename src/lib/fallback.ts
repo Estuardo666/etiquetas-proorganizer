@@ -16,6 +16,12 @@ export const fallbackContent: SiteContent = {
   settings: {
     brand: {
       logo: null,
+      footerLogo: {
+        url: "/logo-footer.png",
+        alt: "Pro Organizer",
+        width: 1024,
+        height: 376,
+      },
       logoText: "PRO ORGANIZER",
       whatsappNumber: "593992787945",
       phone1: "+593992787945",
@@ -43,14 +49,21 @@ export const fallbackContent: SiteContent = {
       msgPromos: "Hola, quiero aprovechar la promo de 4ta hoja gratis.",
       msgFinalCta: "Hola, quiero personalizar mis etiquetas escolares.",
       msgFooter: "Hola, necesito ayuda con un pedido de etiquetas.",
+      msgSizeTemplate: "Hola, quiero etiquetas tamaño {title} ({count} por hoja).",
+      msgDesignTemplate: "Hola, me interesan las etiquetas con diseño de {title}.",
       previewNote: "Te enviamos la vista previa antes de imprimir — sin compromiso.",
+    },
+    palette: {
+      textColor: "#0b4a75",
+      purpleColor: "#7b3fa6",
+      pinkColor: "#de2b22",
+      grayColor: "#c4cfd8",
+      greenColor: "#17803a",
+      blueColor: "#2e8fd0",
     },
     header: {
       ctaText: "Pedir por WhatsApp",
-      // El orden espeja el orden físico de las secciones. Si cambias uno,
-      // cambia el otro o el menú miente.
-      navItems:
-        "Inicio|inicio\nTamaños|tamanos\nDiseños|disenos\nPromociones|promociones\nCómo funciona|como-funciona\nPreguntas frecuentes|preguntas-frecuentes",
+      shortCtaText: "WhatsApp",
     },
     hero: {
       // La categoría principal aparece integrada en una promesa concreta:
@@ -92,22 +105,13 @@ export const fallbackContent: SiteContent = {
       items:
         "drop|Resistentes al agua|No se despegan ni se borran.\nwasher|Aguantan lavavajillas|Perfectas para lunch y termos.\nshield|Ultra duraderas|Soportan el uso diario.\nheart|Seguras y no tóxicas|Material certificado.\nsmile|Fáciles de aplicar|Listas en segundos.",
     },
-    /**
-     * Fuente única de verdad de la prueba social numérica. La página llegó a
-     * decir +6000 hojas, +2500 familias y +8.500 pedidos a la vez: tres cifras
-     * que se contradicen leen peor que ninguna.
-     */
-    stats: {
-      stat1Value: "+2.500",
-      stat1Label: "Familias atendidas",
-      stat2Value: "+6 años",
-      stat2Label: "de experiencia en Ecuador",
-    },
     sizes: {
       eyebrow: "Una para cada necesidad",
       title: "Elige el tamaño ideal",
       subtitle: "",
       ctaText: "Elegir este tamaño",
+      selectedLabel: "Seleccionado",
+      orderCtaTemplate: "Pedir tamaño {title}",
       usesLabel: "Ideal para:",
       sampleName: "Sofía R.",
     },
@@ -120,9 +124,30 @@ export const fallbackContent: SiteContent = {
       title: "Diseños que les encantan",
       subtitle: "",
       ctaText: "Ver todos los diseños",
+      selectedCtaTemplate: "Pedir diseño {title}",
       featuredSub: "Hazlo único con su mejor sonrisa.",
       featuredNote: "Mismo precio, $8 por hoja.",
       featuredCta: "Pedir con su foto",
+    },
+    personalization: {
+      title: "Diseñamos sus etiquetas",
+      titleHighlight: "con amor",
+      subtitle:
+        "Cada detalle se adapta para que sus cosas sean fáciles de reconocer y difíciles de perder.",
+      image: {
+        url: "/hoja de etiquetas.png",
+        alt: "Hoja de etiquetas personalizadas con nueve diseños y el nombre Sofía R.",
+        width: 1024,
+        height: 1280,
+      },
+      featureItems:
+        "image|Imágenes que les encantan|Incluimos su personaje favorito, el logo de la escuela o una foto.\nsticker|Fondo blanco y adhesivo resistente|Cada diseño se lee con claridad y está hecho para acompañar el uso diario.\ntype|Su nombre, siempre visible|Usamos letras oscuras y legibles para encontrar todo de un vistazo.",
+      guideBadge: "Guía rápida",
+      guideTitle: "Mira cómo personalizamos tus etiquetas",
+      guideText: "Del nombre elegido al diseño listo para imprimir.",
+      guideCta: "Ver el paso a paso",
+      guideUrl: "https://etiquetasescolares.proorganizer.com.ec/#como-funciona",
+      approvalText: "Imprimimos tus etiquetas solo cuando apruebas el diseño.",
     },
     /**
      * El competidor real no es otra marca de etiquetas: es el marcador
@@ -144,6 +169,8 @@ export const fallbackContent: SiteContent = {
       goodTitle: "Con etiquetas Pro Organizer",
       goodItems:
         "Aguantan agua y lavavajillas\nSe ven prolijas y ordenadas\nLas pones una vez y listo\nSe adhieren a plástico, metal y tela",
+      badTabLabel: "Con marcador",
+      goodTabLabel: "Con etiquetas",
       ctaText: "Quiero etiquetar sus cosas",
     },
     process: {
@@ -188,7 +215,7 @@ export const fallbackContent: SiteContent = {
       eyebrow: "Listos para empezar",
       title: "Haz que todo vuelva a casa",
       titleHighlight: "",
-      highlightColor: "#FF6B6B",
+      highlightColor: "#a81a13",
       text: "Personaliza ahora y olvídate de las pérdidas.",
       ctaPrimary: "Pedir por WhatsApp",
       guarantees: "",
@@ -200,20 +227,40 @@ export const fallbackContent: SiteContent = {
     },
     footer: {
       quote: "Porque cuando todo tiene un nombre, es más fácil que vuelva a casa.",
-      col1Title: "Productos",
-      // `galeria` y `personalizacion` ya no son secciones: son tabs dentro de
-      // Diseños. El ancla sigue funcionando y abre su panel.
-      col1Links:
-        "Tamaños|tamanos\nDiseños|disenos\nMuestras reales|galeria\nPromociones|promociones",
-      col2Title: "Ayuda",
-      col2Links:
-        "Preguntas frecuentes|preguntas-frecuentes\nCómo funciona|como-funciona\nPolíticas de envío|preguntas-frecuentes",
+      socialTitle: "Síganos",
+      storeTitle: "Compre en nuestra tienda en línea",
+      storeText: "Rápido, fácil y seguro.",
+      storeCta: "Visitar tienda en línea",
       waTitle: "¿Listo para personalizar?",
       waCta: "Comprar por WhatsApp",
       waText: "Escríbanos y le ayudamos a armar el pedido.",
       closing: "Pro Organizer By Daniella Silva",
       copyright: "© {year} Pro Organizer. Todos los derechos reservados.",
       legalLinks: "",
+    },
+    founder: {
+      photo: {
+        url: "/daniella.png",
+        alt: "Daniella Silva, organizadora profesional de espacios certificada",
+        width: 1024,
+        height: 1536,
+      },
+      photoAlt: "Daniella Silva, organizadora profesional de espacios certificada",
+      signature: {
+        url: "/firma.png",
+        alt: "Firma de Daniella Silva",
+        width: 800,
+        height: 300,
+      },
+      title: "Hola, soy Daniella",
+      bio:
+        "Organizadora Profesional de Espacios Certificada. Diseñamos personalmente cada hoja para que llegue perfecta para sus hijos.",
+      guaranteeTitle: "Su tranquilidad es nuestra garantía",
+      guaranteeText:
+        "Si existe un error en el diseño aprobado por nosotros, reimprimimos sin costo.",
+      ctaTitle: "¿Listo para empezar?",
+      ctaText: "Escríbanos por WhatsApp y le ayudamos.",
+      ctaButton: "Comencemos su pedido",
     },
     floating: {
       enabled: true,
@@ -225,6 +272,7 @@ export const fallbackContent: SiteContent = {
       title: "Etiquetas escolares personalizadas en Ecuador | Pro Organizer",
       description:
         "Personaliza etiquetas para lápices, cuadernos, termos y loncheras. Elige entre cuatro tamaños, aprueba el diseño antes de imprimir y realiza tu pedido por WhatsApp.",
+      productName: "Etiquetas escolares personalizadas",
       ogImage: null,
       canonical: "https://www.proorganizer.com.ec",
     },
@@ -239,7 +287,7 @@ export const fallbackContent: SiteContent = {
       dims: "0,8 cm alto x 5 cm ancho",
       uses: "Lápices de colores, cubiertos, marcadores delgados, crayones.",
       badge: "",
-      accent: "#FF6B6B",
+      accent: "#de2b22",
       image: null,
     },
     {
@@ -250,7 +298,7 @@ export const fallbackContent: SiteContent = {
       dims: "1,5 cm alto x 4,5 cm ancho",
       uses: "Lápices jumbo, resaltadores, reglas, gomas, sacapuntas, estuches.",
       badge: "",
-      accent: "#F5A524",
+      accent: "#f0913c",
       image: null,
     },
     {
@@ -261,7 +309,7 @@ export const fallbackContent: SiteContent = {
       dims: "2,5 cm alto x 5 cm ancho",
       uses: "Cuadernos, estuches, carpetas, vasos y objetos de uso diario.",
       badge: "",
-      accent: "#36B8A4",
+      accent: "#2e8fd0",
       image: null,
     },
     {
@@ -272,7 +320,7 @@ export const fallbackContent: SiteContent = {
       dims: "5 cm alto x 6,5 cm ancho",
       uses: "Cuadernos, libros, carpetas, termos, loncheras, mochilas.",
       badge: "",
-      accent: "#8B7CF6",
+      accent: "#7b3fa6",
       image: null,
     },
   ],
@@ -357,6 +405,10 @@ export const fallbackContent: SiteContent = {
     { id: "g5", title: "Señor patata", image: labelImage("senor-papa") },
     { id: "g6", title: "Cerdito hucha", image: labelImage("doctor-tocino") },
     { id: "g7", title: "Muñeco de manualidades", image: labelImage("forky") },
+  ],
+  stats: [
+    { id: "stat-1", title: "Familias atendidas", value: "+2.500", icon: "house" },
+    { id: "stat-2", title: "de experiencia en Ecuador", value: "+6 años", icon: "badge" },
   ],
   /**
    * Una objeción distinta por reseña: lavado, pérdidas, entrega y gusto del

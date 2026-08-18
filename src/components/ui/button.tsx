@@ -13,20 +13,21 @@ export const buttonVariants = cva(
   {
     variants: {
       variant: {
-        // El tono oscuro conserva el contraste sin añadir sombra ni resplandor.
+        // Verde de marca con rótulo blanco (5,0:1), como en el material impreso.
         whatsapp:
-          "bg-[var(--c-whatsapp-ink)] text-white shadow-none hover:-translate-y-0.5 hover:brightness-100 active:shadow-none",
+          "bg-[var(--c-whatsapp)] text-white shadow-none hover:-translate-y-0.5 hover:bg-[var(--c-whatsapp-ink)] active:shadow-none",
         primary:
-          "bg-[var(--c-ink)] text-white shadow-[0_10px_24px_-14px_rgba(24,51,107,0.9)] hover:-translate-y-0.5 hover:brightness-110 hover:shadow-[0_16px_32px_-14px_rgba(24,51,107,0.95)]",
+          "bg-[var(--c-navy)] text-white shadow-[0_10px_24px_-14px_rgba(11,74,117,0.9)] hover:-translate-y-0.5 hover:brightness-110 hover:shadow-[0_16px_32px_-14px_rgba(11,74,117,0.95)]",
+        // Segundo botón del par impreso: pastilla blanca con contorno marino.
         lavender:
-          "bg-[var(--c-accent)] text-white shadow-[0_10px_24px_-14px_rgba(139,124,246,0.95)] hover:-translate-y-0.5 hover:brightness-105 hover:shadow-[0_16px_32px_-14px_rgba(139,124,246,0.95)]",
+          "border-2 border-[var(--c-navy)] bg-white text-[var(--c-navy)] hover:-translate-y-0.5 hover:bg-[var(--c-navy)] hover:text-white",
         accent:
-          "bg-[var(--c-accent)] text-white shadow-[0_10px_24px_-14px_rgba(255,107,107,0.95)] hover:-translate-y-0.5 hover:brightness-105",
+          "bg-[var(--c-highlight)] text-white shadow-[0_10px_24px_-14px_rgba(222,43,34,0.95)] hover:-translate-y-0.5 hover:brightness-105",
         outline:
-          "border-2 border-[var(--c-border)] bg-white text-[var(--c-ink)] hover:-translate-y-0.5 hover:border-[var(--c-accent)] hover:bg-[var(--c-tint-accent)]",
+          "border-2 border-[var(--c-navy)] bg-white text-[var(--c-navy)] hover:-translate-y-0.5 hover:bg-[var(--c-navy)] hover:text-white",
         ghost: "text-[var(--c-ink)] hover:bg-[var(--c-tint-accent)]",
         light:
-          "bg-white text-[var(--c-ink)] shadow-[0_10px_24px_-16px_rgba(24,51,107,0.8)] hover:-translate-y-0.5 hover:bg-[var(--c-tint-accent)]",
+          "bg-white text-[var(--c-ink)] shadow-[0_10px_24px_-16px_rgba(11,74,117,0.8)] hover:-translate-y-0.5 hover:bg-[var(--c-tint-accent)]",
       },
       size: {
         sm: "min-h-[44px] px-5 py-2 text-[15px]",

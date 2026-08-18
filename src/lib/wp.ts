@@ -11,7 +11,7 @@ const QUERY = /* GraphQL */ `
   query SiteContent {
     proOrganizer {
       brand {
-        logo ${IMAGE}
+        logo ${IMAGE} footerLogo ${IMAGE}
         logoText
         whatsappNumber
         phone1
@@ -26,9 +26,10 @@ const QUERY = /* GraphQL */ `
       }
       whatsapp {
         msgNav msgHero msgSizes msgDesigns msgCost msgPromos msgFinalCta msgFooter
-        previewNote
+        msgSizeTemplate msgDesignTemplate previewNote
       }
-      header { ctaText navItems }
+      palette { textColor purpleColor pinkColor grayColor greenColor blueColor }
+      header { ctaText shortCtaText }
       hero {
         badge title titleHighlight subtitle bullets
         priceLabel priceValue priceSuffix ctaPrimary ctaSecondary note
@@ -36,15 +37,18 @@ const QUERY = /* GraphQL */ `
         image ${IMAGE}
       }
       trust { eyebrow title items }
-      stats { stat1Value stat1Label stat2Value stat2Label }
-      sizes { eyebrow title subtitle ctaText usesLabel sampleName }
+      sizes { eyebrow title subtitle ctaText selectedLabel orderCtaTemplate usesLabel sampleName }
       usage { title subtitle }
       designs {
-        eyebrow title subtitle ctaText featuredSub featuredNote featuredCta
+        eyebrow title subtitle ctaText selectedCtaTemplate featuredSub featuredNote featuredCta
+      }
+      personalization {
+        title titleHighlight subtitle image ${IMAGE} featureItems
+        guideBadge guideTitle guideText guideCta guideUrl approvalText
       }
       cost {
         eyebrow title subtitle prices closing pricesNote
-        badTitle badItems goodTitle goodItems ctaText
+        badTitle badItems goodTitle goodItems badTabLabel goodTabLabel ctaText
       }
       process { eyebrow title subtitle }
       pricing {
@@ -59,11 +63,15 @@ const QUERY = /* GraphQL */ `
         seasonNote seasonDeadline
       }
       footer {
-        quote col1Title col1Links col2Title col2Links
+        quote socialTitle storeTitle storeText storeCta
         waTitle waCta waText closing copyright legalLinks
       }
+      founder {
+        photo ${IMAGE} photoAlt signature ${IMAGE} title bio
+        guaranteeTitle guaranteeText ctaTitle ctaText ctaButton
+      }
       floating { enabled label mobileText mobileCta }
-      seo { title description ogImage ${IMAGE} canonical }
+      seo { title description productName ogImage ${IMAGE} canonical }
     }
     poSizes(first: 20, where: { orderby: { field: MENU_ORDER, order: ASC } }) {
       nodes { id slug title count dims uses badge accent image ${IMAGE} }
@@ -83,6 +91,9 @@ const QUERY = /* GraphQL */ `
     poGalleryItems(first: 30, where: { orderby: { field: MENU_ORDER, order: ASC } }) {
       nodes { id title image ${IMAGE} }
     }
+    poStats(first: 20, where: { orderby: { field: MENU_ORDER, order: ASC } }) {
+      nodes { id title value icon }
+    }
     poTestimonials(first: 20, where: { orderby: { field: MENU_ORDER, order: ASC } }) {
       nodes { id title city rating text avatar ${IMAGE} }
     }
@@ -91,6 +102,24 @@ const QUERY = /* GraphQL */ `
     }
   }
 `;
+
+const EDITABLE_NODE_QUERY = /* GraphQL */ `
+  query EditableNodeByUri($uri: String!) {
+    nodeByUri(uri: $uri) {
+      __typename
+      ... on ContentNode {
+        databaseId
+        uri
+      }
+    }
+  }
+`;
+
+export type EditableNode = {
+  __typename: string;
+  databaseId: number;
+  uri: string;
+};
 
 type Nodes<T> = { nodes: T[] } | null | undefined;
 
@@ -156,6 +185,7 @@ export async function getSiteContent(): Promise<SiteContent> {
       steps: list(d.poSteps, fallbackContent.steps),
       promos: list(d.poPromos, fallbackContent.promos),
       gallery: list(d.poGalleryItems, fallbackContent.gallery),
+      stats: list(d.poStats, fallbackContent.stats),
       testimonials: list(d.poTestimonials, fallbackContent.testimonials),
       faqs: list(d.poFaqs, fallbackContent.faqs),
     };
@@ -165,5 +195,46 @@ export async function getSiteContent(): Promise<SiteContent> {
       error instanceof Error ? error.message : error,
     );
     return fallbackContent;
+  }
+}
+
+/** Resolución sin caché para el enlace administrativo contextual. */
+export async function getEditableNodeByUri(uri: string): Promise<EditableNode | null> {
+  try {
+    const response = await fetch(ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: EDITABLE_NODE_QUERY, variables: { uri } }),
+      cache: "no-store",
+    });
+    if (!response.ok) return null;
+
+    const body: unknown = await response.json();
+    if (!body || typeof body !== "object" || Array.isArray(body)) return null;
+
+    const data = (body as Record<string, unknown>).data;
+    if (!data || typeof data !== "object" || Array.isArray(data)) return null;
+
+    const node = (data as Record<string, unknown>).nodeByUri;
+    if (!node || typeof node !== "object" || Array.isArray(node)) return null;
+
+    const record = node as Record<string, unknown>;
+    if (
+      typeof record.__typename !== "string" ||
+      typeof record.databaseId !== "number" ||
+      !Number.isInteger(record.databaseId) ||
+      record.databaseId <= 0 ||
+      typeof record.uri !== "string"
+    ) {
+      return null;
+    }
+
+    return {
+      __typename: record.__typename,
+      databaseId: record.databaseId,
+      uri: record.uri,
+    };
+  } catch {
+    return null;
   }
 }

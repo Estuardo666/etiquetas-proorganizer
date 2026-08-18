@@ -1,8 +1,10 @@
+import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Fredoka } from "next/font/google";
 import "./globals.css";
 import { getSiteContent } from "@/lib/wp";
+import { AdminBar, AdminBarLayout } from "@/components/molecules/AdminBar";
 
 const heading = Fredoka({
   subsets: ["latin"],
@@ -46,15 +48,34 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-/**
- * La paleta es parte del sistema de diseño y vive en `globals.css`, no en
- * WordPress: así la landing siempre se ve como el diseño aprobado y no puede
- * romperse desde el admin. WordPress sigue mandando en textos e imágenes.
- */
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const { settings } = await getSiteContent();
+  const palette = settings.palette;
+  /**
+   * Los seis campos de WordPress son los tonos base, no los roles: `--c-ink`,
+   * `--c-accent` y los tintes se derivan de estos en `globals.css`. Escribir
+   * aquí `--c-navy` y no `--c-ink` es lo que hace que cambiar el color de
+   * marca en WordPress mueva también la cabecera, el pie y los botones.
+   *
+   * `pinkColor` es el rojo de marca y `purpleColor` la lavanda de las
+   * carátulas: los nombres vienen del esquema de WordPress y se quedan como
+   * están hasta que se renombren allí.
+   */
+  const paletteStyle = {
+    "--c-navy": palette.textColor,
+    "--c-purple": palette.purpleColor,
+    "--c-red": palette.pinkColor,
+    "--c-gray": palette.grayColor,
+    "--c-green": palette.greenColor,
+    "--c-blue": palette.blueColor,
+  } as CSSProperties;
+
   return (
-    <html lang="es" className={`${heading.variable} ${body.variable}`}>
-      <body>{children}</body>
+    <html lang="es" className={`${heading.variable} ${body.variable}`} style={paletteStyle}>
+      <body>
+        <AdminBar />
+        <AdminBarLayout>{children}</AdminBarLayout>
+      </body>
     </html>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { SectionHeader } from "@/components/ui/section-header";
 import { DecorativeBackground } from "@/components/ui/decor";
 import { PillNav } from "@/components/ui/pill-nav";
@@ -9,6 +9,7 @@ import { DesignsPanel } from "@/components/sections/designs";
 import { GalleryPanel } from "@/components/sections/gallery";
 import { PersonalizationPanel } from "@/components/sections/design-love";
 import type { DesignItem, GalleryItem, Settings } from "@/lib/types";
+import { useHydratedReducedMotion } from "@/lib/use-hydrated-reduced-motion";
 
 /**
  * Diseños, muestras reales y personalización en una sola sección con tabs.
@@ -24,10 +25,10 @@ import type { DesignItem, GalleryItem, Settings } from "@/lib/types";
  */
 type TabId = "disenos" | "galeria" | "personalizacion";
 
-const TABS: Array<{ id: TabId; label: string; tone: "pink" | "purple" | "blue" }> = [
-  { id: "disenos", label: "Categorías", tone: "pink" },
-  { id: "galeria", label: "Muestras reales", tone: "purple" },
-  { id: "personalizacion", label: "Cómo personalizamos", tone: "blue" },
+const TABS: Array<{ id: TabId; label: string; tone: "blue" | "orange" | "purple" }> = [
+  { id: "disenos", label: "Categorías", tone: "blue" },
+  { id: "galeria", label: "Muestras reales", tone: "orange" },
+  { id: "personalizacion", label: "Cómo personalizamos", tone: "purple" },
 ];
 
 export function Showcase({
@@ -41,7 +42,7 @@ export function Showcase({
 }) {
   const { designs: copy } = settings;
   const [active, setActive] = useState<TabId>("disenos");
-  const reduced = useReducedMotion();
+  const reduced = useHydratedReducedMotion();
 
   // Los tabs sin contenido no se pintan: el cliente puede vaciar la galería
   // desde WordPress y un tab vacío es peor que ningún tab.
@@ -80,13 +81,13 @@ export function Showcase({
         id="galeria"
         aria-hidden="true"
         className="absolute top-0"
-        style={{ scrollMarginTop: "calc(var(--header-h) + 24px)" }}
+        style={{ scrollMarginTop: "calc(var(--header-h) + var(--admin-bar-offset) + 24px)" }}
       />
       <span
         id="personalizacion"
         aria-hidden="true"
         className="absolute top-0"
-        style={{ scrollMarginTop: "calc(var(--header-h) + 24px)" }}
+        style={{ scrollMarginTop: "calc(var(--header-h) + var(--admin-bar-offset) + 24px)" }}
       />
 
       <div className="container-page relative z-10">
@@ -124,7 +125,7 @@ export function Showcase({
             ) : current === "galeria" ? (
               <GalleryPanel settings={settings} items={gallery} />
             ) : (
-              <PersonalizationPanel />
+              <PersonalizationPanel settings={settings} />
             )}
           </motion.div>
         </AnimatePresence>

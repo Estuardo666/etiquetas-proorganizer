@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { ImageIcon, Sticker, Type, Video } from "lucide-react";
 import { SecondaryButton } from "@/components/ui/secondary-button";
-import labelSheet from "../../../public/hoja de etiquetas.png";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
 import {
   DecorPop,
@@ -10,26 +9,14 @@ import {
   DecorativeStarFace,
 } from "@/components/ui/decor";
 import { fadeScaleIn } from "@/lib/motion";
+import { pipes } from "@/lib/utils";
+import type { Settings } from "@/lib/types";
 
-const features = [
-  {
-    icon: ImageIcon,
-    title: "Imágenes que les encantan",
-    description: "Incluimos su personaje favorito, el logo de la escuela o una foto.",
-    tone: "bg-[var(--c-pastel-accent)]",
-  },
-  {
-    icon: Sticker,
-    title: "Fondo blanco y adhesivo resistente",
-    description: "Cada diseño se lee con claridad y está hecho para acompañar el uso diario.",
-    tone: "bg-[var(--c-highlight)]",
-  },
-  {
-    icon: Type,
-    title: "Su nombre, siempre visible",
-    description: "Usamos letras oscuras y legibles para encontrar todo de un vistazo.",
-    tone: "bg-[var(--c-pastel-accent)]",
-  },
+const featureIcons = { image: ImageIcon, sticker: Sticker, type: Type } as const;
+const featureTones = [
+  "bg-[var(--c-pastel-accent)]",
+  "bg-[var(--c-highlight)]",
+  "bg-[var(--c-pastel-accent)]",
 ] as const;
 
 /**
@@ -37,7 +24,15 @@ const features = [
  * de `Showcase`, después de elegir categoría y de ver muestras reales —
  * elección → prueba → comprensión.
  */
-export function PersonalizationPanel() {
+export function PersonalizationPanel({ settings }: { settings: Settings }) {
+  const copy = settings.personalization;
+  const features = pipes(copy.featureItems).map(([icon, title, description], index) => ({
+    icon: featureIcons[icon as keyof typeof featureIcons] ?? ImageIcon,
+    title: title ?? "",
+    description: description ?? "",
+    tone: featureTones[index % featureTones.length],
+  }));
+
   return (
     <>
       <DecorPop className="absolute top-[12%] right-[7%] hidden md:block">
@@ -52,25 +47,26 @@ export function PersonalizationPanel() {
             id="personalizacion-title"
             className="h3-display text-balance text-[var(--c-ink)]"
           >
-            Diseñamos sus etiquetas <span className="text-[var(--c-accent-ink)]">con amor</span>
+            {copy.title}{" "}
+            <span className="text-[var(--c-accent-ink)]">{copy.titleHighlight}</span>
           </h3>
           <p className="mx-auto mt-3 max-w-2xl text-[16px] leading-relaxed text-pretty text-[var(--c-muted)]">
-            Cada detalle se adapta para que sus cosas sean fáciles de reconocer y difíciles de
-            perder.
+            {copy.subtitle}
           </p>
         </Reveal>
 
         <div className="mx-auto grid max-w-[1200px] grid-cols-1 items-center gap-x-8 gap-y-7 lg:grid-cols-[minmax(0,0.95fr)_minmax(320px,0.9fr)_minmax(250px,0.58fr)] lg:grid-rows-[auto_auto] xl:gap-x-12">
           <Reveal className="order-1 lg:col-start-1 lg:row-span-2 lg:row-start-1">
             <figure className="design-sheet-frame relative mx-auto aspect-[4/5] w-full max-w-[460px] overflow-hidden lg:max-w-none">
-              <Image
-                src={labelSheet}
-                alt="Hoja de etiquetas personalizadas con nueve diseños y el nombre Sofía R."
-                fill
-                placeholder="blur"
-                sizes="(max-width: 768px) calc(100vw - 48px), (max-width: 1200px) 42vw, 440px"
-                className="design-sheet-image object-cover object-center"
-              />
+              {copy.image?.url ? (
+                <Image
+                  src={copy.image.url}
+                  alt={copy.image.alt}
+                  fill
+                  sizes="(max-width: 768px) calc(100vw - 48px), (max-width: 1200px) 42vw, 440px"
+                  className="design-sheet-image object-cover object-center"
+                />
+              ) : null}
             </figure>
           </Reveal>
 
@@ -122,21 +118,21 @@ export function PersonalizationPanel() {
               </span>
 
               <p className="mx-auto mt-1 w-fit rounded-full bg-[var(--c-accent)] px-4 py-1 text-[12px] font-bold tracking-[0.06em] text-white uppercase">
-                Guía rápida
+                {copy.guideBadge}
               </p>
               <h3 className="mx-auto mt-4 max-w-[12ch] font-[family-name:var(--font-heading)] text-[25px] leading-[1.08] font-semibold text-balance text-[var(--c-ink)] lg:text-[28px]">
-                Mira cómo personalizamos tus etiquetas
+                {copy.guideTitle}
               </h3>
               <p className="mx-auto mt-3 max-w-[24ch] text-[14px] leading-relaxed text-pretty text-[var(--c-muted)]">
-                Del nombre elegido al diseño listo para imprimir.
+                {copy.guideText}
               </p>
 
               <span className="mt-6 flex justify-center">
                 <SecondaryButton
-                  href="#como-funciona"
-                  ariaLabel="Ver el paso a paso para personalizar las etiquetas"
+                  href={copy.guideUrl}
+                  ariaLabel={copy.guideCta}
                 >
-                  Ver el paso a paso
+                  {copy.guideCta}
                 </SecondaryButton>
               </span>
             </div>
@@ -146,7 +142,7 @@ export function PersonalizationPanel() {
             <div className="approval-note relative mx-auto flex max-w-[430px] items-center gap-3 px-5 py-5 sm:px-6">
               <DecorativeStarFace className="shrink-0" size={58} />
               <p className="font-[family-name:var(--font-heading)] text-[18px] leading-snug font-semibold text-balance text-[var(--c-ink)] sm:text-[20px]">
-                Imprimimos tus etiquetas solo cuando apruebas el diseño.
+                {copy.approvalText}
               </p>
             </div>
           </Reveal>

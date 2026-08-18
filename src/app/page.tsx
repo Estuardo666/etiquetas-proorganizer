@@ -1,6 +1,7 @@
 import { getSiteContent } from "@/lib/wp";
 import { OrderProvider } from "@/components/order-provider";
 import { BackToTop, Header, ScrollProgress } from "@/components/sections/header";
+import { NavbarWrapper } from "@/components/organisms/Navbar/NavbarWrapper";
 import { Hero } from "@/components/sections/hero";
 import { TrustBar } from "@/components/sections/trust-bar";
 import { Sizes } from "@/components/sections/sizes";
@@ -8,7 +9,6 @@ import { Showcase } from "@/components/sections/showcase";
 import { Cost } from "@/components/sections/cost";
 import { Process } from "@/components/sections/process";
 import { Pricing } from "@/components/sections/pricing";
-import { Testimonials } from "@/components/sections/testimonials";
 import { Faq } from "@/components/sections/faq";
 import { Founder } from "@/components/sections/founder";
 import { Footer } from "@/components/sections/footer";
@@ -21,7 +21,7 @@ export default async function Page() {
     {
       "@context": "https://schema.org",
       "@type": "Product",
-      name: "Etiquetas escolares personalizadas",
+      name: settings.seo.productName,
       description: settings.seo.description,
       brand: { "@type": "Brand", name: settings.brand.logoText },
       offers: {
@@ -61,18 +61,21 @@ export default async function Page() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <ScrollProgress />
-      <Header settings={settings} />
+      <NavbarWrapper>
+        <Header settings={settings} />
+      </NavbarWrapper>
 
       {/*
         El orden sigue la decisión de compra, no el catálogo: utilidad
         (tamaños) → deseo (diseños y muestras) → pérdida (costo) → ahorro
         (promos) → operativa (cómo funciona) → prueba → objeciones → cierre.
-        Si cambias este orden, actualiza `header.navItems` en fallback.ts.
+        La navegación que refleja este orden vive en `site-config.ts` y no se
+        expone al cliente en WordPress.
       */}
       <main>
         <Hero settings={settings} />
         {/* La franja de beneficios ya incluye las cifras (StatsRow). */}
-        <TrustBar settings={settings} />
+        <TrustBar settings={settings} stats={content.stats} />
         {/* La sección de tamaños incluye la franja de usos (UsageStrip). */}
         <Sizes settings={settings} sizes={content.sizes} usages={content.usages} />
         {/* Diseños, muestras reales y personalización comparten sección: son
@@ -81,10 +84,9 @@ export default async function Page() {
         <Cost settings={settings} />
         <Pricing settings={settings} promos={content.promos} />
         <Process settings={settings} steps={content.steps} />
-        <Testimonials settings={settings} testimonials={content.testimonials} />
         <Faq settings={settings} faqs={content.faqs} />
         {/* Cierre humano: quién firma el trabajo, garantía y arranque por chat. */}
-        <Founder />
+        <Founder settings={settings} />
       </main>
 
       <Footer settings={settings} />

@@ -9,13 +9,15 @@
 import { cn, slugify } from "@/lib/utils";
 
 /**
- * Escala de las ilustraciones. No son colores nuevos: son los cuatro roles de
- * la paleta a varias fuerzas. Los personajes necesitan profundidad interna
- * (contorno, relleno, sombra, brillo), y esa profundidad se consigue variando
- * la fuerza de un mismo tono, no sumando tonos.
+ * Escala de las ilustraciones. No son colores nuevos: son los tonos de la
+ * paleta de marca a varias fuerzas. Los personajes necesitan profundidad
+ * interna (contorno, relleno, sombra, brillo), y esa profundidad se consigue
+ * variando la fuerza de un mismo tono, no sumando tonos.
  *
- * El verde no existe en la paleta: lo que antes era menta se resuelve con la
- * tinta diluida, igual que el resto de material frio.
+ * Los cinco iconos de beneficio sí llevan color propio (agua azul, escudo
+ * verde, corazón rojo...): son cinco cosas distintas en una fila y el color es
+ * lo que las separa de un vistazo. El contorno sigue siendo azul marino en
+ * todos, que es lo que los mantiene como una familia.
  */
 const C = {
   ink: "var(--c-ink)",
@@ -29,6 +31,11 @@ const C = {
   warmDeep: "var(--c-highlight-ink)",
   warmSoft: "var(--c-pastel-highlight)",
   warmFaint: "var(--c-tint-highlight)",
+  water: "var(--c-blue)",
+  waterFaint: "var(--c-tint-positive)",
+  /** Verde de marca aclarado: sobre él va un check blanco, no texto. */
+  safe: "color-mix(in srgb, var(--c-green) 72%, #ffffff)",
+  sun: "var(--c-star)",
 } as const;
 
 type ArtProps = { className?: string; size?: number };
@@ -233,7 +240,7 @@ export function ArtWater({ className, size = 40 }: ArtProps) {
     <svg viewBox="0 0 48 48" width={size} height={size} className={cn(svgBase, className)} aria-hidden="true">
       <path
         d="M24 5c8 10 13 16 13 22.5A13 13 0 0 1 11 27.5C11 21 16 15 24 5Z"
-        fill={C.accent}
+        fill={C.water}
         stroke={C.ink}
         strokeWidth="1.8"
         strokeLinejoin="round"
@@ -246,9 +253,9 @@ export function ArtWater({ className, size = 40 }: ArtProps) {
 export function ArtWasher({ className, size = 40 }: ArtProps) {
   return (
     <svg viewBox="0 0 48 48" width={size} height={size} className={cn(svgBase, className)} aria-hidden="true">
-      <rect x="8" y="6" width="32" height="36" rx="8" fill={C.warm} stroke={C.ink} strokeWidth="1.8" />
+      <rect x="8" y="6" width="32" height="36" rx="8" fill={C.waterFaint} stroke={C.ink} strokeWidth="1.8" />
       <circle cx="24" cy="27" r="10" fill="#fff" />
-      <circle cx="24" cy="27" r="6" fill={C.accent} />
+      <circle cx="24" cy="27" r="6" fill={C.water} />
       <circle cx="14" cy="13" r="2.2" fill="#fff" />
       <circle cx="21" cy="13" r="2.2" fill="#fff" />
     </svg>
@@ -260,7 +267,7 @@ export function ArtShield({ className, size = 40 }: ArtProps) {
     <svg viewBox="0 0 48 48" width={size} height={size} className={cn(svgBase, className)} aria-hidden="true">
       <path
         d="M24 4 40 10v13c0 10-7 18-16 21-9-3-16-11-16-21V10Z"
-        fill={C.accent}
+        fill={C.safe}
         stroke={C.ink}
         strokeWidth="1.8"
         strokeLinejoin="round"
@@ -287,7 +294,7 @@ export function ArtHeart({ className, size = 40 }: ArtProps) {
 export function ArtSmile({ className, size = 40 }: ArtProps) {
   return (
     <svg viewBox="0 0 48 48" width={size} height={size} className={cn(svgBase, className)} aria-hidden="true">
-      <circle cx="24" cy="24" r="19" fill={C.warm} stroke={C.ink} strokeWidth="1.8" />
+      <circle cx="24" cy="24" r="19" fill={C.sun} stroke={C.ink} strokeWidth="1.8" />
       <circle cx="18" cy="20" r="2.6" fill={C.ink} />
       <circle cx="30" cy="20" r="2.6" fill={C.ink} />
       <path d="M16 28c3.4 4.6 12.6 4.6 16 0" stroke={C.ink} strokeWidth="3" strokeLinecap="round" fill="none" />
@@ -316,6 +323,34 @@ export function ArtEye({ className, size = 40 }: ArtProps) {
   );
 }
 
+export function ArtLeaf({ className, size = 40 }: ArtProps) {
+  return (
+    <svg viewBox="0 0 48 48" width={size} height={size} className={cn(svgBase, className)} aria-hidden="true">
+      <path d="M40 7C22 8 10 17 10 30c0 7 5 11 11 11 13 0 20-14 19-34Z" fill={C.accentSoft} stroke={C.ink} strokeWidth="1.8" strokeLinejoin="round" />
+      <path d="M13 37c7-9 14-15 23-23M22 28l-1-9M28 22l8 1" fill="none" stroke={C.ink} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function ArtBolt({ className, size = 40 }: ArtProps) {
+  return (
+    <svg viewBox="0 0 48 48" width={size} height={size} className={cn(svgBase, className)} aria-hidden="true">
+      <path d="M27 4 10 27h12l-2 17 18-25H26Z" fill={C.warm} stroke={C.ink} strokeWidth="1.8" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function ArtChat({ className, size = 40 }: ArtProps) {
+  return (
+    <svg viewBox="0 0 48 48" width={size} height={size} className={cn(svgBase, className)} aria-hidden="true">
+      <path d="M7 9h34v25H23l-10 8v-8H7Z" fill={C.accentSoft} stroke={C.ink} strokeWidth="1.8" strokeLinejoin="round" />
+      <circle cx="17" cy="22" r="2.3" fill={C.ink} />
+      <circle cx="24" cy="22" r="2.3" fill={C.ink} />
+      <circle cx="31" cy="22" r="2.3" fill={C.ink} />
+    </svg>
+  );
+}
+
 const benefitArt: Record<string, (props: ArtProps) => React.ReactElement> = {
   drop: ArtWater,
   washer: ArtWasher,
@@ -324,6 +359,9 @@ const benefitArt: Record<string, (props: ArtProps) => React.ReactElement> = {
   smile: ArtSmile,
   truck: ArtTruck,
   eye: ArtEye,
+  leaf: ArtLeaf,
+  bolt: ArtBolt,
+  chat: ArtChat,
   badge: ArtShield,
   sparkles: ArtSmile,
   star: ArtSmile,

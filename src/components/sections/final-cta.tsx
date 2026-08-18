@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { Icon } from "@/components/ui/icon";
 import { Reveal } from "@/components/ui/reveal";
 import {
@@ -10,10 +10,11 @@ import {
 } from "@/components/ui/decor";
 import { pipes } from "@/lib/utils";
 import type { Settings } from "@/lib/types";
+import { useHydratedReducedMotion } from "@/lib/use-hydrated-reduced-motion";
 
 export function FinalCta({ settings }: { settings: Settings }) {
   const cta = settings.finalCta;
-  const shouldReduceMotion = useReducedMotion();
+  const shouldReduceMotion = useHydratedReducedMotion();
   const guarantees = pipes(cta.guarantees);
 
   return (

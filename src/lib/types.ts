@@ -13,6 +13,7 @@ export type WpImage = {
 export type Settings = {
   brand: {
     logo: WpImage;
+    footerLogo: WpImage;
     logoText: string;
     whatsappNumber: string;
     phone1: string;
@@ -34,9 +35,19 @@ export type Settings = {
     msgPromos: string;
     msgFinalCta: string;
     msgFooter: string;
+    msgSizeTemplate: string;
+    msgDesignTemplate: string;
     previewNote: string;
   };
-  header: { ctaText: string; navItems: string };
+  palette: {
+    textColor: string;
+    purpleColor: string;
+    pinkColor: string;
+    grayColor: string;
+    greenColor: string;
+    blueColor: string;
+  };
+  header: { ctaText: string; shortCtaText: string };
   hero: {
     badge: string;
     title: string;
@@ -55,12 +66,13 @@ export type Settings = {
     image: WpImage;
   };
   trust: { eyebrow: string; title: string; items: string };
-  stats: { stat1Value: string; stat1Label: string; stat2Value: string; stat2Label: string };
   sizes: {
     eyebrow: string;
     title: string;
     subtitle: string;
     ctaText: string;
+    selectedLabel: string;
+    orderCtaTemplate: string;
     usesLabel: string;
     sampleName: string;
   };
@@ -70,9 +82,23 @@ export type Settings = {
     title: string;
     subtitle: string;
     ctaText: string;
+    selectedCtaTemplate: string;
     featuredSub: string;
     featuredNote: string;
     featuredCta: string;
+  };
+  personalization: {
+    title: string;
+    titleHighlight: string;
+    subtitle: string;
+    image: WpImage;
+    featureItems: string;
+    guideBadge: string;
+    guideTitle: string;
+    guideText: string;
+    guideCta: string;
+    guideUrl: string;
+    approvalText: string;
   };
   cost: {
     eyebrow: string;
@@ -85,6 +111,8 @@ export type Settings = {
     badItems: string;
     goodTitle: string;
     goodItems: string;
+    badTabLabel: string;
+    goodTabLabel: string;
     ctaText: string;
   };
   process: { eyebrow: string; title: string; subtitle: string };
@@ -115,10 +143,10 @@ export type Settings = {
   };
   footer: {
     quote: string;
-    col1Title: string;
-    col1Links: string;
-    col2Title: string;
-    col2Links: string;
+    socialTitle: string;
+    storeTitle: string;
+    storeText: string;
+    storeCta: string;
     waTitle: string;
     waCta: string;
     waText: string;
@@ -126,8 +154,26 @@ export type Settings = {
     copyright: string;
     legalLinks: string;
   };
+  founder: {
+    photo: WpImage;
+    photoAlt: string;
+    signature: WpImage;
+    title: string;
+    bio: string;
+    guaranteeTitle: string;
+    guaranteeText: string;
+    ctaTitle: string;
+    ctaText: string;
+    ctaButton: string;
+  };
   floating: { enabled: boolean; label: string; mobileText: string; mobileCta: string };
-  seo: { title: string; description: string; ogImage: WpImage; canonical: string };
+  seo: {
+    title: string;
+    description: string;
+    productName: string;
+    ogImage: WpImage;
+    canonical: string;
+  };
 };
 
 export type SizeItem = {
@@ -154,6 +200,7 @@ export type PromoItem = {
   featured: boolean;
 };
 export type GalleryItem = { id: string; title: string; image: WpImage };
+export type StatItem = { id: string; title: string; value: string; icon: string };
 export type TestimonialItem = {
   id: string;
   title: string;
@@ -172,6 +219,7 @@ export type SiteContent = {
   steps: StepItem[];
   promos: PromoItem[];
   gallery: GalleryItem[];
+  stats: StatItem[];
   testimonials: TestimonialItem[];
   faqs: FaqItem[];
 };

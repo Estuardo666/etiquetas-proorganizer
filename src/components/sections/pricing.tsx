@@ -8,7 +8,6 @@ import { ArtGift, ArtSheets, Mascot } from "@/components/ui/illustrations";
 import { WhatsAppButton } from "@/components/ui/whatsapp-button";
 import { OrderNote } from "@/components/ui/order-note";
 import { cardHover, fadeScaleIn, viewportOnce } from "@/lib/motion";
-import { cn } from "@/lib/utils";
 import type { PromoItem, Settings } from "@/lib/types";
 
 const promoArt = [ArtSheets, ArtGift];
@@ -64,23 +63,26 @@ export function Pricing({ settings, promos }: { settings: Settings; promos: Prom
             >
               {/* Precio base ------------------------------------------- */}
               <RevealItem variants={fadeScaleIn} className="relative flex">
+                {/* Cifra sobre azul marino, como los recuadros de precio del
+                    material impreso: es el único bloque de la sección que se
+                    lee de lejos y el color lo separa de las promociones. */}
                 <div
                   className="card-base relative flex h-full w-full flex-col items-center justify-center border-white px-5 py-6 text-center"
-                  style={{ background: "var(--c-pink)" }}
+                  style={{ background: "var(--c-navy)" }}
                 >
-                  <Sticker label={pricing.priceSticker} color="var(--c-ink)" />
-                  <p className="font-[family-name:var(--font-heading)] text-[19px] leading-none font-medium text-[var(--c-ink)]">
+                  <Sticker label={pricing.priceSticker} color="var(--c-highlight)" />
+                  <p className="font-[family-name:var(--font-heading)] text-[19px] leading-none font-medium text-white">
                     {pricing.priceTitle}
                   </p>
                   <p className="mt-2 flex items-end justify-center gap-2">
-                    <span className="font-[family-name:var(--font-heading)] text-[52px] leading-none font-semibold text-[var(--c-ink)]">
+                    <span className="font-[family-name:var(--font-heading)] text-[52px] leading-none font-semibold text-white">
                       {pricing.priceValue}
                     </span>
-                    <span className="pb-1.5 text-[15px] font-bold text-[var(--c-ink)]">
+                    <span className="pb-1.5 text-[15px] font-bold text-white">
                       {pricing.priceSuffix}
                     </span>
                   </p>
-                  <p className="mt-2 text-[13px] text-[var(--c-ink)]">{pricing.priceSub}</p>
+                  <p className="mt-2 text-[13px] text-white/90">{pricing.priceSub}</p>
                 </div>
               </RevealItem>
 
@@ -95,15 +97,9 @@ export function Pricing({ settings, promos }: { settings: Settings; promos: Prom
                       animate="rest"
                       whileHover="hover"
                       variants={cardHover}
-                      className="card-base relative flex h-full w-full flex-col items-center justify-center border-white px-5 py-6 text-center"
-                      style={{
-                        background: index % 2 === 0 ? "var(--c-purple)" : "var(--c-blue)",
-                      }}
+                      className="card-base relative flex h-full w-full flex-col items-center justify-center border-white bg-white px-5 py-6 text-center"
                     >
-                      <Sticker
-                        label={promo.title}
-                        color="var(--c-accent-ink)"
-                      />
+                      <Sticker label={promo.title} color="var(--c-navy)" />
 
                       <span className="card-art absolute top-3 right-3 opacity-90">
                         <Art size={44} />
@@ -116,12 +112,9 @@ export function Pricing({ settings, promos }: { settings: Settings; promos: Prom
                       ) : null}
 
                       <p
-                        className={cn(
-                          "mt-2 font-[family-name:var(--font-heading)] text-[38px] leading-none font-semibold",
-                          promo.featured
-                            ? "text-[var(--c-accent-ink)]"
-                            : "text-[var(--c-accent-ink)]",
-                        )}
+                        // La cifra de la promoción es lo único en rojo dentro
+                        // de la tarjeta: el resto va en azul marino.
+                        className="mt-2 font-[family-name:var(--font-heading)] text-[38px] leading-none font-semibold text-[var(--c-highlight-ink)]"
                       >
                         {promo.highlight}
                       </p>
@@ -139,7 +132,7 @@ export function Pricing({ settings, promos }: { settings: Settings; promos: Prom
               <WhatsAppButton
                 source="promos"
                 label={pricing.ctaText}
-                ariaLabel="Escribir por WhatsApp para aprovechar la promo de 4ta hoja gratis"
+                ariaLabel={pricing.ctaText}
               />
               <OrderNote text={settings.whatsapp.previewNote} />
               {pricing.note ? (

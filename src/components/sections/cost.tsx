@@ -2,28 +2,12 @@
 
 import { useState } from "react";
 import { CheckCircle2, XCircle } from "lucide-react";
-import { SectionHeader } from "@/components/ui/section-header";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
 import { DecorativeBackground } from "@/components/ui/decor";
-import { ArtSheets, UsageArt } from "@/components/ui/illustrations";
 import { WhatsAppButton } from "@/components/ui/whatsapp-button";
 import { fadeScaleIn } from "@/lib/motion";
-import { cn, lines, pipes } from "@/lib/utils";
+import { cn, lines } from "@/lib/utils";
 import type { Settings } from "@/lib/types";
-
-/**
- * El circulo de las tres perdidas va en neutro y solo el nuestro se colorea:
- * el contraste *es* el argumento de la seccion, y cuatro pasteles distintos lo
- * borraban.
- */
-const lossTint = "var(--c-tint-ink)";
-const oursTint = "var(--c-tint-accent)";
-
-/** Objeto ilustrado de cada cifra. Reusa las piezas de la fila de usos. */
-function PriceArt({ art }: { art: string }) {
-  if (art === "sheet") return <ArtSheets size={38} />;
-  return <UsageArt title={art === "bottle" ? "Termo" : art === "shirt" ? "Ropa" : "Lonchera"} size={38} />;
-}
 
 function ComparisonFace({ happy }: { happy: boolean }) {
   return (
@@ -45,20 +29,6 @@ function ComparisonFace({ happy }: { happy: boolean }) {
 export function Cost({ settings }: { settings: Settings }) {
   const [compare, setCompare] = useState(0);
   const { cost } = settings;
-  const title = cost.title.includes("Un termo perdido")
-    ? cost.title.replace(" cuesta más que ", " cuesta\nmás que ")
-    : cost.title;
-
-  // Formato del campo: dibujo|precio|texto y, en la nuestra, |nuestro al final.
-  const prices = pipes(cost.prices)
-    .filter(([, value]) => Boolean(value))
-    .map(([art, value, label, flag], index) => ({
-      id: `${art}-${index}`,
-      art,
-      value,
-      label: label ?? "",
-      ours: (flag ?? "").toLowerCase() === "nuestro",
-    }));
 
   const columns = [
     { title: cost.badTitle, items: lines(cost.badItems), good: false },
@@ -70,75 +40,15 @@ export function Cost({ settings }: { settings: Settings }) {
       <DecorativeBackground variant="testimonials" />
 
       <div className="container-page relative z-10">
-        <SectionHeader
-          eyebrow={cost.eyebrow}
-          eyebrowIcon="shield"
-          title={title}
-          titleClassName="whitespace-pre-line"
-          subtitle={cost.subtitle}
-        />
-
-        {/* Bloque A — lo que cuesta reponer ---------------------------- */}
-        <RevealGroup className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-5" gap={0.05}>
-          {prices.map((price, index) => (
-            <RevealItem key={price.id} variants={fadeScaleIn}>
-              <div
-                className={cn(
-                  "card-base flex h-full flex-col items-center px-4 pt-6 pb-5 text-center",
-                  price.ours && "border-[var(--c-accent)] bg-white",
-                )}
-                style={{ boxShadow: "none" }}
-              >
-                <span
-                  className="card-art mb-3 grid size-[58px] place-items-center rounded-full"
-                  style={{ background: price.ours ? oursTint : lossTint }}
-                >
-                  <PriceArt art={price.art} />
-                </span>
-                <p
-                  className={cn(
-                    "font-[family-name:var(--font-heading)] text-[30px] leading-none font-semibold",
-                    price.ours ? "text-[var(--c-accent-ink)]" : "text-[var(--c-muted)]",
-                  )}
-                >
-                  {price.value}
-                </p>
-                <p
-                  className={cn(
-                    "mt-1.5 text-[13.5px] leading-snug text-balance",
-                    price.ours
-                      ? "font-extrabold text-[var(--c-ink)]"
-                      : "font-semibold text-[var(--c-muted)]",
-                  )}
-                >
-                  {price.label}
-                </p>
-              </div>
-            </RevealItem>
-          ))}
-        </RevealGroup>
-
-        <Reveal className="mt-5 text-center">
-          {cost.closing ? (
-            <p className="font-[family-name:var(--font-heading)] text-[19px] leading-snug font-semibold text-balance text-[var(--c-ink)]">
-              {cost.closing}
-            </p>
-          ) : null}
-          {cost.pricesNote ? (
-            <p className="mt-1 text-[12.5px] text-[var(--c-muted)]">{cost.pricesNote} 🇪🇨</p>
-          ) : null}
-        </Reveal>
-
-        {/* Bloque B — contra el marcador permanente -------------------- */}
         {/*
           Movil: un panel a la vez con un switch. La comparacion necesita verse
           junta, pero apilada deja de ser comparacion: son dos listas separadas
           por media pantalla de scroll. Desde `md` vuelven lado a lado.
         */}
-        <div className="mt-10 flex justify-center md:hidden">
+        <div className="flex justify-center md:hidden">
           <div
             role="group"
-            aria-label="Comparar marcador y etiquetas"
+            aria-label={`${cost.badTabLabel} / ${cost.goodTabLabel}`}
             className="inline-flex rounded-full border border-[var(--c-border)] bg-white p-1"
           >
             {columns.map((column, index) => (
@@ -154,14 +64,14 @@ export function Cost({ settings }: { settings: Settings }) {
                     : "text-[var(--c-muted)]",
                 )}
               >
-                {column.good ? "Con etiquetas" : "Con marcador"}
+                {column.good ? cost.goodTabLabel : cost.badTabLabel}
               </button>
             ))}
           </div>
         </div>
 
         <RevealGroup
-          className="comparison-pair mx-auto mt-5 grid max-w-[844px] gap-4 md:mt-10 md:grid-cols-2 lg:gap-5"
+          className="comparison-pair mx-auto mt-5 grid max-w-[844px] gap-4 md:mt-0 md:grid-cols-2 lg:gap-5"
           gap={0.06}
         >
           {columns.map((column, index) => (
@@ -174,7 +84,7 @@ export function Cost({ settings }: { settings: Settings }) {
                 className={cn(
                   "comparison-card relative h-full rounded-[24px] border-2 px-5 py-6",
                   column.good
-                    ? "comparison-card--good border-[var(--c-highlight)] bg-[var(--c-highlight)]"
+                    ? "comparison-card--good border-[var(--c-highlight)] bg-white"
                     : "comparison-card--bad border-[var(--c-border)] bg-[var(--c-tint-ink)]",
                 )}
               >
@@ -223,7 +133,7 @@ export function Cost({ settings }: { settings: Settings }) {
           <WhatsAppButton
             source="cost"
             label={cost.ctaText}
-            ariaLabel="Escribir por WhatsApp para etiquetar las cosas del colegio"
+            ariaLabel={cost.ctaText}
           />
         </Reveal>
       </div>

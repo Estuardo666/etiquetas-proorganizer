@@ -1,9 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useHydratedReducedMotion } from "@/lib/use-hydrated-reduced-motion";
 
 /**
  * Floating Pill Navigation — reconstrucción del componente de Framer
@@ -29,13 +30,19 @@ import { cn } from "@/lib/utils";
 export type PillNavItem = {
   id: string;
   label: string;
-  tone?: "pink" | "purple" | "blue";
+  tone?: "blue" | "orange" | "purple";
 };
 
+/**
+ * Los tres colores de tarjeta de la marca, en el mismo orden que la portada y
+ * en su versión diluida: el rótulo de la pestaña va en azul marino y sobre el
+ * azul pleno se queda en 2,4:1. El estado activo lo marca el contorno, no la
+ * saturación.
+ */
 const toneClass = {
-  pink: "bg-[var(--c-pink)]",
-  purple: "bg-[var(--c-purple)]",
-  blue: "bg-[var(--c-blue)]",
+  blue: "bg-[var(--c-tint-positive)]",
+  orange: "bg-[var(--c-tint-warm)]",
+  purple: "bg-[var(--c-tint-purple)]",
 } as const;
 
 export function PillNav({
@@ -58,7 +65,7 @@ export function PillNav({
   const navRef = useRef<HTMLDivElement>(null);
   const itemRef = useRef<HTMLButtonElement>(null);
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
-  const reduced = useReducedMotion();
+  const reduced = useHydratedReducedMotion();
 
   // Radios calculados a partir del alto real, como en el original: así la
   // píldora sigue siendo un óvalo perfecto aunque cambie el tamaño de letra.
@@ -195,7 +202,7 @@ export function PillNav({
               onKeyDown={(event) => onKeyDown(event, index)}
               className={cn(
                 "focus-ring relative z-[1] min-h-[44px] w-[210px] shrink-0 rounded-full px-[22px] text-[14.5px] font-bold whitespace-nowrap text-[var(--c-ink)] transition-[transform,filter] duration-200 active:scale-[0.97]",
-                toneClass[item.tone ?? "pink"],
+                toneClass[item.tone ?? "blue"],
                 !selected && "hover:brightness-[0.96]",
               )}
             >

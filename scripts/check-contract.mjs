@@ -7,9 +7,7 @@
  */
 import { readFileSync } from "node:fs";
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-
-const ENDPOINT = process.env.WP_GRAPHQL_URL ?? "https://etiquetas-escolares.local/graphql";
+const ENDPOINT = process.env.WP_GRAPHQL_URL ?? "http://etiquetas-escolares.local/graphql";
 
 /** Campos que registra nuestro plugin en cada CPT (los heredados de WPGraphQL se ignoran). */
 const CPTS = {
@@ -19,12 +17,38 @@ const CPTS = {
   poSteps: { type: "PoStep", fields: ["desc", "icon"] },
   poPromos: { type: "PoPromo", fields: ["pre", "highlight", "post", "featured"] },
   poGalleryItems: { type: "PoGalleryItem", fields: ["image"] },
+  poStats: { type: "PoStat", fields: ["value", "icon"] },
   poTestimonials: { type: "PoTestimonial", fields: ["city", "rating", "text", "avatar"] },
   poFaqs: { type: "PoFaq", fields: ["answer"] },
 };
 
 const problems = [];
 const note = (msg) => problems.push(msg);
+
+async function graphql(query, purpose) {
+  const response = await fetch(ENDPOINT, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ query }),
+  });
+  const body = await response.text();
+  const contentType = response.headers.get("content-type") ?? "";
+
+  if (!response.ok || !contentType.includes("application/json")) {
+    const preview = body.replace(/\s+/g, " ").slice(0, 160);
+    console.error(
+      `WPGraphQL no respondió JSON al intentar ${purpose}: HTTP ${response.status} (${contentType || "sin Content-Type"}).\n${preview}`,
+    );
+    process.exit(1);
+  }
+
+  try {
+    return JSON.parse(body);
+  } catch (error) {
+    console.error(`WPGraphQL devolvió JSON inválido al intentar ${purpose}:`, error.message);
+    process.exit(1);
+  }
+}
 
 /** Parser mínimo de selecciones GraphQL: devuelve { campo: subárbol | null }. */
 function parseSelection(source) {
@@ -86,12 +110,10 @@ function parseSelection(source) {
 }
 
 // --- Esquema real de WordPress -------------------------------------------
-const res = await fetch(ENDPOINT, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ query: "{ __schema { types { name fields { name } } } }" }),
-});
-const json = await res.json();
+const json = await graphql(
+  "{ __schema { types { name fields { name } } } }",
+  "introspeccionar el esquema",
+);
 if (json.errors) {
   console.error("No se pudo introspeccionar:", json.errors[0].message);
   process.exit(1);
@@ -143,6 +165,22 @@ for (const group of Object.keys(askedSettings)) {
   if (!groups.includes(group)) note(`[consulta] el grupo "${group}" no existe en WordPress`);
 }
 
+// La navegación pertenece a la estructura de la landing. El cliente puede
+// editar el contenido de las secciones, pero no crear enlaces rotos ni cambiar
+// su orden desde el CMS.
+const protectedNavigationFields = {
+  header: ["navItems"],
+  footer: ["col1Title", "col1Links", "col2Title", "col2Links"],
+};
+for (const [group, fields] of Object.entries(protectedNavigationFields)) {
+  const typeName = `ProorgSettings${group[0].toUpperCase()}${group.slice(1)}`;
+  const wpFields = schemaTypes.get(typeName) ?? [];
+  for (const field of fields) {
+    if (wpFields.includes(field)) note(`[navegación] ${group}.${field} no debe ser editable en WordPress`);
+    if (field in (askedSettings[group] ?? {})) note(`[navegación] ${group}.${field} no debe consultarse`);
+  }
+}
+
 // --- 2) Listados (CPT) -----------------------------------------------------
 for (const [plural, { type, fields }] of Object.entries(CPTS)) {
   const wpFields = schemaTypes.get(type);
@@ -166,12 +204,7 @@ for (const [plural, { type, fields }] of Object.entries(CPTS)) {
 }
 
 // --- 3) La consulta real debe ejecutarse y traer datos ---------------------
-const run = await fetch(ENDPOINT, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ query: filledQuery }),
-});
-const result = await run.json();
+const result = await graphql(filledQuery, "ejecutar la consulta de la landing");
 if (result.errors) {
   for (const error of result.errors) note(`[ejecución] ${error.message}`);
 } else {

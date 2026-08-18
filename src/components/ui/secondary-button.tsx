@@ -3,15 +3,16 @@ import { cn } from "@/lib/utils";
 
 /**
  * Botón secundario: mismo componente y misma animación que el principal, un
- * escalón por debajo en tamaño y en el morado de la paleta en vez del verde.
+ * escalón por debajo en tamaño y en pastilla blanca con contorno azul marino
+ * en vez del verde — el segundo botón del par que usa el material impreso.
  *
  * La jerarquía la marcan el tamaño y el color, no la forma. Dos formas
  * distintas (una píldora sólida y un enlace subrayado, por ejemplo) obligan a
  * leer para saber cuál es la acción importante; dos píldoras del mismo estilo
  * con distinto peso se ordenan de un vistazo.
  *
- * Texto en gris oscuro sobre morado (5,6:1) y blanco sobre gris oscuro al
- * hacer hover (14,8:1).
+ * Texto azul marino sobre blanco (9,0:1) y blanco sobre azul marino al hacer
+ * hover (9,0:1).
  */
 export function SecondaryButton({
   children,
@@ -38,9 +39,10 @@ export function SecondaryButton({
       onClick={onClick}
       ariaLabel={ariaLabel}
       size="xs"
-      background="var(--c-accent)"
-      overlayColor="var(--c-ink)"
-      textColor="var(--c-ink)"
+      background="#ffffff"
+      overlayColor="var(--c-navy)"
+      borderColor="var(--c-navy)"
+      textColor="var(--c-navy)"
       secondTextColor="#ffffff"
       // Sin pulso: el rebote es el gesto del CTA principal y repetirlo en el
       // secundario iguala dos cosas que no tienen el mismo peso.

@@ -18,7 +18,6 @@ const SECTION_SOURCE: Array<[string, WaSource]> = [
   ["costo", "cost"],
   ["promociones", "promos"],
   ["como-funciona", "finalCta"],
-  ["testimonios", "finalCta"],
   ["preguntas-frecuentes", "finalCta"],
 ];
 

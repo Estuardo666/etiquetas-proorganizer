@@ -8,7 +8,7 @@ import { Media } from "@/components/ui/media";
 import { WhatsAppButton } from "@/components/ui/whatsapp-button";
 import { useOrder } from "@/components/order-provider";
 import { fadeScaleIn } from "@/lib/motion";
-import { waMessageForDesign } from "@/lib/site-config";
+import { fillMessageTemplate, waMessageForDesign } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
 import type { DesignItem, Settings } from "@/lib/types";
 
@@ -190,8 +190,16 @@ export function DesignsPanel({ settings, designs }: { settings: Settings; design
           <WhatsAppButton
             source="designs"
             variant="inline"
-            message={selectedDesign ? waMessageForDesign(selectedDesign) : undefined}
-            label={selectedDesign ? `Pedir diseño ${selectedDesign}` : copy.ctaText}
+            message={
+              selectedDesign
+                ? waMessageForDesign(settings.whatsapp.msgDesignTemplate, selectedDesign)
+                : undefined
+            }
+            label={
+              selectedDesign
+                ? fillMessageTemplate(copy.selectedCtaTemplate, { title: selectedDesign })
+                : copy.ctaText
+            }
             ariaLabel={
               selectedDesign
                 ? `Pedir por WhatsApp etiquetas con diseño de ${selectedDesign}`

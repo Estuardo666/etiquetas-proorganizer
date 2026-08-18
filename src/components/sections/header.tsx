@@ -1,18 +1,20 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import {
   AnimatePresence,
   LayoutGroup,
   motion,
   useMotionValue,
-  useReducedMotion,
   useSpring,
 } from "framer-motion";
 import { ArrowUp, Menu, X } from "lucide-react";
 import { WhatsAppButton } from "@/components/ui/whatsapp-button";
-import { brandParts, cn, pipes } from "@/lib/utils";
+import { sectionNavigation } from "@/lib/site-config";
+import { brandParts, cn } from "@/lib/utils";
+import { useAdminBarVisible } from "@/lib/admin-bar-store";
+import { useHydratedReducedMotion } from "@/lib/use-hydrated-reduced-motion";
 import type { Settings } from "@/lib/types";
 
 /**
@@ -22,6 +24,7 @@ import type { Settings } from "@/lib/types";
  * `useScroll` no ve este scroller y la barra se quedaba a cero toda la página.
  */
 export function ScrollProgress() {
+  const adminBarVisible = useAdminBarVisible();
   const progress = useMotionValue(0);
   const scaleX = useSpring(progress, {
     stiffness: 120,
@@ -46,8 +49,12 @@ export function ScrollProgress() {
   return (
     <motion.div
       aria-hidden="true"
-      className="fixed inset-x-0 top-0 z-[60] h-[3px] origin-left"
-      style={{ scaleX, background: "var(--c-accent)" }}
+      className="fixed inset-x-0 z-[60] h-[3px] origin-left transition-[top] duration-200 motion-reduce:transition-none"
+      style={{
+        scaleX,
+        background: "var(--c-accent)",
+        top: adminBarVisible ? "var(--admin-bar-height)" : 0,
+      }}
     />
   );
 }
@@ -92,23 +99,16 @@ export function BackToTop() {
 }
 
 export function Header({ settings }: { settings: Settings }) {
-  const nav = useMemo(
-    () =>
-      pipes(settings.header.navItems).map(([label, anchor]) => ({
-        label,
-        anchor,
-      })),
-    [settings.header.navItems],
-  );
+  const nav = sectionNavigation;
   const brandWords = brandParts(settings.brand.logoText);
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const [active, setActive] = useState(nav[0]?.anchor ?? "");
+  const [active, setActive] = useState<string>(nav[0]?.anchor ?? "");
   // Al hacer scroll la barra se contrae a la seccion activa; el puntero o el
   // foco de teclado la vuelven a abrir. El componente de Framer solo tiene las
   // variantes, pero sin esto la navegacion queda inaccesible una vez colapsada.
   const [hovered, setHovered] = useState(false);
-  const reduced = useReducedMotion();
+  const reduced = useHydratedReducedMotion();
 
   const collapsed = scrolled && !hovered;
   // Muelles del original: contenedor bounce .2 / .4 s, texto bounce 0 / .4 s.
@@ -157,7 +157,7 @@ export function Header({ settings }: { settings: Settings }) {
   return (
     <motion.header
       className={cn(
-        "sticky top-0 z-50 transition-[padding] duration-300",
+        "relative transition-[padding] duration-300",
         scrolled ? "py-2" : "py-3",
       )}
     >
@@ -166,9 +166,9 @@ export function Header({ settings }: { settings: Settings }) {
           layout
           transition={shellSpring}
           className={cn(
-            "mx-auto flex w-full items-center justify-between gap-3 overflow-hidden rounded-full border border-white/10 bg-[var(--c-ink)] pl-4 text-white shadow-[0_14px_36px_-20px_rgba(38,38,38,0.72)] transition-[height,box-shadow] duration-300 sm:pl-5 lg:w-fit",
+            "mx-auto flex w-full items-center justify-between gap-3 overflow-hidden rounded-full border border-white/10 bg-[var(--c-navy)] pl-4 text-white shadow-[0_14px_36px_-20px_rgba(11,74,117,0.72)] transition-[height,box-shadow] duration-300 sm:pl-5 lg:w-fit",
             scrolled
-              ? "h-[56px] pr-1.5 shadow-[0_16px_40px_-18px_rgba(38,38,38,0.82)] sm:pr-2"
+              ? "h-[56px] pr-1.5 shadow-[0_16px_40px_-18px_rgba(11,74,117,0.82)] sm:pr-2"
               : "h-[64px] pr-2.5 sm:pr-3",
           )}
         >
@@ -217,7 +217,7 @@ export function Header({ settings }: { settings: Settings }) {
                   >
                     {brandWords[0]}{" "}
                     {brandWords[1] ? (
-                      <span className="text-[var(--c-highlight)]">
+                      <span className="text-[var(--c-star)]">
                         {brandWords[1]}
                       </span>
                     ) : null}
@@ -260,8 +260,8 @@ export function Header({ settings }: { settings: Settings }) {
                             className={cn(
                               "focus-ring relative inline-flex h-10 items-center rounded-full px-3 text-[14.5px] font-medium transition-colors duration-200",
                               active === anchor
-                                ? "bg-white/10 text-[var(--c-highlight)]"
-                                : "text-white/82 hover:text-[var(--c-highlight)]",
+                                ? "bg-white/15 text-white"
+                                : "text-white/82 hover:text-white",
                             )}
                           >
                             {label}
@@ -287,7 +287,7 @@ export function Header({ settings }: { settings: Settings }) {
               <span className="hidden md:inline">
                 {settings.header.ctaText}
               </span>
-              <span className="hidden sm:inline md:hidden">WhatsApp</span>
+              <span className="hidden sm:inline md:hidden">{settings.header.shortCtaText}</span>
             </WhatsAppButton>
 
             <button
@@ -332,7 +332,7 @@ export function Header({ settings }: { settings: Settings }) {
           >
             <nav
               aria-label="Menú móvil"
-              className="card-shadow-lg mt-2 rounded-[28px] border border-white/10 bg-[var(--c-ink)] p-4 text-white"
+              className="card-shadow-lg mt-2 rounded-[28px] border border-white/10 bg-[var(--c-navy)] p-4 text-white"
             >
               <ul className="flex flex-col">
                 {nav.map(({ label, anchor }) => (
@@ -343,8 +343,8 @@ export function Header({ settings }: { settings: Settings }) {
                       className={cn(
                         "focus-ring flex min-h-[48px] items-center rounded-2xl px-4 text-[17px] font-medium",
                         active === anchor
-                          ? "bg-white/10 text-[var(--c-highlight)]"
-                          : "text-white/82 hover:text-[var(--c-highlight)]",
+                          ? "bg-white/15 text-white"
+                          : "text-white/82 hover:text-white",
                       )}
                     >
                       {label}

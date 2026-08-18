@@ -18,15 +18,8 @@ export function Hero({ settings }: { settings: Settings }) {
     .split("|")
     .map((part) => part.trim())
     .filter(Boolean);
-  const configuredHeadline = `${hero.title} ${configuredHighlights.join(" ")}`.toLocaleLowerCase("es");
-  // Si WordPress conserva un titular antiguo o demasiado largo, usamos una
-  // versión breve y natural en lugar de añadir la keyword como línea aislada.
-  const hasProductName =
-    configuredHeadline.includes("etiquetas escolares") && configuredHeadline.split(/\s+/).length <= 9;
-  const title = hasProductName ? hero.title : "Etiquetas escolares";
-  const highlights = hasProductName
-    ? configuredHighlights
-    : ["para que todo vuelva a casa"];
+  const title = hero.title;
+  const highlights = configuredHighlights;
 
   return (
     <section id="inicio" className="relative">
@@ -50,7 +43,11 @@ export function Hero({ settings }: { settings: Settings }) {
               ) : null}
 
               <h1 className="h1-display text-center text-[var(--c-ink)] lg:text-left">
-                <motion.span variants={fadeScaleIn} className="block">
+                {/* Primera línea en rojo de marca, como en el logotipo: la
+                    palabra que nombra el producto se separa de la promesa que
+                    la sigue. A 38 px o más el rojo cumple 3:1 sobre el crema;
+                    en cuerpo pequeño no se usa. */}
+                <motion.span variants={fadeScaleIn} className="block text-[var(--c-red)]">
                   {title}
                 </motion.span>
                 {highlights.map((part, index) => (
@@ -144,7 +141,7 @@ export function Hero({ settings }: { settings: Settings }) {
               {hero.image?.url ? (
                 <Media
                   image={hero.image}
-                  alt={`Útiles escolares etiquetados con ${brand.logoText}`}
+                  alt={hero.image.alt || `Útiles escolares etiquetados con ${brand.logoText}`}
                   priority
                   sizes="(max-width: 1024px) 100vw, 55vw"
                   className="aspect-[3/2] w-full rounded-[32px]"

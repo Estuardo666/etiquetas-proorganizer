@@ -4,8 +4,7 @@ import { Reveal } from "@/components/ui/reveal";
 import { WhatsAppButton } from "@/components/ui/whatsapp-button";
 import { WhatsAppIcon } from "@/components/ui/icon";
 import { DecorativeHeart } from "@/components/ui/decor";
-import daniella from "../../../public/daniella.png";
-import firma from "../../../public/firma.png";
+import type { Settings } from "@/lib/types";
 
 /**
  * Cierre humano justo antes del pie: quién hace las etiquetas, qué pasa si algo
@@ -16,7 +15,9 @@ import firma from "../../../public/firma.png";
  * servicio, así que ocupa más ancho y es la única con foto. Las tarjetas de la
  * derecha van en gris y morado de la paleta, nunca en un gris nuevo.
  */
-export function Founder() {
+export function Founder({ settings }: { settings: Settings }) {
+  const { founder } = settings;
+
   return (
     <section id="daniella" className="surface-base section-y">
       <div className="container-page">
@@ -40,36 +41,39 @@ export function Founder() {
                     al suelo de la tarjeta y estirada hacia arriba, el recorte
                     sobresale siempre lo mismo mida lo que mida el texto. */}
                 <div className="absolute inset-0 sm:-top-20 sm:inset-x-0 sm:bottom-0">
-                  <Image
-                    src={daniella}
-                    alt="Daniella Silva, organizadora profesional de espacios certificada"
-                    fill
-                    placeholder="blur"
-                    sizes="(max-width: 640px) 168px, 272px"
-                    className="object-contain object-bottom drop-shadow-[0_10px_18px_rgb(38_38_38/0.14)]"
-                  />
+                  {founder.photo?.url ? (
+                    <Image
+                      src={founder.photo.url}
+                      alt={founder.photoAlt || founder.photo.alt}
+                      fill
+                      sizes="(max-width: 640px) 168px, 272px"
+                      className="object-contain object-bottom drop-shadow-[0_10px_18px_rgb(38_38_38/0.14)]"
+                    />
+                  ) : null}
                 </div>
               </div>
 
               <div className="relative z-10 min-w-0 sm:self-center sm:pb-1">
                 <h2 className="font-[family-name:var(--font-heading)] text-[24px] leading-tight font-semibold text-[var(--c-ink)] sm:text-[27px]">
-                  Hola, soy Daniella
+                  {founder.title}
                 </h2>
                 <p className="mt-2 max-w-[32ch] text-[15.5px] leading-relaxed text-pretty text-[var(--c-muted)]">
-                  Organizadora Profesional de Espacios Certificada. Diseñamos personalmente cada
-                  hoja para que llegue perfecta para sus hijos.
+                  {founder.bio}
                 </p>
                 {/* Firma escaneada, no tipografía manuscrita: la firma real es
                     la prueba de que detrás hay una persona. Decorativa — el
                     nombre ya está en el título, así que no repite texto. */}
-                <Image
-                  src={firma}
-                  alt=""
-                  aria-hidden="true"
-                  placeholder="blur"
-                  sizes="(max-width: 640px) 160px, 200px"
-                  className="mt-3 h-auto w-[160px] max-w-full sm:w-[200px]"
-                />
+                {founder.signature?.url ? (
+                  <Image
+                    src={founder.signature.url}
+                    alt=""
+                    aria-hidden="true"
+                    width={founder.signature.width || 200}
+                    height={founder.signature.height || 75}
+                    sizes="(max-width: 640px) 160px, 200px"
+                    className="mt-3 h-auto w-[160px] max-w-full sm:w-[200px]"
+                  />
+                ) : null}
               </div>
             </div>
           </Reveal>
@@ -86,10 +90,10 @@ export function Founder() {
                 </span>
                 <div className="min-w-0">
                   <h3 className="text-[17px] leading-tight font-extrabold text-[var(--c-ink)] sm:text-[19px]">
-                    Su tranquilidad es nuestra garantía
+                    {founder.guaranteeTitle}
                   </h3>
                   <p className="mt-1.5 max-w-[40ch] text-[15px] leading-snug text-pretty text-[var(--c-muted)]">
-                    Si existe un error en el diseño aprobado por nosotros, reimprimimos sin costo.
+                    {founder.guaranteeText}
                   </p>
                 </div>
               </div>
@@ -105,18 +109,18 @@ export function Founder() {
                 </span>
                 <div className="min-w-0">
                   <h3 className="text-[17px] leading-tight font-extrabold text-[var(--c-ink)] sm:text-[19px]">
-                    ¿Listo para empezar?
+                    {founder.ctaTitle}
                   </h3>
                   <p className="mt-1.5 max-w-[38ch] text-[15px] leading-snug text-pretty text-[var(--c-muted)]">
-                    Escríbanos por WhatsApp y le ayudamos.
+                    {founder.ctaText}
                   </p>
                   <div className="mt-3.5">
                     <WhatsAppButton
                       source="finalCta"
                       carrySelection
                       variant="inline"
-                      ariaLabel="Escribir por WhatsApp para comenzar el pedido"
-                      label="Comencemos su pedido"
+                      ariaLabel={founder.ctaButton}
+                      label={founder.ctaButton}
                     />
                   </div>
                 </div>

@@ -8,10 +8,11 @@
   --color-highlight-ink: var(--c-highlight-ink);
   --color-surface: var(--c-surface);
   --color-purple: var(--c-purple);
-  --color-pink: var(--c-pink);
+  --color-red: var(--c-red);
   --color-gray-warm: var(--c-gray);
   --color-green: var(--c-green);
   --color-blue: var(--c-blue);
+  --color-orange: var(--c-orange);
   --color-star: var(--c-star);
   --color-whatsapp: var(--c-whatsapp);
   --color-whatsapp-ink: var(--c-whatsapp-ink);
@@ -23,78 +24,90 @@
 }
 
 /**
- * Paleta: cuatro colores planos y un gris oscuro para leer.
+ * Paleta de marca Pro Organizer. Dos colores mandan —el azul marino del
+ * logotipo y el rojo de la firma manuscrita— y todo lo demás es superficie.
  *
- * Los cuatro son *superficie*, nunca texto: son pasteles saturados y ninguno
- * llega a 4,5:1 con blanco encima. Todo lo que se lee va en `--c-ink`, que es
- * el mismo gris oscuro sobre los cuatro fondos. Eso es lo que mantiene la
- * página legible aunque las tarjetas cambien de color.
+ * El azul marino hace doble trabajo: es el texto de toda la página y es el
+ * fondo de las piezas oscuras (cabecera, pie, botones principales). Un solo
+ * tono para las dos cosas es lo que hace que la página se lea como una marca
+ * y no como una plantilla con acentos.
  *
- * Los tintes y los pasteles son mezclas de esos cuatro con blanco. Un tono
+ * El rojo nunca es texto pequeño (4,0:1 sobre blanco): es fondo de pastilla,
+ * cifra grande y borde. Cuando hace falta rojo en un párrafo se usa
+ * `--c-highlight-ink`, que es el mismo rojo oscurecido a 7:1.
+ *
+ * Azul, durazno y lavanda son *solo* superficie de tarjeta: son los tres
+ * fondos de las tres categorías (útiles, ropa, carátulas) y encima siempre va
+ * el azul marino. El verde queda reservado al botón de WhatsApp.
+ *
+ * Los tintes y los pasteles son mezclas de esos tonos con blanco. Un tono
  * nuevo aquí es lo que rompió el sistema las veces anteriores.
  */
 :root {
-  --c-ink: #262626; /* gris oscuro: titulos, texto, contornos */
-  --c-purple: #a78bfa;
-  --c-pink: #ff9fe0;
-  --c-gray: #cbc6c1;
-  --c-green: #90ee8f; /* solo botones de acción (WhatsApp) */
-  --c-blue: #8fd4ee; /* celeste suave: superficies que antes eran verdes */
-  --c-star: #ffcf3f; /* amarillo de las estrellas de valoración */
-  --c-surface: #f5f4f2;
+  --c-navy: #0b4a75; /* azul marino de marca: texto, cabecera, pie, botones */
+  --c-red: #de2b22; /* rojo de marca: promos, precio, pastillas */
+  --c-blue: #2e8fd0; /* tarjeta "útiles escolares" */
+  --c-orange: #f0913c; /* tarjeta "ropa o uniformes" */
+  --c-purple: #7b3fa6; /* tarjeta "carátulas de cuadernos" */
+  --c-green: #17803a; /* solo el botón de WhatsApp */
+  --c-gray: #c4cfd8; /* neutro frío, del mismo lado que el azul marino */
+  --c-star: #ffc93c; /* amarillo de las estrellas de valoración */
+  --c-surface: #f7f9fb;
+
+  --c-ink: var(--c-navy); /* títulos, texto, contornos */
 
   /**
-   * Roles. El resto del código habla de acento y destacado, no de morado y
-   * rosa: si mañana cambia la paleta, cambia aquí y no en cuarenta ficheros.
+   * Roles. El resto del código habla de acento y destacado, no de azul marino
+   * y rojo: si mañana cambia la paleta, cambia aquí y no en cuarenta ficheros.
    */
-  --c-accent: var(--c-purple); /* acción, selección, estado activo */
-  --c-highlight: var(--c-pink); /* precio, promo, adornos cálidos */
+  --c-accent: var(--c-navy); /* acción, selección, estado activo, pie */
+  --c-highlight: var(--c-red); /* precio, promo, adornos cálidos */
   --c-neutral: var(--c-gray);
   --c-positive: var(--c-blue);
 
   /**
-   * Antes estos `-ink` eran versiones oscurecidas de cada color para poder
-   * usarlos como texto. Con esta paleta no hacen falta dos valores: sobre
-   * cualquiera de los cuatro fondos el texto legible es siempre el mismo gris
-   * oscuro, y eso da una jerarquía más limpia que cuatro tonos de texto.
+   * Versiones legibles como *texto* de cada rol. El acento ya es el color del
+   * texto, así que coincide con la tinta; el rojo de marca no llega a 4,5:1 en
+   * cuerpo pequeño y se oscurece.
    */
-  --c-accent-ink: var(--c-ink);
-  --c-highlight-ink: var(--c-ink);
+  --c-accent-ink: var(--c-navy);
+  --c-highlight-ink: #a81a13;
 
   --c-text: var(--c-ink);
   /**
-   * 76 % del gris oscuro. El texto secundario aparece sobre cuatro fondos
-   * distintos (crema, tinte gris, tinte rosa y tinte morado) y el peor de los
-   * cuatro manda: a 76 % da 5,4:1 sobre el tinte gris, que es el más oscuro.
-   * Medido en el navegador, no estimado sobre blanco — el fondo crema ya resta
-   * medio punto de ratio por si solo.
+   * 82 % del azul marino: 5,3:1 sobre blanco y 4,9:1 sobre el peor de los
+   * fondos claros (el tinte gris). El texto secundario aparece sobre cuatro
+   * superficies distintas y manda la más oscura.
    */
-  --c-muted: color-mix(in srgb, var(--c-ink) 76%, #ffffff);
+  --c-muted: color-mix(in srgb, var(--c-ink) 82%, #ffffff);
   --c-border: color-mix(in srgb, var(--c-ink) 16%, #ffffff);
 
-  --c-tint-accent: color-mix(in srgb, var(--c-accent) 22%, #ffffff);
-  --c-tint-highlight: color-mix(in srgb, var(--c-highlight) 22%, #ffffff);
+  --c-tint-accent: color-mix(in srgb, var(--c-accent) 12%, #ffffff);
+  --c-tint-highlight: color-mix(in srgb, var(--c-highlight) 14%, #ffffff);
   --c-tint-ink: color-mix(in srgb, var(--c-neutral) 45%, #ffffff);
-  --c-tint-positive: color-mix(in srgb, var(--c-positive) 28%, #ffffff);
+  --c-tint-positive: color-mix(in srgb, var(--c-positive) 16%, #ffffff);
+  --c-tint-warm: color-mix(in srgb, var(--c-orange) 20%, #ffffff);
+  --c-tint-purple: color-mix(in srgb, var(--c-purple) 12%, #ffffff);
 
-  --c-pastel-accent: color-mix(in srgb, var(--c-accent) 55%, #ffffff);
-  --c-pastel-highlight: color-mix(in srgb, var(--c-highlight) 55%, #ffffff);
+  --c-pastel-accent: color-mix(in srgb, var(--c-accent) 45%, #ffffff);
+  --c-pastel-highlight: color-mix(in srgb, var(--c-highlight) 45%, #ffffff);
   --c-pastel-ink: color-mix(in srgb, var(--c-neutral) 85%, #ffffff);
-  --c-pastel-positive: color-mix(in srgb, var(--c-positive) 65%, #ffffff);
+  --c-pastel-positive: color-mix(in srgb, var(--c-positive) 55%, #ffffff);
 
   /**
-   * El CTA de chat conserva el verde: es el único sitio donde queda. Verde de
-   * reposo con el gris
-   * oscuro encima (13,9:1) y relleno de gris oscuro con blanco al hacer hover
-   * (14,8:1). Se pierde el verde de marca de WhatsApp, pero el icono sigue
-   * identificando el canal y la página gana un único sistema de color.
+   * El botón de chat es el verde de la marca oscurecido hasta que el texto
+   * blanco encima llega a 5,0:1 — el verde de WhatsApp tal cual solo da 2,9:1
+   * y el rótulo del botón es el texto más importante de la página. Al hacer
+   * hover el relleno pasa a azul marino (9,0:1).
    */
   --c-whatsapp: var(--c-green);
-  --c-whatsapp-ink: var(--c-ink);
+  --c-whatsapp-ink: var(--c-navy);
 
   --c-radius: 28px;
 
   --header-h: 80px;
+  --admin-bar-height: 36px;
+  --admin-bar-offset: 0px;
 }
 
 html {
@@ -112,7 +125,7 @@ body {
 }
 
 section[id] {
-  scroll-margin-top: calc(var(--header-h) + 24px);
+  scroll-margin-top: calc(var(--header-h) + var(--admin-bar-offset) + 24px);
 }
 
 ::selection {
@@ -230,6 +243,14 @@ section[id] {
 
 .surface-positive {
   background: var(--c-tint-positive);
+}
+
+.surface-peach {
+  background: var(--c-tint-warm);
+}
+
+.surface-lavender {
+  background: var(--c-tint-purple);
 }
 
 /* Tipografía ------------------------------------------------------------ */
@@ -364,11 +385,12 @@ h5 {
   transform: translateY(-50%);
 }
 
-/* El relleno oscuro del hover necesita su copia de texto clara encima. */
-.fluid-btn:hover .fluid-btn__stack > :last-child,
-.fluid-btn:focus-visible .fluid-btn__stack > :last-child {
-  color: #ffffff !important;
-}
+/*
+ * El color de la segunda copia lo pone `secondTextColor` (blanco por defecto).
+ * Antes se forzaba aquí en blanco con `!important` y eso rompía cualquier
+ * botón cuyo relleno de hover fuera claro — el CTA de WhatsApp del pie, con
+ * relleno blanco, se quedaba con el rótulo blanco sobre blanco.
+ */
 
 /**
  * Text Arrow CTA: la flecha abre hueco por la izquierda y el subrayado barre
@@ -462,7 +484,7 @@ h5 {
   padding: 7px 12px;
   border-radius: 999px;
   background: var(--c-highlight);
-  color: var(--c-ink);
+  color: #ffffff;
   font-size: 12.5px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -472,9 +494,9 @@ h5 {
 
 /** Iconos sociales: cambio claro de superficie, con movimiento breve. */
 /**
- * Enlaces del pie: sobre el morado no se puede bajar el gris del texto (2,4:1),
- * así que el estado de reposo y el de hover se distinguen por el subrayado y no
- * por el color. Aparece la línea, no se aclara la letra.
+ * Enlaces del pie: sobre el azul marino el texto es blanco y no baja de opacidad
+ * — blanco al 70 % da 4,3:1 y ya no pasa. El reposo y el hover se distinguen por
+ * el subrayado, no por el color. Aparece la línea, no se apaga la letra.
  */
 .footer-link {
   text-decoration: underline;
@@ -504,14 +526,15 @@ h5 {
 .footer-pill-title {
   display: inline-block;
   border-radius: 999px;
-  background: var(--c-ink);
+  background: var(--c-highlight);
   padding: 5px 14px;
   font-size: 12.5px;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  /* Gris oscuro relleno: el rótulo pasa a blanco (14,8:1) y deja de competir
-     con las pastillas blancas de teléfono, que sí son pulsables. */
+  /* Rojo de marca sobre el azul marino: el rótulo se separa de los enlaces
+     blancos sin una línea más, y no se confunde con las pastillas blancas de
+     teléfono, que sí son pulsables. Texto blanco, 4,9:1 sobre el rojo. */
   color: #ffffff;
 }
 
@@ -529,7 +552,7 @@ h5 {
 
 @media (hover: hover) and (pointer: fine) {
   .footer-pill:hover {
-    background: var(--c-ink);
+    background: var(--c-highlight);
     color: #ffffff;
   }
 }
@@ -549,11 +572,11 @@ h5 {
 
 @media (hover: hover) and (pointer: fine) {
   .footer-social-link:hover {
-    color: var(--c-highlight);
-    background: var(--c-ink);
-    border-color: var(--c-ink);
+    color: #ffffff;
+    background: var(--c-highlight);
+    border-color: var(--c-highlight);
     transform: translateY(-3px) scale(1.06);
-    box-shadow: 0 10px 22px -12px rgb(38 38 38 / 70%);
+    box-shadow: 0 10px 22px -12px rgb(0 0 0 / 55%);
   }
 }
 
@@ -572,7 +595,7 @@ h5 {
   .comparison-card--good {
     z-index: 2;
     transform: translateX(-34px) rotate(2.25deg);
-    box-shadow: 0 18px 36px -24px rgb(38 38 38 / 55%);
+    box-shadow: 0 18px 36px -24px rgb(11 74 117 / 55%);
   }
 
   .comparison-pair:hover .comparison-card {
@@ -605,7 +628,7 @@ h5 {
 
 .approval-note {
   border-radius: 14px;
-  background: var(--c-highlight);
+  background: var(--c-tint-highlight);
   transform: rotate(-1deg);
 }
 

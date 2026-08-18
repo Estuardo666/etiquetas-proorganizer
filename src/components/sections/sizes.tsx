@@ -11,7 +11,7 @@ import { UsageStrip } from "@/components/sections/usage";
 import { WhatsAppButton } from "@/components/ui/whatsapp-button";
 import { useOrder } from "@/components/order-provider";
 import { cardHover, fadeScaleIn } from "@/lib/motion";
-import { waMessageForSize } from "@/lib/site-config";
+import { fillMessageTemplate, waMessageForSize } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
 import type { Settings, SizeItem, UsageItem } from "@/lib/types";
 
@@ -20,14 +20,18 @@ import type { Settings, SizeItem, UsageItem } from "@/lib/types";
  * Un color de la paleta por tarjeta, en el orden del listado. Aqui el color no
  * es decoracion: son cuatro opciones entre las que hay que elegir una, y darle
  * a cada una su propia superficie las hace distinguibles de un vistazo y
- * faciles de senalar ("la verde"). El texto va en gris oscuro sobre las
- * cuatro, asi que la legibilidad no depende de cual toque.
+ * faciles de senalar ("la azul").
+ *
+ * Son los tintes y no los tonos plenos: sobre el azul, el durazno y la lavanda
+ * a plena saturacion el texto en azul marino se queda en 1,9:1. Los mismos
+ * tres colores diluidos —los de las tarjetas de categoria del material
+ * impreso— dan 7:1 largos y siguen distinguiendose entre si.
  */
 const cardTints = [
-  "var(--c-pink)",
-  "var(--c-purple)",
-  "var(--c-gray)",
-  "var(--c-blue)",
+  "var(--c-tint-positive)",
+  "var(--c-tint-warm)",
+  "var(--c-tint-purple)",
+  "var(--c-tint-ink)",
 ];
 
 /** Los usos llegan como frase suelta; se leen mejor separados por puntos. */
@@ -147,7 +151,7 @@ export function Sizes({
                     {selected ? (
                       <>
                         <Check className="size-4" strokeWidth={3} aria-hidden="true" />
-                        Seleccionado
+                        {settings.sizes.selectedLabel}
                       </>
                     ) : (
                       settings.sizes.ctaText
@@ -161,8 +165,14 @@ export function Sizes({
                   <WhatsAppButton
                     source="sizes"
                     variant="link"
-                    message={waMessageForSize(size.title, size.count)}
-                    label={`Pedir tamaño ${size.title}`}
+                    message={waMessageForSize(
+                      settings.whatsapp.msgSizeTemplate,
+                      size.title,
+                      size.count,
+                    )}
+                    label={fillMessageTemplate(settings.sizes.orderCtaTemplate, {
+                      title: size.title,
+                    })}
                     ariaLabel={`Pedir por WhatsApp el tamaño ${size.title}, ${size.count} por hoja`}
                   />
                 </span>

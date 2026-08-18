@@ -15,12 +15,9 @@ import type { WaSource } from "@/lib/site-config";
  * `source` decide el mensaje precargado; `message` lo sobrescribe cuando el
  * CTA es de una tarjeta concreta (un tamaño, un diseño).
  *
- * Todas las variantes salvo `link` son `FluidButton`. El relleno gris oscuro
- * sube sobre el verde de la paleta: verde con texto en gris oscuro en reposo
- * (13,9:1) y gris oscuro con texto blanco al hacer hover (14,8:1). El icono
- * sigue identificando el canal aunque el verde ya no sea el de la marca de
- * WhatsApp — la pagina tiene un solo sistema de color y el icono basta para
- * saber que esto abre un chat.
+ * Todas las variantes salvo `link` son `FluidButton`. Verde de marca con
+ * rotulo blanco en reposo (5,0:1) y relleno azul marino al hacer hover
+ * (9,0:1): el mismo boton verde del material impreso.
  *
  * `link` es `TextArrowCta`: dentro de una rejilla de tarjetas, un boton solido
  * por tarjeta compite con el CTA principal de la seccion.
@@ -94,7 +91,7 @@ export function WhatsAppButton({
       size={sizeFor[variant]}
       background="var(--c-whatsapp)"
       overlayColor="var(--c-whatsapp-ink)"
-      textColor="var(--c-ink)"
+      textColor="#ffffff"
       secondTextColor="#ffffff"
       className={className}
     >
