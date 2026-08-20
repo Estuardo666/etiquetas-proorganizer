@@ -8,6 +8,22 @@ const labelImage = (slug: string, alt = "Etiqueta escolar personalizada"): WpIma
   height: 900,
 });
 
+/** Foto de producto por tamaño, en `public/tamanos` (proporción 4:3). */
+const sizeImage = (slug: string, title: string): WpImage => ({
+  url: `/tamanos/${slug}.webp`,
+  alt: `Etiquetas ${title} aplicadas sobre útiles escolares`,
+  width: 900,
+  height: 675,
+});
+
+/** Foto de uso, en `public/usos` (cuadrada, fondo recortado). */
+const usageImage = (slug: string, title: string): WpImage => ({
+  url: `/usos/${slug}.webp`,
+  alt: `Etiquetas personalizadas en ${title.toLowerCase()}`,
+  width: 600,
+  height: 600,
+});
+
 /**
  * Espejo de los valores por defecto definidos en el plugin de WordPress
  * (wp-content/mu-plugins/proorg). Mantener ambos lados sincronizados.
@@ -295,7 +311,7 @@ export const fallbackContent: SiteContent = {
       uses: "Lápices de colores, cubiertos, marcadores delgados, crayones.",
       badge: "",
       accent: "#de2b22",
-      image: null,
+      image: sizeImage("extra-pequenas", "Extra pequeñas"),
     },
     {
       id: "size-2",
@@ -306,7 +322,7 @@ export const fallbackContent: SiteContent = {
       uses: "Lápices jumbo, resaltadores, reglas, gomas, sacapuntas, estuches.",
       badge: "",
       accent: "#f0913c",
-      image: null,
+      image: sizeImage("pequena", "Pequeña"),
     },
     {
       id: "size-3",
@@ -317,7 +333,7 @@ export const fallbackContent: SiteContent = {
       uses: "Estuches, vasos, cajas de colores y objetos de uso diario.",
       badge: "",
       accent: "#2e8fd0",
-      image: null,
+      image: sizeImage("medianas", "Medianas"),
     },
     {
       id: "size-4",
@@ -328,17 +344,17 @@ export const fallbackContent: SiteContent = {
       uses: "Cuadernos, libros, carpetas, termos, loncheras, mochilas.",
       badge: "",
       accent: "#7b3fa6",
-      image: null,
+      image: sizeImage("grande", "Grande"),
     },
   ],
   usages: [
-    { id: "u1", title: "Loncheras", image: null, sizeSlug: "grande" },
-    { id: "u2", title: "Termos y botellas", image: null, sizeSlug: "grande" },
-    { id: "u3", title: "Cuadernos y libros", image: null, sizeSlug: "grande" },
-    { id: "u4", title: "Útiles escolares", image: null, sizeSlug: "pequena" },
-    { id: "u5", title: "Mochilas y bolsas", image: null, sizeSlug: "grande" },
-    { id: "u6", title: "Ropa y uniformes", image: null, sizeSlug: "pequena" },
-    { id: "u7", title: "Juguetes", image: null, sizeSlug: "pequena" },
+    { id: "u1", title: "Loncheras", image: usageImage("loncheras", "Loncheras"), sizeSlug: "grande" },
+    { id: "u2", title: "Termos y botellas", image: usageImage("termos-botellas", "Termos y botellas"), sizeSlug: "grande" },
+    { id: "u3", title: "Cuadernos y libros", image: usageImage("cuadernos-libros", "Cuadernos y libros"), sizeSlug: "grande" },
+    { id: "u4", title: "Útiles escolares", image: usageImage("utiles-escolares", "Útiles escolares"), sizeSlug: "pequena" },
+    { id: "u5", title: "Mochilas y bolsas", image: usageImage("mochilas-bolsas", "Mochilas y bolsas"), sizeSlug: "grande" },
+    { id: "u6", title: "Ropa y uniformes", image: usageImage("ropa-uniformes", "Ropa y uniformes"), sizeSlug: "pequena" },
+    { id: "u7", title: "Juguetes", image: usageImage("juguetes", "Juguetes"), sizeSlug: "pequena" },
     { id: "u8", title: "¡Y mucho más!", image: null, sizeSlug: "extra-pequenas" },
   ],
   designs: [

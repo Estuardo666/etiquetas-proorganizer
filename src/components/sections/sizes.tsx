@@ -112,11 +112,14 @@ export function Sizes({
                       interior y sombra para que tenga profundidad. */}
                   <div className="my-4 w-full">
                     {size.image?.url ? (
+                      // Foto de producto sobre fondo claro: `contain` para que
+                      // la hoja de etiquetas no se recorte por los bordes.
                       <Media
                         image={size.image}
                         alt={`Etiqueta ${size.title}`}
-                        className="aspect-[5/2] w-full rounded-2xl border-2 border-white"
-                        sizes="(max-width: 1024px) 50vw, 22vw"
+                        className="aspect-[4/3] w-full rounded-2xl"
+                        imgClassName="object-contain transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
+                        sizes="(max-width: 640px) 78vw, (max-width: 1024px) 44vw, 22vw"
                       />
                     ) : (
                       <span
