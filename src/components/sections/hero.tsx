@@ -7,6 +7,7 @@ import { WhatsAppButton } from "@/components/ui/whatsapp-button";
 import { Media } from "@/components/ui/media";
 import { OrderNote } from "@/components/ui/order-note";
 import { HeroScene } from "@/components/ui/illustrations";
+import { InfiniteGrid } from "@/components/ui/infinite-grid";
 import { DecorPop, DecorativeCloud, DecorativeHeart, DecorativeStarFace } from "@/components/ui/decor";
 import { fadeScaleIn, slideLeft, stagger } from "@/lib/motion";
 import type { Settings } from "@/lib/types";
@@ -23,9 +24,36 @@ export function Hero({ settings }: { settings: Settings }) {
 
   return (
     <section id="inicio" className="relative">
-      <div className="surface-base relative overflow-hidden">
+      {/* El hero empieza donde empieza la página, no debajo del menú: sube la
+          banda del menú con un margen negativo para que la rejilla y los
+          degradados se vean por detrás de la píldora, que flota encima con su
+          propio `z-50`. El relleno equivalente va en el contenido, más abajo. */}
+      <div
+        className="surface-base relative overflow-hidden"
+        style={{ marginTop: "calc(-1 * var(--header-band))" }}
+      >
+        {/* Fondo animado. Va aquí y no en `section` para que quede recortado
+            por el `overflow-hidden` de la superficie del hero, y por debajo del
+            `z-10` del contenido. Los colores salen de la paleta editable. */}
+        <InfiniteGrid
+          gridColor="#0b4a75"
+          gridOpacity={0.07}
+          revealOpacity={0.28}
+          revealRadius={260}
+          direction="down-right"
+          speedX={0.3}
+          speedY={0.3}
+          gradient1="#de2b22"
+          gradient2="#f0913c"
+          gradient3="#2e8fd0"
+          gradientOpacity={0.4}
+        />
+
         <div className="container-page relative z-10">
-          <div className="grid items-center gap-6 pt-10 pb-14 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1fr)] lg:gap-4 lg:pt-14 lg:pb-20">
+          <div
+            className="grid items-center gap-6 pb-14 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1fr)] lg:gap-4 lg:pb-20"
+            style={{ paddingTop: "calc(var(--header-band) + 2.5rem)" }}
+          >
             {/* Columna de texto ------------------------------------------ */}
             <motion.div
               initial="hidden"

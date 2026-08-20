@@ -23,12 +23,17 @@ const tints = [
 ];
 
 /**
- * Franja de beneficios: cinco tarjetas bajas con icono ilustrado y texto muy
+ * Franja de beneficios: tres tarjetas bajas con icono ilustrado y texto muy
  * breve. Los envíos no van aquí: ya están en la barra superior.
+ *
+ * Eran cinco, y cinco tarjetas más las dos cifras hacían siete bloques de
+ * información antes de que la clienta viera un solo producto — cuatro de ellos
+ * repitiendo lo que ya decía el subtítulo del hero. Tres caben en una fila en
+ * cualquier ancho y dejan la sección de tamaños más arriba.
  */
 export function TrustBar({ settings, stats }: { settings: Settings; stats: StatItem[] }) {
   const { trust } = settings;
-  const items = pipes(trust.items).slice(0, 5);
+  const items = pipes(trust.items).slice(0, 3);
   if (!items.length) return null;
 
   return (

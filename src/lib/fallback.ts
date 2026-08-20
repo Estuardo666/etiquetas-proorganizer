@@ -51,7 +51,7 @@ export const fallbackContent: SiteContent = {
       msgFooter: "Hola, necesito ayuda con un pedido de etiquetas.",
       msgSizeTemplate: "Hola, quiero etiquetas tamaño {title} ({count} por hoja).",
       msgDesignTemplate: "Hola, me interesan las etiquetas con diseño de {title}.",
-      previewNote: "Te enviamos la vista previa antes de imprimir — sin compromiso.",
+      previewNote: "Le enviamos la vista previa antes de imprimir — sin compromiso.",
     },
     palette: {
       textColor: "#0b4a75",
@@ -72,9 +72,10 @@ export const fallbackContent: SiteContent = {
       badge: "Regreso a clases 2026",
       title: "Etiquetas escolares",
       // Cada tramo separado por "|" mantiene el mismo azul oscuro del titular.
-      titleHighlight: "para que todo vuelva a casa",
+      titleHighlight: "personalizadas",
       // Amplía la promesa con el beneficio funcional, sin inflar el H1.
-      subtitle: "Personalizadas con su nombre, resistentes al agua, al lavavajillas y al uso diario.",
+      subtitle:
+        "Para que todo vuelva a casa con su nombre. Resisten agua, lavavajillas y el uso diario.",
       // Se muestran como franja de confianza al pie del hero.
       bullets:
         "Material premium\nImpresas en alta calidad\nFáciles de aplicar\n100 % seguras para niños",
@@ -84,13 +85,13 @@ export const fallbackContent: SiteContent = {
       // El CTA del hero vende el paso sin riesgo (ver la vista previa), no el
       // canal. "Pedir por WhatsApp" se reserva para el CTA de cierre, donde el
       // usuario ya decidió.
-      ctaPrimary: "Ver mi vista previa gratis",
+      ctaPrimary: "Pedir por WhatsApp",
       ctaSecondary: "Ver diseños",
-      note: "",
+      note: "Cuatro tamaños · desde $8 la hoja · 4ta hoja gratis",
       // "$8 por hoja" no se puede evaluar sin saber qué trae una hoja.
       sheetNote: "Cada hoja trae de 9 a 60 etiquetas según el tamaño.",
       promoNote: "4ta hoja gratis · Llevas 4 y pagas 3",
-      deliveryNote: "Entrega en 3 a 5 días tras aprobar tu diseño.",
+      deliveryNote: "Entrega en 3 a 5 días tras aprobar su diseño.",
       image: {
         url: "/hero imagen 2.png",
         alt: "Útiles escolares personalizados con etiquetas con el nombre de Camila López",
@@ -103,11 +104,11 @@ export const fallbackContent: SiteContent = {
       title: "Hechas para seguirles el ritmo",
       // Cinco beneficios cortos: la franja del diseño es compacta.
       items:
-        "drop|Resistentes al agua|No se despegan ni se borran.\nwasher|Aguantan lavavajillas|Perfectas para lunch y termos.\nshield|Ultra duraderas|Soportan el uso diario.\nheart|Seguras y no tóxicas|Material certificado.\nsmile|Fáciles de aplicar|Listas en segundos.",
+        "drop|Resisten agua y lavavajillas|Loncheras, termos y cubiertos.\nshield|Duran todo el año|No se despegan ni se borran.\nheart|Seguras para niños|Material certificado y no tóxico.",
     },
     sizes: {
       eyebrow: "Una para cada necesidad",
-      title: "Elige el tamaño ideal",
+      title: "Elija el tamaño ideal",
       subtitle: "",
       ctaText: "Elegir este tamaño",
       selectedLabel: "Seleccionado",
@@ -116,7 +117,7 @@ export const fallbackContent: SiteContent = {
       sampleName: "Sofía R.",
     },
     usage: {
-      title: "¿Dónde las puedes usar?",
+      title: "¿Dónde las puede usar?",
       subtitle: "",
     },
     designs: {
@@ -125,9 +126,9 @@ export const fallbackContent: SiteContent = {
       subtitle: "",
       ctaText: "Ver todos los diseños",
       selectedCtaTemplate: "Pedir diseño {title}",
-      featuredSub: "Hazlo único con su mejor sonrisa.",
+      featuredSub: "Hágalo único con su mejor sonrisa.",
       featuredNote: "Mismo precio, $8 por hoja.",
-      featuredCta: "Pedir con su foto",
+      featuredCta: "Pedir por WhatsApp",
     },
     personalization: {
       title: "Diseñamos sus etiquetas",
@@ -168,26 +169,29 @@ export const fallbackContent: SiteContent = {
         "Se borra al segundo lavado\nSe ve desprolijo en cosas nuevas\nHay que rehacerlo cada mes\nNo funciona en plástico ni en tela",
       goodTitle: "Con etiquetas Pro Organizer",
       goodItems:
-        "Aguantan agua y lavavajillas\nSe ven prolijas y ordenadas\nLas pones una vez y listo\nSe adhieren a plástico, metal y tela",
+        "Aguantan agua y lavavajillas\nSe ven prolijas y ordenadas\nLas pone una vez y listo\nSe adhieren a plástico, metal y tela",
       badTabLabel: "Con marcador",
       goodTabLabel: "Con etiquetas",
-      ctaText: "Quiero etiquetar sus cosas",
+      ctaText: "Pedir por WhatsApp",
     },
     process: {
       eyebrow: "Personalizar es muy fácil",
       title: "Así de fácil es personalizar",
-      subtitle: "",
+      // Absorbe lo que explicaba el panel de personalización retirado de la
+      // sección de diseños: qué lleva la etiqueta y quién da el visto bueno.
+      subtitle:
+        "Cada etiqueta lleva fondo blanco y su nombre en letras oscuras, con el personaje favorito, el logo del colegio o una foto. Imprimimos solo cuando usted aprueba el diseño.",
     },
     pricing: {
       eyebrow: "Más etiquetas, mejor precio",
-      promoTitle: "Promos que te encantarán",
+      promoTitle: "Promos que le encantarán",
       priceSticker: "Precio simple",
       priceTitle: "Precios simples y justos",
       priceValue: "$8",
       priceSuffix: "por hoja",
       priceSub: "Cualquier tamaño",
-      ctaText: "Aprovechar promoción",
-      note: "Las promociones aplican a hojas de igual o menor valor. Confirma las condiciones al realizar tu pedido.",
+      ctaText: "Pedir por WhatsApp",
+      note: "Las promociones aplican a hojas de igual o menor valor. Confirme las condiciones al realizar su pedido.",
     },
     // Encendida: como sección propia costaba una pantalla entera de scroll
     // para repetir lo que ya decían las categorías, así que estaba apagada.
@@ -196,7 +200,7 @@ export const fallbackContent: SiteContent = {
     gallery: {
       enabled: true,
       title: "Etiquetas reales, tal como se imprimen",
-      subtitle: "Muestras de la colección de personajes. Toca una para verla en grande.",
+      subtitle: "Muestras de la colección de personajes. Toque una para verla en grande.",
     },
     testimonials: {
       eyebrow: "Experiencias reales",
@@ -205,7 +209,7 @@ export const fallbackContent: SiteContent = {
       ratingLabel: "según las reseñas que nos comparten.",
     },
     faq: {
-      eyebrow: "Todo lo que necesitas saber",
+      eyebrow: "Todo lo que necesita saber",
       title: "Preguntas frecuentes",
       subtitle: "",
       linkText: "Ver todas las preguntas",
@@ -213,10 +217,10 @@ export const fallbackContent: SiteContent = {
     },
     finalCta: {
       eyebrow: "Listos para empezar",
-      title: "Haz que todo vuelva a casa",
+      title: "Haga que todo vuelva a casa",
       titleHighlight: "",
       highlightColor: "#a81a13",
-      text: "Personaliza ahora y olvídate de las pérdidas.",
+      text: "Personalice ahora y olvídese de las pérdidas.",
       ctaPrimary: "Pedir por WhatsApp",
       guarantees: "",
       // Único punto de presión temporal de la página. Sin fecha dura: una
@@ -226,15 +230,18 @@ export const fallbackContent: SiteContent = {
       seasonDeadline: "",
     },
     footer: {
-      quote: "Porque cuando todo tiene un nombre, es más fácil que vuelva a casa.",
+      quote: "Etiquetas que organizan y acompañan cada aventura.",
       socialTitle: "Síganos",
       storeTitle: "Compre en nuestra tienda en línea",
       storeText: "Rápido, fácil y seguro.",
       storeCta: "Visitar tienda en línea",
-      waTitle: "¿Listo para personalizar?",
-      waCta: "Comprar por WhatsApp",
-      waText: "Escríbanos y le ayudamos a armar el pedido.",
-      closing: "Pro Organizer By Daniella Silva",
+      // La columna de ayuda conserva su propio verbo: va al mismo WhatsApp,
+      // pero bajo un horario de atención es soporte, no un pedido, y llamarla
+      // "Pedir por WhatsApp" haría que el pie prometiera dos cosas distintas.
+      waTitle: "¿Necesita ayuda?",
+      waCta: "Escríbanos por WhatsApp",
+      waText: "Lun a Vie de 9 a 18 h",
+      closing: "Porque cuando todo tiene un nombre, es más fácil que vuelva a casa.",
       copyright: "© {year} Pro Organizer. Todos los derechos reservados.",
       legalLinks: "",
     },
@@ -260,7 +267,7 @@ export const fallbackContent: SiteContent = {
         "Si existe un error en el diseño aprobado por nosotros, reimprimimos sin costo.",
       ctaTitle: "¿Listo para empezar?",
       ctaText: "Escríbanos por WhatsApp y le ayudamos.",
-      ctaButton: "Comencemos su pedido",
+      ctaButton: "Pedir por WhatsApp",
     },
     floating: {
       enabled: true,
@@ -271,7 +278,7 @@ export const fallbackContent: SiteContent = {
     seo: {
       title: "Etiquetas escolares personalizadas en Ecuador | Pro Organizer",
       description:
-        "Personaliza etiquetas para lápices, cuadernos, termos y loncheras. Elige entre cuatro tamaños, aprueba el diseño antes de imprimir y realiza tu pedido por WhatsApp.",
+        "Etiquetas adhesivas personalizadas para lápices, cuadernos, termos y loncheras. Cuatro tamaños desde $8 la hoja, vista previa antes de imprimir y pedido por WhatsApp.",
       productName: "Etiquetas escolares personalizadas",
       ogImage: null,
       canonical: "https://www.proorganizer.com.ec",
@@ -281,7 +288,7 @@ export const fallbackContent: SiteContent = {
   sizes: [
     {
       id: "size-1",
-      slug: "mini",
+      slug: "extra-pequenas",
       title: "Extra pequeñas",
       count: "60 etiquetas",
       dims: "0,8 cm alto x 5 cm ancho",
@@ -303,11 +310,11 @@ export const fallbackContent: SiteContent = {
     },
     {
       id: "size-3",
-      slug: "mediana",
+      slug: "medianas",
       title: "Medianas",
       count: "24 etiquetas",
       dims: "2,5 cm alto x 5 cm ancho",
-      uses: "Cuadernos, estuches, carpetas, vasos y objetos de uso diario.",
+      uses: "Estuches, vasos, cajas de colores y objetos de uso diario.",
       badge: "",
       accent: "#2e8fd0",
       image: null,
@@ -332,7 +339,7 @@ export const fallbackContent: SiteContent = {
     { id: "u5", title: "Mochilas y bolsas", image: null, sizeSlug: "grande" },
     { id: "u6", title: "Ropa y uniformes", image: null, sizeSlug: "pequena" },
     { id: "u7", title: "Juguetes", image: null, sizeSlug: "pequena" },
-    { id: "u8", title: "¡Y mucho más!", image: null, sizeSlug: "mini" },
+    { id: "u8", title: "¡Y mucho más!", image: null, sizeSlug: "extra-pequenas" },
   ],
   designs: [
     { id: "d1", title: "Animales", image: null, badge: "" },
@@ -351,25 +358,25 @@ export const fallbackContent: SiteContent = {
   steps: [
     {
       id: "s1",
-      title: "Escribe el nombre",
-      desc: "y elige tu diseño favorito.",
+      title: "Escriba el nombre",
+      desc: "y elija su diseño favorito.",
       icon: "pencil",
     },
     {
       id: "s2",
-      title: "Elige el tamaño",
-      desc: "y confirma tu pedido.",
+      title: "Elija el tamaño",
+      desc: "y confirme su pedido.",
       icon: "bag",
     },
     {
       id: "s3",
-      title: "Recibe en casa",
+      title: "Reciba en casa",
       desc: "en pocos días.",
       icon: "package",
     },
     {
       id: "s4",
-      title: "Aplica y listo",
+      title: "Aplique y listo",
       desc: "¡nada se pierde!",
       icon: "star",
     },
@@ -380,7 +387,7 @@ export const fallbackContent: SiteContent = {
     {
       id: "p1",
       title: "Más elegida",
-      pre: "Ahorra más en tu compra",
+      pre: "Ahorre más en su compra",
       highlight: "50 % OFF",
       post: "3ra hoja",
       featured: false,
@@ -388,7 +395,7 @@ export const fallbackContent: SiteContent = {
     {
       id: "p2",
       title: "Mejor precio",
-      pre: "Llevas 4 hojas y pagas 3",
+      pre: "Lleva 4 hojas y paga 3",
       highlight: "GRATIS",
       post: "4ta hoja",
       featured: true,
@@ -460,7 +467,7 @@ export const fallbackContent: SiteContent = {
       id: "f2",
       title: "¿Cómo aplico las etiquetas?",
       answer:
-        "Limpia y seca la superficie, despega la etiqueta y presiona firmemente unos segundos. Listo.",
+        "Limpie y seque la superficie, despegue la etiqueta y presione firmemente unos segundos. Listo.",
     },
     {
       // Objeción de fricción número uno de un pedido que se cierra por chat y
@@ -468,7 +475,7 @@ export const fallbackContent: SiteContent = {
       id: "f10",
       title: "¿Es seguro pedir por WhatsApp?",
       answer:
-        "Sí. Llevamos más de 6 años y más de 2.500 familias atendidas en todo Ecuador. Antes de imprimir te enviamos la vista previa para que la apruebes, y solo entonces se produce tu pedido.",
+        "Sí. Llevamos más de 6 años y más de 2.500 familias atendidas en todo Ecuador. Antes de imprimir le enviamos la vista previa para que la apruebe, y solo entonces se produce su pedido.",
     },
     {
       id: "f3",
@@ -486,31 +493,31 @@ export const fallbackContent: SiteContent = {
       id: "f5",
       title: "¿En cuánto tiempo llega mi pedido?",
       answer:
-        "Entre 24 y 48 horas hábiles después de aprobar el diseño, más el tiempo de envío a tu ciudad.",
+        "Entre 24 y 48 horas hábiles después de aprobar el diseño, más el tiempo de envío a su ciudad.",
     },
     {
       id: "f9",
       title: "¿Puedo pedir con foto personalizada?",
       answer:
-        "Sí. Envíanos la foto por WhatsApp con buena iluminación y la integramos al diseño de la etiqueta.",
+        "Sí. Envíenos la foto por WhatsApp con buena iluminación y la integramos al diseño de la etiqueta.",
     },
     {
       id: "f6",
       title: "¿Realizan envíos a otras ciudades?",
       answer:
-        "Enviamos a todo Ecuador mediante courier. El costo depende de tu ciudad y te lo confirmamos al hacer el pedido.",
+        "Enviamos a todo Ecuador mediante courier. El costo depende de su ciudad y se lo confirmamos al hacer su pedido.",
     },
     {
       id: "f7",
       title: "¿Cómo se colocan las etiquetas?",
       answer:
-        "Limpia y seca la superficie, despega la etiqueta y presiona firmemente por unos segundos. Listo.",
+        "Limpie y seque la superficie, despegue la etiqueta y presione firmemente por unos segundos. Listo.",
     },
     {
       id: "f8",
       title: "¿Qué métodos de pago aceptan?",
       answer:
-        "Transferencia bancaria, depósito y pagos por la tienda en línea. Te compartimos los datos al confirmar tu pedido.",
+        "Transferencia bancaria, depósito y pagos por la tienda en línea. Le compartimos los datos al confirmar su pedido.",
     },
   ],
 };

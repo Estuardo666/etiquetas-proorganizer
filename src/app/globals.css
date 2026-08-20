@@ -106,6 +106,19 @@
   --c-radius: 28px;
 
   --header-h: 80px;
+
+  /*
+   * Alto real de la banda del menú sin desplazar la página: py-3 (24px) más la
+   * píldora de 64px. `--header-h` no sirve para esto: es el margen que se deja
+   * al saltar por un ancla, y va redondeado.
+   *
+   * El hero sube esta distancia con un margen negativo para que su fondo pase
+   * por detrás del menú, y devuelve la misma distancia como relleno para que el
+   * texto no acabe debajo. Al bajar la página el menú encoge, pero para
+   * entonces el hero ya se desplazó y la medida deja de importar.
+   */
+  --header-band: 88px;
+
   --admin-bar-height: 36px;
   --admin-bar-offset: 0px;
 }

@@ -1,36 +1,27 @@
-"use client";
-
-import { useCallback, useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import { SectionHeader } from "@/components/ui/section-header";
 import { DecorativeBackground } from "@/components/ui/decor";
-import { PillNav } from "@/components/ui/pill-nav";
 import { DesignsPanel } from "@/components/sections/designs";
 import { GalleryPanel } from "@/components/sections/gallery";
-import { PersonalizationPanel } from "@/components/sections/design-love";
 import type { DesignItem, GalleryItem, Settings } from "@/lib/types";
-import { useHydratedReducedMotion } from "@/lib/use-hydrated-reduced-motion";
 
 /**
- * Diseños, muestras reales y personalización en una sola sección con tabs.
+ * Diseños, muestras reales y personalización, uno detrás de otro.
  *
- * Las tres respondían a la misma pregunta del usuario —"¿cómo se ve esto?"— y
- * en móvil sumaban 3,3 pantallas seguidas de scroll. No sobra ninguna: sobra
- * el orden lineal. Con tabs el usuario elige qué profundidad quiere y la
- * sección ocupa lo que ocupa el panel más alto.
+ * Estuvieron detrás de tabs para ahorrar scroll, y el ahorro salió caro: la
+ * clienta que entraba veía "Categorías" y "Cómo personalizamos" y no llegaba a
+ * las muestras reales, que son la prueba que cierra la venta. Un tab cerrado es
+ * contenido que la mayoría no abre.
  *
- * Cada panel conserva su ancla (`#disenos`, `#galeria`, `#personalizacion`)
- * porque el menú y el footer enlazan a las tres: entrar por un ancla abre su
- * tab.
+ * La landing de Canva que sí convierte es scroll lineal puro: nada se descubre,
+ * todo se ve bajando. Aquí se hace lo mismo, y cada panel conserva su ancla.
+ *
+ * El panel de personalización salió de aquí: ocupaba 1.474 px en móvil —el
+ * bloque más alto de toda la página— para explicar lo mismo que la sección
+ * "Cómo funciona" que viene justo después, y su botón "Ver el paso a paso"
+ * llevaba precisamente allí. Su contenido útil (fondo blanco, nombre legible,
+ * personaje o foto, impresión solo tras aprobar) vive ahora en el subtítulo de
+ * esa sección. `design-love.tsx` se conserva sin usar por si se recupera.
  */
-type TabId = "disenos" | "galeria" | "personalizacion";
-
-const TABS: Array<{ id: TabId; label: string; tone: "blue" | "orange" | "purple" }> = [
-  { id: "disenos", label: "Categorías", tone: "blue" },
-  { id: "galeria", label: "Muestras reales", tone: "orange" },
-  { id: "personalizacion", label: "Cómo personalizamos", tone: "purple" },
-];
-
 export function Showcase({
   settings,
   designs,
@@ -41,94 +32,29 @@ export function Showcase({
   gallery: GalleryItem[];
 }) {
   const { designs: copy } = settings;
-  const [active, setActive] = useState<TabId>("disenos");
-  const reduced = useHydratedReducedMotion();
+  const showGallery = settings.gallery.enabled && gallery.length > 0;
 
-  // Los tabs sin contenido no se pintan: el cliente puede vaciar la galería
-  // desde WordPress y un tab vacío es peor que ningún tab.
-  const available = TABS.filter((tab) => {
-    if (tab.id === "galeria") return settings.gallery.enabled && gallery.length > 0;
-    if (tab.id === "disenos") return designs.length > 0;
-    return true;
-  });
+  if (!designs.length && !showGallery) return null;
 
-  /** Entrar por `#galeria` o `#personalizacion` abre su panel, no solo lo desplaza. */
-  const syncFromHash = useCallback(() => {
-    const hash = window.location.hash.replace("#", "");
-    if (available.some((tab) => tab.id === hash)) setActive(hash as TabId);
-  }, [available]);
-
-  useEffect(() => {
-    syncFromHash();
-    window.addEventListener("hashchange", syncFromHash);
-    return () => window.removeEventListener("hashchange", syncFromHash);
-  }, [syncFromHash]);
-
-  if (!available.length) return null;
-  const current = available.some((tab) => tab.id === active) ? active : available[0].id;
+  /** Compensa el header fijo al saltar por ancla. */
+  const anchorOffset = {
+    scrollMarginTop: "calc(var(--header-h) + var(--admin-bar-offset) + 24px)",
+  } as const;
 
   return (
     <section id="disenos" className="section-y relative overflow-hidden bg-white">
       <DecorativeBackground variant="designs" />
 
-      {/*
-        Anclas de los paneles que ya no son sección propia. Van aquí y no
-        dentro del panel activo: el menú y el footer siguen enlazando a las
-        tres, y el navegador tiene que encontrar el destino aunque su tab esté
-        cerrado. Abrirlo es trabajo de `hashchange`.
-      */}
-      <span
-        id="galeria"
-        aria-hidden="true"
-        className="absolute top-0"
-        style={{ scrollMarginTop: "calc(var(--header-h) + var(--admin-bar-offset) + 24px)" }}
-      />
-      <span
-        id="personalizacion"
-        aria-hidden="true"
-        className="absolute top-0"
-        style={{ scrollMarginTop: "calc(var(--header-h) + var(--admin-bar-offset) + 24px)" }}
-      />
-
       <div className="container-page relative z-10">
         <SectionHeader eyebrow={copy.eyebrow} eyebrowIcon="sparkles" title={copy.title} />
 
-        <div className="mb-7 flex justify-center">
-          <PillNav
-            items={available.map((tab) => ({ id: tab.id, label: tab.label, tone: tab.tone }))}
-            active={current}
-            onChange={(id) => setActive(id as TabId)}
-            label="Ver los diseños"
-            idPrefix="showcase"
-          />
-        </div>
+        {designs.length ? <DesignsPanel settings={settings} designs={designs} /> : null}
 
-        {/*
-          `mode="wait"`: sin él los dos paneles coexisten un instante y la
-          sección da un salto de alto igual a la suma de ambos.
-        */}
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div
-            key={current}
-            id={`showcase-panel-${current}`}
-            role="tabpanel"
-            aria-labelledby={`showcase-tab-${current}`}
-            tabIndex={-1}
-            initial={reduced ? false : { opacity: 0, scale: 0.98, y: 12 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={reduced ? undefined : { opacity: 0, scale: 0.98, y: -8 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="relative"
-          >
-            {current === "disenos" ? (
-              <DesignsPanel settings={settings} designs={designs} />
-            ) : current === "galeria" ? (
-              <GalleryPanel settings={settings} items={gallery} />
-            ) : (
-              <PersonalizationPanel settings={settings} />
-            )}
-          </motion.div>
-        </AnimatePresence>
+        {showGallery ? (
+          <div id="galeria" className="mt-14" style={anchorOffset}>
+            <GalleryPanel settings={settings} items={gallery} />
+          </div>
+        ) : null}
       </div>
     </section>
   );
