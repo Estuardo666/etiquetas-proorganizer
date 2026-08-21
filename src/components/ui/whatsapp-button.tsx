@@ -16,8 +16,8 @@ import type { WaSource } from "@/lib/site-config";
  * CTA es de una tarjeta concreta (un tamaño, un diseño).
  *
  * Todas las variantes salvo `link` son `FluidButton`. Verde de marca con
- * rotulo blanco en reposo (5,0:1) y relleno azul marino al hacer hover
- * (9,0:1): el mismo boton verde del material impreso.
+ * rotulo oscuro en reposo (6,5:1) y relleno verde muy claro al hacer hover
+ * (10,5:1), sobre un extruido verde azulado oscuro.
  *
  * `link` es `TextArrowCta`: dentro de una rejilla de tarjetas, un boton solido
  * por tarjeta compite con el CTA principal de la seccion.
@@ -68,6 +68,13 @@ export function WhatsAppButton({
 }) {
   const { wa, waWith } = useOrder();
   const href = message ? waWith(message) : wa(source, carrySelection);
+  /**
+   * Cuando la sección pinta el CTA con el color de su tarjeta, la paleta de
+   * WhatsApp deja de aplicar: son rellenos oscuros y saturados, así que el
+   * rótulo va en blanco y el hover sube el azul marino. El verde claro
+   * (`--c-whatsapp-ink`) es solo del botón verde de WhatsApp.
+   */
+  const custom = Boolean(background);
   const content = children ?? label;
 
   if (variant === "link") {
@@ -99,9 +106,10 @@ export function WhatsAppButton({
       onClick={onClick}
       size={sizeFor[variant]}
       background={background ?? "var(--c-whatsapp)"}
-      overlayColor={overlayColor ?? "var(--c-whatsapp-ink)"}
-      textColor={textColor ?? "#ffffff"}
-      secondTextColor="#ffffff"
+      overlayColor={overlayColor ?? (custom ? "var(--c-navy)" : "var(--c-whatsapp-ink)")}
+      extrudeColor={custom ? undefined : "var(--c-whatsapp-extrude)"}
+      textColor={textColor ?? (custom ? "#ffffff" : "var(--c-whatsapp-text)")}
+      secondTextColor={custom ? "#ffffff" : "var(--c-whatsapp-text)"}
       className={className}
     >
       <WhatsAppIcon className="size-[17px] shrink-0" />

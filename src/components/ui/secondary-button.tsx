@@ -42,6 +42,7 @@ export function SecondaryButton({
       background="#ffffff"
       overlayColor="var(--c-navy)"
       borderColor="var(--c-navy)"
+      extrudeColor="var(--c-navy)"
       textColor="var(--c-navy)"
       secondTextColor="#ffffff"
       // Sin pulso: el rebote es el gesto del CTA principal y repetirlo en el

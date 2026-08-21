@@ -136,15 +136,6 @@ export function Hero({ settings }: { settings: Settings }) {
                   </p>
                 ) : null}
               </motion.div>
-
-              {hero.note ? (
-                <motion.p
-                  variants={fadeScaleIn}
-                  className="mt-3 text-[14px] font-semibold text-[var(--c-muted)]"
-                >
-                  {hero.note}
-                </motion.p>
-              ) : null}
             </motion.div>
 
             {/* Composición de productos ---------------------------------- */}

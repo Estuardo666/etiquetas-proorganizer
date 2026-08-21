@@ -115,7 +115,7 @@ export const fallbackContent: SiteContent = {
       // usuario ya decidió.
       ctaPrimary: "Pedir por WhatsApp",
       ctaSecondary: "Ver diseños",
-      note: "Cuatro tamaños · desde $8 la hoja · 4ta hoja gratis",
+      note: "",
       // "$8 por hoja" no se puede evaluar sin saber qué trae una hoja.
       sheetNote: "Cada hoja trae de 9 a 60 etiquetas según el tamaño.",
       promoNote: "4ta hoja gratis · Llevas 4 y pagas 3",

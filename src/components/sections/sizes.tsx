@@ -1,7 +1,8 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Check } from "lucide-react";
+import { Check, Ruler } from "lucide-react";
+import { useState } from "react";
 import { SectionHeader } from "@/components/ui/section-header";
 import { RevealGroup, RevealItem } from "@/components/ui/reveal";
 import { DecorativeBackground } from "@/components/ui/decor";
@@ -13,7 +14,7 @@ import { useOrder } from "@/components/order-provider";
 import { cardHover, decorPop, fadeScaleIn } from "@/lib/motion";
 import { fillMessageTemplate, waMessageForSize } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
-import type { Settings, SizeItem, UsageItem } from "@/lib/types";
+import type { Settings, SizeItem, UsageItem, WpImage } from "@/lib/types";
 
 
 /**
@@ -51,6 +52,18 @@ const cardSolids = [
   "var(--c-ink)",
 ];
 
+/**
+ * Diagrama a escala de cada tamaño, en `public/tamanos/comparativas`. Sirve
+ * para lo que la foto de producto no puede: poner los cuatro rectángulos uno
+ * al lado del otro y que la diferencia de tamaño se vea sin leer las medidas.
+ */
+const compareImage = (slug: string, title: string): WpImage => ({
+  url: `/tamanos/comparativas/${slug}.webp`,
+  alt: `Diagrama a escala del tamaño ${title}`,
+  width: 920,
+  height: 920,
+});
+
 /** Los usos llegan como frase suelta; se leen mejor separados por puntos. */
 const useList = (uses: string) =>
   uses
@@ -69,6 +82,12 @@ export function Sizes({
   usages: UsageItem[];
 }) {
   const { selectedSize, selectSize } = useOrder();
+  /**
+   * Las fotos y los diagramas ocupan el mismo hueco de cada tarjeta: no es una
+   * vista aparte sino el mismo contenido visto de otra manera, así que la
+   * comparación no obliga a salir de la decisión que se está tomando.
+   */
+  const [comparing, setComparing] = useState(false);
   if (!sizes.length) return null;
 
   return (
@@ -83,6 +102,28 @@ export function Sizes({
           title={settings.sizes.title}
           subtitle={settings.sizes.subtitle}
         />
+
+        {/*
+          Botón terciario: sin relleno ni contorno pesado, un escalón por
+          debajo del secundario. Cambia cómo se ve la sección, no la lleva a
+          ninguna parte, y no debe competir con "Elegir este tamaño".
+        */}
+        <div className="-mt-2 mb-6 flex justify-center">
+          <button
+            type="button"
+            onClick={() => setComparing((on) => !on)}
+            aria-pressed={comparing}
+            className={cn(
+              "focus-ring inline-flex items-center gap-2 rounded-full px-4 py-2 text-[14px] font-bold transition-colors duration-200",
+              comparing
+                ? "bg-[var(--c-ink)]/10 text-[var(--c-ink)]"
+                : "text-[var(--c-ink)]/70 hover:bg-[var(--c-ink)]/8 hover:text-[var(--c-ink)]",
+            )}
+          >
+            <Ruler className="size-4" strokeWidth={2.5} aria-hidden="true" />
+            {comparing ? "Ver fotos" : "Comparar tamaños"}
+          </button>
+        </div>
 
         {/* Cuatro tamaños: la muestra se ve a tamaño real y cada opción
             conserva espacio suficiente para sus usos. */}
@@ -127,28 +168,74 @@ export function Sizes({
 
                   {/* Muestra de etiqueta: nombre + personaje, con borde blanco
                       interior y sombra para que tenga profundidad. */}
-                  <div className="my-4 w-full">
-                    {size.image?.url ? (
-                      // Foto de producto sobre fondo claro: `contain` para que
-                      // la hoja de etiquetas no se recorte por los bordes.
-                      <Media
-                        image={size.image}
-                        alt={`Etiqueta ${size.title}`}
-                        className="aspect-[4/3] w-full rounded-2xl"
-                        imgClassName="object-contain transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
-                        sizes="(max-width: 640px) 78vw, (max-width: 1024px) 44vw, 22vw"
-                      />
-                    ) : (
-                      <span
-                        className="card-shadow mx-auto flex w-full max-w-[230px] items-center justify-center gap-2 rounded-[18px] border-[3px] border-white px-3 py-2.5 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-0.5 group-hover:scale-[1.04]"
-                        style={{ background: "#fff" }}
-                      >
-                        <span className="font-[family-name:var(--font-heading)] text-[17px] font-semibold text-[var(--c-ink)]">
-                          {settings.sizes.sampleName}
-                        </span>
-                        <SizeArt title={size.title} index={index} size={24} />
-                      </span>
-                    )}
+                  {/*
+                      Foto y diagrama comparten hueco, apilados: la que sale
+                      encoge hasta desaparecer y la que entra crece un pelo
+                      después, así el cambio se lee como un "pop out / pop in"
+                      y no como un parpadeo. El retraso por tarjeta hace que la
+                      fila cambie en cascada de izquierda a derecha.
+
+                      La animación es CSS y no framer-motion a propósito: la
+                      tarjeta es un `motion.button` con árbol de variantes, y
+                      dentro de él las variantes del padre mandan sobre las de
+                      los hijos — un `AnimatePresence` anidado aquí se queda
+                      congelado a medio camino.
+                  */}
+                  <div className="relative my-4 aspect-[4/3] w-full">
+                    {[false, true].map((isCompare) => {
+                      const on = isCompare === comparing;
+                      const image = isCompare ? compareImage(size.slug, size.title) : size.image;
+
+                      return (
+                        <div
+                          key={isCompare ? "compare" : "photo"}
+                          aria-hidden={!on}
+                          className={cn(
+                            "absolute inset-0 flex items-center justify-center transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
+                            on ? "scale-100 opacity-100" : "pointer-events-none scale-[0.6] opacity-0",
+                          )}
+                          // Solo la que entra espera; la que sale se va enseguida.
+                          style={{ transitionDelay: on ? `${140 + index * 50}ms` : "0ms" }}
+                        >
+                          {image?.url ? (
+                            // Foto de producto sobre fondo claro: `contain` para que
+                            // la hoja de etiquetas no se recorte por los bordes.
+                            <Media
+                              image={image}
+                              alt={
+                                isCompare
+                                  ? `Diagrama a escala del tamaño ${size.title}`
+                                  : `Etiqueta ${size.title}`
+                              }
+                              className="aspect-[4/3] w-full rounded-2xl"
+                              imgClassName={cn(
+                                "object-contain",
+                                // El diagrama viene con fondo blanco de lienzo:
+                                // `multiply` lo funde con el tinte de la
+                                // tarjeta (blanco x color = color) y deja solo
+                                // el rectángulo a escala y sus cotas, sin el
+                                // recuadro pálido que lo hacía parecer una
+                                // captura pegada encima.
+                                isCompare
+                                  ? "mix-blend-multiply"
+                                  : "transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]",
+                              )}
+                              sizes="(max-width: 640px) 78vw, (max-width: 1024px) 44vw, 22vw"
+                            />
+                          ) : (
+                            <span
+                              className="card-shadow mx-auto flex w-full max-w-[230px] items-center justify-center gap-2 rounded-[18px] border-[3px] border-white px-3 py-2.5 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-0.5 group-hover:scale-[1.04]"
+                              style={{ background: "#fff" }}
+                            >
+                              <span className="font-[family-name:var(--font-heading)] text-[17px] font-semibold text-[var(--c-ink)]">
+                                {settings.sizes.sampleName}
+                              </span>
+                              <SizeArt title={size.title} index={index} size={24} />
+                            </span>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
 
                   <p className="text-[12px] font-bold text-[var(--c-ink)]/75">

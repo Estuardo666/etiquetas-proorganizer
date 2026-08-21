@@ -95,13 +95,15 @@
   --c-pastel-positive: color-mix(in srgb, var(--c-positive) 55%, #ffffff);
 
   /**
-   * El botón de chat es el verde de la marca oscurecido hasta que el texto
-   * blanco encima llega a 5,0:1 — el verde de WhatsApp tal cual solo da 2,9:1
-   * y el rótulo del botón es el texto más importante de la página. Al hacer
-   * hover el relleno pasa a azul marino (9,0:1).
+   * Botón de chat: verde en reposo, verde muy claro al hacer hover y el
+   * extruido en verde azulado oscuro. El rótulo es el mismo tono oscuro en
+   * los dos estados (6,5:1 sobre el verde, 10,5:1 sobre el claro): blanco
+   * sobre este verde solo daría 1,9:1.
    */
-  --c-whatsapp: var(--c-green);
-  --c-whatsapp-ink: var(--c-navy);
+  --c-whatsapp: #59ce72;
+  --c-whatsapp-ink: #e0f6ca;
+  --c-whatsapp-extrude: #215c54;
+  --c-whatsapp-text: #123b36;
 
   --c-radius: 28px;
 
@@ -366,6 +368,30 @@ h5 {
  * botón devuelve el gesto y se queda quieto, que es lo que evita que un CTA
  * grande vibre mientras el usuario lee lo que hay dentro.
  */
+/**
+ * Neobrutalismo con perspectiva central: el botón se apoya sobre un extruido
+ * sólido del mismo ancho, proyectado recto hacia abajo (sin desviación
+ * lateral, de ahí lo de central). Al pulsar, el botón baja exactamente la
+ * altura del extruido y el extruido desaparece: la pastilla queda aplastada
+ * contra la página, que es el gesto físico del clic.
+ *
+ * `translate` y no `transform`: el pulso de `fluid-pulse` ya ocupa
+ * `transform` con su escala, y usar la misma propiedad haría que una
+ * animación pisara a la otra.
+ */
+.btn-3d {
+  --btn-depth: 6px;
+  box-shadow: 0 var(--btn-depth) 0 0 var(--btn-extrude, var(--c-ink));
+  transition:
+    translate 110ms cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 110ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-3d:active {
+  translate: 0 var(--btn-depth);
+  box-shadow: 0 0 0 0 var(--btn-extrude, var(--c-ink));
+}
+
 @keyframes fluid-pulse {
   0% {
     transform: scale(1);

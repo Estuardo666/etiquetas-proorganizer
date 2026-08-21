@@ -44,24 +44,38 @@ import type { Settings, StatItem } from "@/lib/types";
  * entre una celda y su copia, no como `scrollWidth / 2`: la pista lleva
  * relleno lateral y ese medio relleno bastaba para que el salto no cayera en
  * el mismo punto y se viera un tirón cada vuelta.
+ *
+ * La velocidad va en píxeles por segundo y se multiplica por el delta real de
+ * cada fotograma, así la cinta corre igual en una pantalla de 60 Hz que en una
+ * de 120.
  */
-function useMarquee<T extends HTMLElement>(speed = 0.35) {
+function useMarquee<T extends HTMLElement>(pxPerSecond = 32) {
   const ref = useRef<T>(null);
 
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
-    if (window.matchMedia("(min-width: 640px)").matches) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const wide = window.matchMedia("(min-width: 640px)");
+    const still = window.matchMedia("(prefers-reduced-motion: reduce)");
 
     let frame = 0;
+    let running = false;
     let pausedUntil = 0;
+    let last = 0;
+    /*
+      La posición se lleva aparte, en decimales. Asignar `scrollLeft` en pasos
+      de menos de un píxel y volver a leerlo no acumula: el navegador redondea
+      al leer, así que la cinta se quedaba clavada sumando y perdiendo la misma
+      fracción cada fotograma. Aquí solo se escribe; lo que manda es `pos`.
+    */
+    let pos = 0;
 
     const hold = () => {
       pausedUntil = performance.now() + 1500;
     };
 
-    /** Distancia entre una celda y su copia; es lo que dura una vuelta. */
+    /** Distancia entre una celda y su copia: lo que dura una vuelta. */
     const periodOf = () => {
       const cells = node.querySelectorAll<HTMLElement>(".trust-cell");
       if (cells.length < 2) return 0;
@@ -71,25 +85,65 @@ function useMarquee<T extends HTMLElement>(speed = 0.35) {
 
     const step = (now: number) => {
       frame = requestAnimationFrame(step);
-      if (now < pausedUntil) return;
+
+      // El primer fotograma no tiene delta, y una pestaña que vuelve del
+      // segundo plano trae uno enorme: se recorta para que la cinta no dé un
+      // salto de varias vueltas al volver.
+      const delta = last ? Math.min(now - last, 100) : 0;
+      last = now;
+
+      if (now < pausedUntil) {
+        pos = node.scrollLeft;
+        return;
+      }
 
       const period = periodOf();
-      const next = node.scrollLeft + speed;
-      node.scrollLeft = period > 0 && next >= period ? next - period : next;
+      pos += (pxPerSecond * delta) / 1000;
+      if (period > 0 && pos >= period) pos -= period;
+      node.scrollLeft = pos;
     };
 
-    frame = requestAnimationFrame(step);
+    const start = () => {
+      if (running) return;
+      running = true;
+      last = 0;
+      pos = node.scrollLeft;
+      frame = requestAnimationFrame(step);
+    };
+
+    const stop = () => {
+      if (!running) return;
+      running = false;
+      cancelAnimationFrame(frame);
+    };
+
+    /*
+      Se re-evalúa al cambiar el ancho y no solo al montar: al abrir la página
+      en escritorio y estrecharla —o al girar el móvil— el efecto ya se había
+      ejecutado, salía por la puerta de "esto es escritorio" y la cinta se
+      quedaba muerta hasta recargar.
+    */
+    const sync = () => {
+      if (wide.matches || still.matches) stop();
+      else start();
+    };
+
+    sync();
+    wide.addEventListener("change", sync);
+    still.addEventListener("change", sync);
     node.addEventListener("pointerdown", hold);
     node.addEventListener("touchstart", hold, { passive: true });
     node.addEventListener("wheel", hold, { passive: true });
 
     return () => {
-      cancelAnimationFrame(frame);
+      stop();
+      wide.removeEventListener("change", sync);
+      still.removeEventListener("change", sync);
       node.removeEventListener("pointerdown", hold);
       node.removeEventListener("touchstart", hold);
       node.removeEventListener("wheel", hold);
     };
-  }, [speed]);
+  }, [pxPerSecond]);
 
   return ref;
 }

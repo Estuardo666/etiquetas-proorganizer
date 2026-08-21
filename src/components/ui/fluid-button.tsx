@@ -63,6 +63,10 @@ type FluidButtonProps = {
   /** Color del texto una vez el relleno ha subido. */
   secondTextColor?: string;
   borderColor?: string;
+  /** Color del extruido; por defecto el relleno oscurecido. */
+  extrudeColor?: string;
+  /** Altura del extruido en px. */
+  depth?: number;
   pulse?: boolean;
   className?: string;
   /** Atribución de la conversión; lo usa `WhatsAppButton`. */
@@ -82,6 +86,8 @@ export function FluidButton({
   textColor = "var(--c-ink)",
   secondTextColor = "#ffffff",
   borderColor = "transparent",
+  extrudeColor,
+  depth = 6,
   pulse = true,
   className,
   dataWaSource,
@@ -94,9 +100,19 @@ export function FluidButton({
       onClick={onClick}
       aria-label={ariaLabel}
       data-wa-source={dataWaSource}
-      style={{ background, borderColor }}
+      style={
+        {
+          background,
+          borderColor,
+          // El extruido por defecto es el propio relleno mezclado con azul
+          // marino: cada botón hereda su sombra sin declararla una por una.
+          "--btn-extrude":
+            extrudeColor ?? `color-mix(in srgb, ${background} 55%, var(--c-navy))`,
+          "--btn-depth": `${depth}px`,
+        } as React.CSSProperties
+      }
       className={cn(
-        "focus-ring fluid-btn relative isolate inline-flex items-center justify-center overflow-hidden rounded-full border-2 font-[family-name:var(--font-body)] font-medium active:scale-[0.98]",
+        "focus-ring fluid-btn btn-3d relative isolate inline-flex items-center justify-center overflow-hidden rounded-full border-2 font-[family-name:var(--font-body)] font-medium",
         pulse && "fluid-pulse",
         sizes[size],
         className,
