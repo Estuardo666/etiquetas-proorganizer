@@ -902,3 +902,167 @@ h5 {
     flex: 0 0 auto;
   }
 }
+
+/**
+ * Franja de personajes ("Personalice a su gusto").
+ *
+ * El recorte lo hace `clip-path: inset(...)` y no `overflow: hidden`: la
+ * cabeza tiene que salirse por arriba del círculo mientras el cuerpo se corta
+ * limpio contra su borde inferior, y `overflow` recorta por los cuatro lados.
+ *
+ * Los PNG son cuadrados, así que la imagen se dimensiona por ancho (`width`,
+ * no `height`): con `height` los que traen aire arriba se apoyaban más abajo
+ * que el resto y la fila de círculos se veía desalineada.
+ *
+ * El nombre está siempre en el flujo —altura reservada— y solo aparece en el
+ * hover: si entrara y saliera del layout, la franja daría un salto de 24 px
+ * cada vez que el puntero cruza un personaje.
+ */
+.character-marquee-mask {
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent 0, #000 7%, #000 93%, transparent 100%);
+}
+
+.character-marquee {
+  display: flex;
+  width: max-content;
+  animation: character-scroll 46s linear infinite;
+}
+
+.character-marquee:hover {
+  animation-play-state: paused;
+}
+
+.character-track {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  /* El aire de arriba lo pone la pista y no cada item: el contenedor recorta
+     con `overflow: hidden` (lo necesita en horizontal para el bucle) y sin
+     este colchón la cabeza que sobresale del círculo se cortaba contra el
+     borde superior de la franja. */
+  padding-block: 40px 0;
+  padding-inline: 14px;
+}
+
+@keyframes character-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.character-item {
+  display: flex;
+  width: 99px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.character-disc {
+  position: relative;
+  display: block;
+  width: 99px;
+  height: 99px;
+  border-radius: 999px;
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.character-clip {
+  position: absolute;
+  inset: 0;
+  display: block;
+  /* Arriba libre para la cabeza; abajo y a los lados, al ras del círculo. */
+  clip-path: inset(-46% -4% 0 -4%);
+}
+
+.character-img {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 118%;
+  height: auto;
+  transform: translateX(-50%);
+  object-fit: contain;
+  object-position: bottom center;
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.character-name {
+  margin-top: 10px;
+  min-height: 1.15em;
+  font-family: var(--font-heading), sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--c-accent-ink);
+  text-align: center;
+  line-height: 1.15;
+  opacity: 0;
+  transform: scale(0.7);
+  /* Salida más corta que la entrada y sin rebote: el pop es la bienvenida. */
+  transition:
+    opacity 140ms ease,
+    transform 140ms cubic-bezier(0.4, 0, 1, 1);
+}
+
+.character-item:hover .character-disc {
+  transform: translateY(-4px) scale(1.05);
+}
+
+.character-item:hover .character-img {
+  transform: translateX(-50%) translateY(-6px) scale(1.08);
+}
+
+.character-item:hover .character-name {
+  opacity: 1;
+  transform: scale(1);
+  transition:
+    opacity 180ms ease,
+    /* Sobrepasa a 1.06 y vuelve: eso es el "pop". */
+    transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@media (min-width: 768px) {
+  .character-marquee-mask {
+    /* El fade tapa un cuarto de la franja a cada lado: en desktop la franja
+       mide 1200 px y con un 7 % el corte se veía como un borde, no como que
+       la fila sigue más allá. */
+    mask-image: linear-gradient(to right, transparent 0, #000 18%, #000 82%, transparent 100%);
+  }
+
+  .character-item,
+  .character-disc {
+    width: 112px;
+  }
+
+  .character-disc {
+    height: 112px;
+  }
+
+  .character-track {
+    gap: 32px;
+  }
+
+  .character-name {
+    font-size: 15px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .character-marquee {
+    animation: none;
+  }
+
+  .character-marquee-mask {
+    overflow-x: auto;
+  }
+
+  .character-name {
+    opacity: 1;
+    transform: none;
+  }
+}

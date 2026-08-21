@@ -152,7 +152,7 @@ export const fallbackContent: SiteContent = {
       eyebrow: "Su estilo, su etiqueta",
       title: "Diseños que les encantan",
       subtitle: "",
-      ctaText: "Ver todos los diseños",
+      ctaText: "Quiero ver más diseños",
       selectedCtaTemplate: "Pedir diseño {title}",
       featuredSub: "Hágalo único con su mejor sonrisa.",
       featuredNote: "Mismo precio, $8 por hoja.",

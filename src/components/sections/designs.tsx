@@ -5,6 +5,7 @@ import { ArrowRight, Check } from "lucide-react";
 import { RevealGroup, RevealItem, Reveal } from "@/components/ui/reveal";
 import { DesignArt } from "@/components/ui/illustrations";
 import { Media } from "@/components/ui/media";
+import { CharacterMarquee } from "@/components/ui/character-marquee";
 import { WhatsAppButton } from "@/components/ui/whatsapp-button";
 import { useOrder } from "@/components/order-provider";
 import { fadeScaleIn } from "@/lib/motion";
@@ -189,6 +190,17 @@ export function DesignsPanel({ settings, designs }: { settings: Settings; design
           })}
         </RevealGroup>
 
+        {/* Sub-bloque de personajes: la rejilla de arriba enseña categorías
+            ("Foto personalizada", "Animales"...) y la pregunta que queda es
+            "¿tienen el personaje de mi hijo?". La franja la responde sin
+            añadir otra rejilla de tarjetas. */}
+        <Reveal className="mt-10 lg:mt-12">
+          <h3 className="mb-5 text-center font-[family-name:var(--font-heading)] text-[22px] leading-tight font-extrabold text-[var(--c-ink)] sm:text-[26px]">
+            Personalice a su <span className="text-[var(--c-highlight-ink)]">gusto</span>
+          </h3>
+          <CharacterMarquee />
+        </Reveal>
+
         {/* Un solo CTA para toda la sección, pero con el mensaje de la
             categoría elegida: siete botones verdes en la rejilla competirían
             entre sí y con el flotante. */}
@@ -209,7 +221,7 @@ export function DesignsPanel({ settings, designs }: { settings: Settings; design
             ariaLabel={
               selectedDesign
                 ? `Pedir por WhatsApp etiquetas con diseño de ${selectedDesign}`
-                : "Escribir por WhatsApp para ver todos los diseños"
+                : "Escribir por WhatsApp para ver más diseños"
             }
           />
         </Reveal>
