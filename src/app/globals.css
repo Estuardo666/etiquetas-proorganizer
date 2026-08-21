@@ -734,6 +734,57 @@ h5 {
 }
 
 /**
+ * Móvil: la franja de confianza se desplaza sola, en bucle.
+ *
+ * Era una fila con scroll manual, y una fila que no se mueve no se lee como
+ * deslizable: la mitad de las celdas quedaban fuera de pantalla sin que nada
+ * lo indicara. En bucle continuo el usuario ve las cinco sin tocar nada.
+ *
+ * La pista lleva el contenido duplicado y se desplaza media pista más medio
+ * hueco: ese medio hueco es lo que hace que el salto al reiniciar caiga en el
+ * mismo sitio y el bucle no dé un tirón.
+ */
+.trust-marquee-mask {
+  overflow: hidden;
+}
+
+@media (max-width: 639px) {
+  .trust-marquee {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px;
+    width: max-content;
+    animation: trust-marquee 26s linear infinite;
+  }
+
+  /* Al tocar o enfocar una celda la cinta se detiene: si no, leer el pie de
+     una cifra obliga a perseguirla. */
+  .trust-marquee:hover,
+  .trust-marquee:focus-within {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes trust-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-50% - 5px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trust-marquee {
+    animation: none;
+  }
+
+  .trust-marquee-mask {
+    overflow-x: auto;
+  }
+}
+
+/**
  * Franja de confianza: el dibujo salta al pasar por encima.
  *
  * Va en CSS y no en gestos de framer-motion porque el efecto tiene que

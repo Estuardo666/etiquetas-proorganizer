@@ -209,6 +209,17 @@ export function Footer({ settings }: { settings: Settings }) {
         {/* Cierre de marca ---------------------------------------------- */}
         <div className="mt-9 text-center">
           {/*
+            La cobertura de envío cierra el pie, justo encima del copyright:
+            es la última objeción que queda viva cuando alguien de fuera de
+            Guayaquil llega al final de la página, y aquí no compite con
+            ninguna de las tres columnas de contacto.
+          */}
+          {footer.shippingNote ? (
+            <p className="mx-auto mb-4 w-fit rounded-full border border-white/35 px-4 py-1.5 text-[14.5px] font-bold text-white">
+              {footer.shippingNote}
+            </p>
+          ) : null}
+          {/*
             El lema y la frase de cierre salieron del pie: decían lo mismo que
             el hero y que la sección de costo, y eran las dos últimas líneas
             antes del copyright. `quote` y `closing` siguen en el contrato de

@@ -150,7 +150,14 @@ export function Personalization({ settings }: { settings: Settings }) {
                 </p>
 
                 <span className="mt-4 flex lg:mt-5 lg:justify-center">
-                  <SecondaryButton href={copy.guideUrl} ariaLabel={copy.guideCta}>
+                  {/* Pestaña nueva: el tutorial vive en Instagram y salir de la
+                      landing a media lectura pierde el pedido. */}
+                  <SecondaryButton
+                    href={copy.guideUrl}
+                    target="_blank"
+                    rel="noopener"
+                    ariaLabel={`${copy.guideCta} (se abre en una pestaña nueva)`}
+                  >
                     {copy.guideCta}
                   </SecondaryButton>
                 </span>

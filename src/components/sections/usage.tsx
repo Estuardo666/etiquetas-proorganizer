@@ -43,7 +43,11 @@ export function UsageStrip({ settings, usages }: { settings: Settings; usages: U
               initial="rest"
               whileHover="hover"
               variants={cardHoverSm}
-              className="group flex h-full w-[116px] flex-col items-center gap-2 sm:w-full"
+              /* 36vw: en móvil entran dos tarjetas y media, así que la tercera
+                 asoma cortada por el borde y la fila se lee como deslizable.
+                 A 116px fijos entraban casi tres enteras y parecía una rejilla
+                 completa que no invitaba a arrastrar. */
+              className="group flex h-full w-[36vw] max-w-[150px] flex-col items-center gap-2 sm:w-full sm:max-w-none"
             >
               {/* Las fotos van recortadas sobre el fondo de la seccion: la
                   tarjeta blanca alrededor solo repetia el marco que ya trae la
@@ -53,7 +57,7 @@ export function UsageStrip({ settings, usages }: { settings: Settings; usages: U
                 alt={usage.title}
                 className="aspect-square w-full"
                 imgClassName="object-contain transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06]"
-                sizes="(max-width: 640px) 116px, (max-width: 1024px) 22vw, 150px"
+                sizes="(max-width: 640px) 36vw, (max-width: 1024px) 22vw, 150px"
               />
               <figcaption className="rounded-full border border-[var(--c-border)] bg-white px-3 py-1.5 text-center text-[13px] leading-tight font-bold text-balance text-[var(--c-text)]">
                 {usage.title}

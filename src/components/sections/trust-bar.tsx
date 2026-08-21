@@ -26,6 +26,43 @@ import type { Settings, StatItem } from "@/lib/types";
  * bloques distintos dentro de una misma fila. Tampoco llevan disco de color
  * detrás: los dibujos ya traen el suyo.
  */
+/**
+ * Ancho de celda en móvil: 42vw deja ver dos y media, así que la siguiente
+ * asoma cortada. A 58% quedaban muy separadas entre sí.
+ */
+type Cell = {
+  key: string;
+  art: React.ReactNode;
+  headline: string;
+  detail?: string;
+};
+
+const cellClass =
+  "trust-cell flex w-[42vw] shrink-0 flex-col items-center gap-2 px-1 text-center sm:w-auto sm:col-span-2 lg:col-span-1";
+
+function CellBody({ cell }: { cell: Cell }) {
+  return (
+    <>
+      <span
+        aria-hidden="true"
+        className="trust-art grid h-16 place-items-center"
+      >
+        {cell.art}
+      </span>
+
+      <p className="trust-headline max-w-[12ch] font-[family-name:var(--font-heading)] text-[clamp(19px,1.6vw,23px)] leading-[1.15] font-semibold text-balance text-[var(--c-ink)]">
+        {cell.headline}
+      </p>
+
+      {cell.detail ? (
+        <p className="max-w-[14rem] text-[13.5px] leading-snug text-pretty text-[var(--c-muted)]">
+          {cell.detail}
+        </p>
+      ) : null}
+    </>
+  );
+}
+
 export function TrustBar({
   settings,
   stats,
@@ -36,13 +73,6 @@ export function TrustBar({
   const { trust } = settings;
   const benefits = pipes(trust.items).slice(0, 3);
   const figures = stats.filter((item) => Boolean(item.value));
-
-  type Cell = {
-    key: string;
-    art: React.ReactNode;
-    headline: string;
-    detail?: string;
-  };
 
   const benefitCells = benefits.map(([icon, title, desc], index) => ({
     key: `b-${index}`,
@@ -80,48 +110,48 @@ export function TrustBar({
         />
 
         {/*
-          Móvil: fila deslizable. Cinco columnas en 375 px dejarían cada texto
-          en una tira de 60 px.
+          Móvil: cinta en bucle (`.trust-marquee`). Cinco columnas en 375 px
+          dejarían cada texto en una tira de 60 px, y una fila con scroll
+          manual no se lee como deslizable: la mitad quedaba fuera de pantalla
+          sin avisar. El contenido va duplicado para que el bucle no corte.
         */}
         {/*
           Seis columnas en tablet: cada celda ocupa dos, así que salen tres
           arriba y dos abajo, y la fila de abajo va centrada. Desde `lg` los
           cinco entran de una.
         */}
-        <RevealGroup
-          className="snap-row snap-row-sm sm:grid sm:gap-x-3 sm:gap-y-8 sm:overflow-visible sm:p-0 sm:[margin-inline:0] sm:[grid-template-columns:repeat(6,minmax(0,1fr))] lg:gap-x-2 lg:[grid-template-columns:repeat(5,minmax(0,1fr))]"
-          gap={0.05}
-        >
-          {cells.map((cell, index) => (
-            <RevealItem
-              key={cell.key}
-              variants={fadeScaleIn}
-              className={cn(
-                "trust-cell flex w-[58%] shrink-0 flex-col items-center gap-2 px-1 text-center sm:w-auto sm:col-span-2 lg:col-span-1",
-                /* Cuarta celda: arranca en la segunda columna para que la fila
-                   de dos quede centrada bajo la de tres. */
-                index === 3 ? "sm:col-start-2 lg:col-start-auto" : "",
-              )}
-            >
-              <span
-                aria-hidden="true"
-                className="trust-art grid h-16 place-items-center"
+        <div className="trust-marquee-mask sm:overflow-visible">
+          <RevealGroup
+            className="trust-marquee sm:grid sm:gap-x-3 sm:gap-y-8 sm:[grid-template-columns:repeat(6,minmax(0,1fr))] lg:gap-x-2 lg:[grid-template-columns:repeat(5,minmax(0,1fr))]"
+            gap={0.05}
+          >
+            {cells.map((cell, index) => (
+              <RevealItem
+                key={cell.key}
+                variants={fadeScaleIn}
+                className={cn(
+                  cellClass,
+                  index === 3 ? "sm:col-start-2 lg:col-start-auto" : "",
+                )}
               >
-                {cell.art}
-              </span>
+                <CellBody cell={cell} />
+              </RevealItem>
+            ))}
 
-              <p className="trust-headline font-[family-name:var(--font-heading)] text-[clamp(19px,1.6vw,23px)] leading-[1.15] font-semibold text-balance text-[var(--c-ink)] max-w-[12ch]">
-                {cell.headline}
-              </p>
-
-              {cell.detail ? (
-                <p className="max-w-[14rem] text-[13.5px] leading-snug text-pretty text-[var(--c-muted)]">
-                  {cell.detail}
-                </p>
-              ) : null}
-            </RevealItem>
-          ))}
-        </RevealGroup>
+            {/*
+              Segunda vuelta de la cinta. Va fuera del árbol de accesibilidad
+              —es la misma información— y desaparece desde `sm`, donde la
+              rejilla ya enseña las cinco celdas a la vez.
+            */}
+            <div className="contents sm:hidden" aria-hidden="true">
+              {cells.map((cell) => (
+                <div key={`dup-${cell.key}`} className={cellClass}>
+                  <CellBody cell={cell} />
+                </div>
+              ))}
+            </div>
+          </RevealGroup>
+        </div>
       </div>
     </section>
   );

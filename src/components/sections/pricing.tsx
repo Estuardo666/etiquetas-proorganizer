@@ -43,6 +43,12 @@ const artWiggle: Variants = {
   hover: { rotate: -8, scale: 1.12, transition: { duration: 0.3, ease } },
 };
 
+/** La pastilla del ahorro entra con la tarjeta y crece un punto al pasar. */
+const savingPop: Variants = {
+  rest: { scale: 1, transition: { duration: 0.3, ease } },
+  hover: { scale: 1.05, transition: { duration: 0.3, ease } },
+};
+
 const stickerPop: Variants = {
   rest: { rotate: -8, scale: 1, transition: { duration: 0.3, ease } },
   hover: { rotate: -3, scale: 1.06, transition: { duration: 0.3, ease } },
@@ -188,6 +194,21 @@ export function Pricing({ settings, promos }: { settings: Settings; promos: Prom
                   >
                     {promo.highlight}
                   </motion.p>
+
+                  {/*
+                    El ahorro en dinero, bajo la cifra: "50 %" no dice cuánto
+                    es hasta que se hace la cuenta, y "$4" sí se compara con el
+                    "$8" de la tarjeta azul de al lado.
+                  */}
+                  {promo.saving ? (
+                    <motion.p
+                      variants={savingPop}
+                      className="mt-3 rounded-full px-3 py-1 text-[13px] leading-none font-extrabold text-white"
+                      style={{ background: "var(--c-highlight-ink)" }}
+                    >
+                      {promo.saving}
+                    </motion.p>
+                  ) : null}
 
                   <span className="mt-auto pt-6">
                     <WhatsAppButton

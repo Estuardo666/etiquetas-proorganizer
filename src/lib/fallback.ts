@@ -8,6 +8,14 @@ const labelImage = (slug: string, alt = "Etiqueta escolar personalizada"): WpIma
   height: 900,
 });
 
+/** Muestra de categoría, en `public/disenos` (cuadrada, útiles rotulados). */
+const designImage = (slug: string, title: string): WpImage => ({
+  url: `/disenos/${slug}.jpg`,
+  alt: `Útiles escolares rotulados con etiquetas de ${title}`,
+  width: 900,
+  height: 900,
+});
+
 /** Foto de producto por tamaño, en `public/tamanos` (proporción 4:3). */
 const sizeImage = (slug: string, title: string): WpImage => ({
   url: `/tamanos/${slug}.webp`,
@@ -170,7 +178,7 @@ export const fallbackContent: SiteContent = {
       guideTitle: "Vea cómo personalizamos sus etiquetas",
       guideText: "Del nombre elegido al diseño listo para imprimir.",
       guideCta: "Ver el paso a paso",
-      guideUrl: "https://etiquetasescolares.proorganizer.com.ec/#como-funciona",
+      guideUrl: "https://www.instagram.com/reels/DWNCKQ8jzoS/",
       approvalText: "Imprimimos sus etiquetas solo cuando usted aprueba el diseño.",
     },
     /**
@@ -258,6 +266,7 @@ export const fallbackContent: SiteContent = {
     footer: {
       // Sin uso: el pie ya no pinta lema ni cierre. Ver `footer.tsx`.
       quote: "",
+      shippingNote: "Hacemos envíos a todo el Ecuador 🇪🇨",
       socialTitle: "Síganos",
       storeTitle: "Compre en nuestra tienda en línea",
       storeText: "Rápido, fácil y seguro.",
@@ -368,19 +377,26 @@ export const fallbackContent: SiteContent = {
     { id: "u7", title: "Juguetes", image: usageImage("juguetes", "Juguetes"), sizeSlug: "pequena" },
     { id: "u8", title: "¡Y mucho más!", image: null, sizeSlug: "extra-pequenas" },
   ],
+  // Seis categorías, las mismas que siembra el plugin. Cada una con su foto
+  // de conjunto —lonchera, termo, cartuchera y cuaderno rotulados— porque la
+  // muestra hace el trabajo que hacía el dibujo: enseñar cómo queda puesto.
   designs: [
-    { id: "d1", title: "Animales", image: null, badge: "" },
-    { id: "d2", title: "Espacio", image: null, badge: "" },
-    { id: "d3", title: "Deportes", image: null, badge: "" },
-    { id: "d4", title: "Dinosaurios", image: null, badge: "" },
-    { id: "d5", title: "Unicornios", image: null, badge: "" },
+    { id: "d1", title: "Animales", image: designImage("animales", "animales"), badge: "" },
+    { id: "d2", title: "Espacio", image: designImage("espacio", "espacio"), badge: "" },
+    { id: "d3", title: "Deportes", image: designImage("deportes", "deportes"), badge: "" },
     {
-      id: "d7",
-      title: "Personajes",
-      image: labelImage("buzz", "Etiqueta con personaje y el nombre del niño"),
-      badge: "Nuevo",
+      id: "d4",
+      title: "Dinosaurios",
+      image: designImage("dinosaurios", "dinosaurios"),
+      badge: "",
     },
-    { id: "d6", title: "Foto personalizada", image: null, badge: "100 % único" },
+    { id: "d5", title: "Unicornios", image: designImage("unicornios", "unicornios"), badge: "" },
+    {
+      id: "d6",
+      title: "Foto personalizada",
+      image: designImage("foto-personalizada", "foto personalizada"),
+      badge: "100 % único",
+    },
   ],
   steps: [
     {
@@ -417,6 +433,8 @@ export const fallbackContent: SiteContent = {
       pre: "Compre 2 hojas de etiquetas para útiles escolares y lleve la",
       highlight: "50 %",
       post: "3era hoja",
+      // $8 + $8 + $4 = $20 por tres hojas, contra $24 sueltas.
+      saving: "Ahorre $4",
       featured: false,
     },
     {
@@ -425,6 +443,8 @@ export const fallbackContent: SiteContent = {
       pre: "Compre 3 hojas de etiquetas para útiles escolares y lleve la",
       highlight: "GRATIS",
       post: "4ta hoja",
+      // $24 por cuatro hojas, contra $32 sueltas.
+      saving: "Ahorre $8",
       featured: true,
     },
   ],

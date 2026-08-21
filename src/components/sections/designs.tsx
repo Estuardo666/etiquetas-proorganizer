@@ -30,6 +30,24 @@ const artVariants: Variants = {
 const isFeatured = (title: string) => /foto/i.test(title);
 
 /**
+ * Un pastel por tarjeta, rotando. Estuvieron todas en blanco para que el color
+ * significara solo "esta es la elegida", y una rejilla de seis cuadros blancos
+ * se lee como una lista de casillas, no como un muestrario de diseños. La
+ * selección la marcan ahora el borde azul, el anillo y el check, que son más
+ * explícitos que un fondo un punto más saturado.
+ */
+const cardTints = [
+  "var(--c-tint-positive)",
+  "var(--c-tint-warm)",
+  "var(--c-tint-purple)",
+  "var(--c-tint-highlight)",
+  "var(--c-tint-ink)",
+  // Verde y no otro azul: la quinta y la sexta tarjeta caen juntas en la
+  // segunda fila y dos grises azulados seguidos se leían como la misma.
+  "color-mix(in srgb, var(--c-green) 14%, #ffffff)",
+] as const;
+
+/**
  * Panel de categorías. Ya no es una sección propia: vive dentro del primer tab
  * de `Showcase`, junto a las muestras reales y a la explicación de cómo se
  * personaliza. Los tres bloques respondían a la misma pregunta ("¿cómo se ve
@@ -52,13 +70,12 @@ export function DesignsPanel({ settings, designs }: { settings: Settings; design
         </Reveal>
       ) : null}
 
-        {/* 3 columnas: con 7 diseños la última fila queda con una sola
-            tarjeta, centrada por el propio grid. `max-w` evita que, al ser
-            solo 3, cada tarjeta se estire al ancho completo de sección y el
-            ícono quede perdido en una caja enorme. */}
-        {/* Flex y no grid: el número de categorías lo decide el cliente desde
-            WordPress, y con una rejilla fija la última fila queda con huecos
-            muertos en cuanto no es múltiplo de tres. Así siempre se centra. */}
+        {/* Tres columnas, y la foto personalizada es un cuadro más: a ancho
+            completo bajo las demás parecía otra sección y dejaba la fila
+            anterior coja, con dos tarjetas sueltas centradas.
+            Flex y no grid porque el número de categorías lo decide el cliente
+            desde WordPress: con una rejilla fija la última fila queda con
+            huecos muertos en cuanto no es múltiplo de tres. */}
         <RevealGroup
           className="mx-auto flex max-w-[820px] flex-wrap justify-center gap-4 lg:gap-5"
           gap={0.05}
@@ -71,13 +88,7 @@ export function DesignsPanel({ settings, designs }: { settings: Settings; design
             <RevealItem
               key={design.id}
               variants={fadeScaleIn}
-              className={
-                featured
-                  ? // `flex-col`: sin esto el botón se estira a toda la altura
-                    // del item y empuja su CTA fuera, encima del de la sección.
-                    "flex w-full flex-col"
-                  : "w-[calc(50%-0.5rem)] sm:w-[calc(33.333%-0.667rem)] lg:w-[calc(33.333%-0.834rem)]"
-              }
+              className="flex w-[calc(50%-0.5rem)] flex-col sm:w-[calc(33.333%-0.667rem)] lg:w-[calc(33.333%-0.834rem)]"
             >
               {/* Botón, no `article`: la flecha del hover prometía una acción
                   que la tarjeta no tenía. Ahora elegir el diseño es la acción,
@@ -93,40 +104,39 @@ export function DesignsPanel({ settings, designs }: { settings: Settings; design
                 aria-label={`Elegir el diseño ${design.title}`}
                 className={cn(
                   "focus-ring group h-full w-full overflow-hidden rounded-[24px] border-2 p-1.5 text-left transition-[border-color,box-shadow] duration-[260ms]",
-                  featured && "sm:flex sm:items-center sm:gap-7 sm:p-3",
                 )}
-                // Una tarjeta blanca por categoría en vez de seis pasteles
-                // distintos: el color ahora solo significa "esta es la que has
-                // elegido", que es la única diferencia que el usuario tiene que
-                // ver de un vistazo.
                 style={{
-                  background: selected ? "var(--c-tint-accent)" : "#fff",
-                  borderColor: selected || featured ? "var(--c-accent)" : "var(--c-border)",
-                  boxShadow: "none",
+                  background: cardTints[index % cardTints.length],
+                  borderColor: selected
+                    ? "var(--c-accent)"
+                    : "color-mix(in srgb, var(--c-ink) 12%, transparent)",
+                  boxShadow: selected
+                    ? "0 0 0 3px color-mix(in srgb, var(--c-accent) 26%, transparent)"
+                    : "none",
                 }}
               >
                 <div
                   className={cn(
                     "relative overflow-hidden rounded-[18px]",
-                    featured && "sm:w-[210px] sm:shrink-0",
                   )}
                 >
                   {design.image?.url ? (
                     <motion.div variants={artVariants}>
-                      {/* Las muestras son etiquetas cuadradas sobre blanco:
-                          `contain` las enseña enteras, `cover` les cortaría el
-                          nombre. */}
+                      {/* Las muestras son fotos cuadradas del conjunto —lonchera,
+                          termo, cartuchera y cuaderno rotulados—, así que van a
+                          sangre: `contain` dejaba dos bandas de fondo a los lados
+                          dentro de una tarjeta que ya tiene su propio color. */}
                       <Media
                         image={design.image}
                         alt={`Diseño ${design.title}`}
-                        className="aspect-[4/3] w-full rounded-[18px] bg-white"
-                        imgClassName="object-contain p-1"
-                        sizes="(max-width: 640px) 45vw, 16vw"
+                        className="aspect-[4/3] w-full rounded-[18px]"
+                        imgClassName="object-cover"
+                        sizes="(max-width: 640px) 45vw, 250px"
                       />
                     </motion.div>
                   ) : (
                     <div
-                      className="grid aspect-[4/3] w-full place-items-center rounded-[18px] bg-white/45"
+                      className="grid aspect-[4/3] w-full place-items-center rounded-[18px] bg-white/55"
                       role="img"
                       aria-label={`Diseño ${design.title}`}
                     >
@@ -145,15 +155,11 @@ export function DesignsPanel({ settings, designs }: { settings: Settings; design
                   ) : null}
                 </div>
 
-                <div className={cn(featured && "sm:min-w-0 sm:flex-1 sm:pr-2")}>
-                  <h3
-                    className={cn(
-                      "flex items-center justify-center gap-1 pt-2 pb-0.5 text-center font-extrabold text-[var(--c-ink)] transition-transform duration-[260ms] group-hover:-translate-y-0.5",
-                      featured
-                        ? "font-[family-name:var(--font-heading)] text-[22px] font-semibold sm:justify-start sm:pt-0 sm:text-left"
-                        : "text-[16px]",
-                    )}
-                  >
+                <div>
+                  {/* 19px: un 20 % más que los 16 de antes. El nombre es lo que
+                      se busca al barrer la rejilla, y a 16 pesaba menos que el
+                      pie de la tarjeta destacada. */}
+                  <h3 className="flex items-center justify-center gap-1 pt-2 pb-0.5 text-center text-[19px] font-extrabold text-[var(--c-ink)] transition-transform duration-[260ms] group-hover:-translate-y-0.5">
                     {design.title}
                     {selected ? (
                       <Check
@@ -171,7 +177,7 @@ export function DesignsPanel({ settings, designs }: { settings: Settings; design
                   </h3>
 
                   {featured ? (
-                    <p className="pb-1 text-center text-[13.5px] leading-snug text-pretty text-[var(--c-muted)] sm:text-left">
+                    <p className="px-1 pb-1 text-center text-[13px] leading-snug text-pretty text-[var(--c-muted)]">
                       {copy.featuredSub} {copy.featuredNote}
                     </p>
                   ) : null}

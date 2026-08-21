@@ -145,6 +145,8 @@ export type Settings = {
   };
   footer: {
     quote: string;
+    /** Cobertura de envío, en el cierre del pie. Admite emoji. */
+    shippingNote: string;
     socialTitle: string;
     storeTitle: string;
     storeText: string;
@@ -199,6 +201,8 @@ export type PromoItem = {
   pre: string;
   highlight: string;
   post: string;
+  /** Cuánto se ahorra con la promo, ya calculado. Ejemplo: "Ahorre $4". */
+  saving: string;
   featured: boolean;
 };
 export type GalleryItem = { id: string; title: string; image: WpImage };

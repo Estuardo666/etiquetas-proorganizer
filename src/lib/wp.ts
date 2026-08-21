@@ -63,7 +63,7 @@ const QUERY = /* GraphQL */ `
         seasonNote seasonDeadline
       }
       footer {
-        quote socialTitle storeTitle storeText storeCta
+        quote shippingNote socialTitle storeTitle storeText storeCta
         waTitle waCta waText closing copyright legalLinks
       }
       founder {
@@ -86,7 +86,7 @@ const QUERY = /* GraphQL */ `
       nodes { id title desc icon }
     }
     poPromos(first: 20, where: { orderby: { field: MENU_ORDER, order: ASC } }) {
-      nodes { id title pre highlight post featured }
+      nodes { id title pre highlight post saving featured }
     }
     poGalleryItems(first: 30, where: { orderby: { field: MENU_ORDER, order: ASC } }) {
       nodes { id title image ${IMAGE} }
