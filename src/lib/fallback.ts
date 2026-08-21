@@ -18,7 +18,11 @@ const sizeImage = (slug: string, title: string): WpImage => ({
 
 /** Foto de uso, en `public/usos` (cuadrada, fondo recortado). */
 const usageImage = (slug: string, title: string): WpImage => ({
-  url: `/usos/${slug}.webp`,
+  // El sufijo de versión va en el nombre del archivo a propósito: al cambiar
+  // una foto conservando el nombre, el navegador sigue mostrando la anterior
+  // durante horas. Nombre nuevo = URL nueva = ninguna caché puede servir la
+  // vieja. Al reemplazar una foto, suba el sufijo del archivo y de aquí.
+  url: `/usos/${slug}-v2.webp`,
   alt: `Etiquetas personalizadas en ${title.toLowerCase()}`,
   width: 600,
   height: 600,
@@ -152,19 +156,22 @@ export const fallbackContent: SiteContent = {
       subtitle:
         "Cada detalle se adapta para que sus cosas sean fáciles de reconocer y difíciles de perder.",
       image: {
-        url: "/hoja de etiquetas.png",
+        // Recorte del original: el PNG traía ~9% de margen transparente a cada
+        // lado, así que el borde derecho del archivo no coincidía con el borde
+        // de la hoja y las líneas punteadas se quedaban cortas.
+        url: "/hoja-etiquetas-recortada.png",
         alt: "Hoja de etiquetas personalizadas con nueve diseños y el nombre Sofía R.",
-        width: 1024,
-        height: 1280,
+        width: 871,
+        height: 1058,
       },
       featureItems:
         "image|Imágenes que les encantan|Incluimos su personaje favorito, el logo de la escuela o una foto.\nsticker|Fondo blanco y adhesivo resistente|Cada diseño se lee con claridad y está hecho para acompañar el uso diario.\ntype|Su nombre, siempre visible|Usamos letras oscuras y legibles para encontrar todo de un vistazo.",
       guideBadge: "Guía rápida",
-      guideTitle: "Mira cómo personalizamos tus etiquetas",
+      guideTitle: "Vea cómo personalizamos sus etiquetas",
       guideText: "Del nombre elegido al diseño listo para imprimir.",
       guideCta: "Ver el paso a paso",
       guideUrl: "https://etiquetasescolares.proorganizer.com.ec/#como-funciona",
-      approvalText: "Imprimimos tus etiquetas solo cuando apruebas el diseño.",
+      approvalText: "Imprimimos sus etiquetas solo cuando usted aprueba el diseño.",
     },
     /**
      * El competidor real no es otra marca de etiquetas: es el marcador
@@ -193,19 +200,22 @@ export const fallbackContent: SiteContent = {
     process: {
       eyebrow: "Personalizar es muy fácil",
       title: "Así de fácil es personalizar",
-      // Absorbe lo que explicaba el panel de personalización retirado de la
-      // sección de diseños: qué lleva la etiqueta y quién da el visto bueno.
-      subtitle:
-        "Cada etiqueta lleva fondo blanco y su nombre en letras oscuras, con el personaje favorito, el logo del colegio o una foto. Imprimimos solo cuando usted aprueba el diseño.",
+      // Sin repetir lo que lleva la etiqueta ni quién aprueba: eso lo cuenta
+      // la sección de personalización, que va justo antes.
+      subtitle: "De la primera idea a las etiquetas puestas, en cuatro pasos.",
     },
     pricing: {
       eyebrow: "Más etiquetas, mejor precio",
       promoTitle: "Promos que le encantarán",
-      priceSticker: "Precio simple",
-      priceTitle: "Precios simples y justos",
+      // Prefijo del sticker de esquina: se pinta como "Promo 1", "Promo 2".
+      promosLabel: "Promo",
+      // Rótulo grande de la tarjeta azul, no una pegatina de esquina.
+      priceSticker: "Precio",
+      priceTitle: "de cualquier tipo o tamaño",
       priceValue: "$8",
-      priceSuffix: "por hoja",
-      priceSub: "Cualquier tamaño",
+      // El material impreso no pone sufijo pegado a la cifra: lo dice debajo.
+      priceSuffix: "",
+      priceSub: "Cada hoja",
       ctaText: "Pedir por WhatsApp",
       note: "Las promociones aplican a hojas de igual o menor valor. Confirme las condiciones al realizar su pedido.",
     },
@@ -246,7 +256,8 @@ export const fallbackContent: SiteContent = {
       seasonDeadline: "",
     },
     footer: {
-      quote: "Etiquetas que organizan y acompañan cada aventura.",
+      // Sin uso: el pie ya no pinta lema ni cierre. Ver `footer.tsx`.
+      quote: "",
       socialTitle: "Síganos",
       storeTitle: "Compre en nuestra tienda en línea",
       storeText: "Rápido, fácil y seguro.",
@@ -257,7 +268,7 @@ export const fallbackContent: SiteContent = {
       waTitle: "¿Necesita ayuda?",
       waCta: "Escríbanos por WhatsApp",
       waText: "Lun a Vie de 9 a 18 h",
-      closing: "Porque cuando todo tiene un nombre, es más fácil que vuelva a casa.",
+      closing: "",
       copyright: "© {year} Pro Organizer. Todos los derechos reservados.",
       legalLinks: "",
     },
@@ -328,9 +339,9 @@ export const fallbackContent: SiteContent = {
       id: "size-3",
       slug: "medianas",
       title: "Medianas",
-      count: "24 etiquetas",
-      dims: "2,5 cm alto x 5 cm ancho",
-      uses: "Estuches, vasos, cajas de colores y objetos de uso diario.",
+      count: "14 etiquetas",
+      dims: "3 cm alto x 8 cm ancho",
+      uses: "Cuadernos, libros, carpetas, termos, loncheras, proyectos escolares.",
       badge: "",
       accent: "#2e8fd0",
       image: sizeImage("medianas", "Medianas"),
@@ -403,15 +414,15 @@ export const fallbackContent: SiteContent = {
     {
       id: "p1",
       title: "Más elegida",
-      pre: "Ahorre más en su compra",
-      highlight: "50 % OFF",
-      post: "3ra hoja",
+      pre: "Compre 2 hojas de etiquetas para útiles escolares y lleve la",
+      highlight: "50 %",
+      post: "3era hoja",
       featured: false,
     },
     {
       id: "p2",
       title: "Mejor precio",
-      pre: "Lleva 4 hojas y paga 3",
+      pre: "Compre 3 hojas de etiquetas para útiles escolares y lleve la",
       highlight: "GRATIS",
       post: "4ta hoja",
       featured: true,

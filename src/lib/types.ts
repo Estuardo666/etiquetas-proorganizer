@@ -119,6 +119,8 @@ export type Settings = {
   pricing: {
     eyebrow: string;
     promoTitle: string;
+    /** Rótulo del panel rojo de promociones. */
+    promosLabel: string;
     priceSticker: string;
     priceTitle: string;
     priceValue: string;

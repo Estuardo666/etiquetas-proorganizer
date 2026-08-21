@@ -43,16 +43,19 @@ export function UsageStrip({ settings, usages }: { settings: Settings; usages: U
               initial="rest"
               whileHover="hover"
               variants={cardHoverSm}
-              className="group flex h-full w-[116px] flex-col items-center gap-2 rounded-2xl border border-[var(--c-border)] bg-white p-2.5 sm:w-full"
+              className="group flex h-full w-[116px] flex-col items-center gap-2 sm:w-full"
             >
+              {/* Las fotos van recortadas sobre el fondo de la seccion: la
+                  tarjeta blanca alrededor solo repetia el marco que ya trae la
+                  pastilla del nombre. */}
               <Media
                 image={usage.image!}
                 alt={usage.title}
-                className="aspect-square w-full rounded-xl"
+                className="aspect-square w-full"
                 imgClassName="object-contain transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06]"
                 sizes="(max-width: 640px) 116px, (max-width: 1024px) 22vw, 150px"
               />
-              <figcaption className="text-center text-[13px] leading-tight font-bold text-balance text-[var(--c-text)]">
+              <figcaption className="rounded-full border border-[var(--c-border)] bg-white px-3 py-1.5 text-center text-[13px] leading-tight font-bold text-balance text-[var(--c-text)]">
                 {usage.title}
               </figcaption>
             </motion.figure>

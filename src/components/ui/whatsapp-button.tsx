@@ -40,6 +40,9 @@ export function WhatsAppButton({
   label,
   ariaLabel,
   variant = "primary",
+  background,
+  overlayColor,
+  textColor,
   className,
   children,
   onClick,
@@ -54,6 +57,11 @@ export function WhatsAppButton({
   /** Obligatorio cuando el texto visible no describe la acción por sí solo. */
   ariaLabel: string;
   variant?: Variant;
+  /** Relleno del CTA: la tarjeta elegida lo pinta con su propio color. */
+  background?: string;
+  /** Color que sube en hover; por defecto el azul marino de marca. */
+  overlayColor?: string;
+  textColor?: string;
   className?: string;
   children?: React.ReactNode;
   onClick?: () => void;
@@ -72,6 +80,7 @@ export function WhatsAppButton({
         dataWaSource={source}
         onClick={onClick}
         color="var(--c-ink)"
+        background={background}
         lineColor="var(--c-accent)"
         className={cn("text-[13.5px]", className)}
       >
@@ -89,9 +98,9 @@ export function WhatsAppButton({
       dataWaSource={source}
       onClick={onClick}
       size={sizeFor[variant]}
-      background="var(--c-whatsapp)"
-      overlayColor="var(--c-whatsapp-ink)"
-      textColor="#ffffff"
+      background={background ?? "var(--c-whatsapp)"}
+      overlayColor={overlayColor ?? "var(--c-whatsapp-ink)"}
+      textColor={textColor ?? "#ffffff"}
       secondTextColor="#ffffff"
       className={className}
     >

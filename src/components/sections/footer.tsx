@@ -208,12 +208,12 @@ export function Footer({ settings }: { settings: Settings }) {
 
         {/* Cierre de marca ---------------------------------------------- */}
         <div className="mt-9 text-center">
-          {footer.quote ? (
-            <p className="mx-auto max-w-[46ch] font-[family-name:var(--font-heading)] text-[19px] leading-snug font-semibold text-balance text-white sm:text-[22px]">
-              {footer.quote}
-            </p>
-          ) : null}
-          <p className="mt-2 text-[14.5px] font-bold text-white">{footer.closing}</p>
+          {/*
+            El lema y la frase de cierre salieron del pie: decían lo mismo que
+            el hero y que la sección de costo, y eran las dos últimas líneas
+            antes del copyright. `quote` y `closing` siguen en el contrato de
+            WordPress, pero ya no se pintan aquí.
+          */}
           <p className="mt-3 text-[13.5px] text-white">
             {footer.copyright.replace("{year}", String(new Date().getFullYear()))}
           </p>

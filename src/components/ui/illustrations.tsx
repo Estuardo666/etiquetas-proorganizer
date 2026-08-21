@@ -32,11 +32,21 @@ const C = {
   warmSoft: "var(--c-pastel-highlight)",
   warmFaint: "var(--c-tint-highlight)",
   water: "var(--c-blue)",
+  waterLight: "color-mix(in srgb, var(--c-blue) 45%, #ffffff)",
+  warmLight: "color-mix(in srgb, var(--c-highlight) 45%, #ffffff)",
   waterFaint: "var(--c-tint-positive)",
   /** Verde de marca aclarado: sobre él va un check blanco, no texto. */
   safe: "color-mix(in srgb, var(--c-green) 72%, #ffffff)",
   sun: "var(--c-star)",
 } as const;
+
+/**
+ * Grosor de contorno de los iconos de beneficio, en el sistema de 48.
+ * Equivale al 2,5-3 que llevan la casa y la escarapela de las cifras en su
+ * sistema de 64: es lo que los hace ver de la misma familia en la misma fila.
+ * Antes iban a 1,8 y al lado de las cifras parecían de otro juego.
+ */
+const OUTLINE = 1.7;
 
 type ArtProps = { className?: string; size?: number };
 
@@ -242,10 +252,21 @@ export function ArtWater({ className, size = 40 }: ArtProps) {
         d="M24 5c8 10 13 16 13 22.5A13 13 0 0 1 11 27.5C11 21 16 15 24 5Z"
         fill={C.water}
         stroke={C.ink}
-        strokeWidth="1.8"
+        strokeWidth={OUTLINE}
         strokeLinejoin="round"
       />
-      <path d="M18 28a6 6 0 0 0 5 5.6" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" fill="none" />
+      {/* Cara clara de la gota: el volumen viene de dos azules, no de uno. */}
+      <path d="M24 12c-5.5 7-8.5 11.5-8.5 15.5a8.5 8.5 0 0 0 8.5 8.5Z" fill={C.waterLight} />
+      <path
+        d="M18.5 20.5c-2.6 3.4-3.6 5.9-3.6 7.6"
+        stroke="#fff"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        fill="none"
+      />
+      {/* Salpicaduras: sitúan la gota en una superficie y suman el naranja. */}
+      <circle cx="39" cy="14" r="2.6" fill={C.sun} stroke={C.ink} strokeWidth="1.2" />
+      <circle cx="9" cy="17" r="2" fill={C.waterLight} stroke={C.ink} strokeWidth="1.1" />
     </svg>
   );
 }
@@ -253,11 +274,12 @@ export function ArtWater({ className, size = 40 }: ArtProps) {
 export function ArtWasher({ className, size = 40 }: ArtProps) {
   return (
     <svg viewBox="0 0 48 48" width={size} height={size} className={cn(svgBase, className)} aria-hidden="true">
-      <rect x="8" y="6" width="32" height="36" rx="8" fill={C.waterFaint} stroke={C.ink} strokeWidth="1.8" />
-      <circle cx="24" cy="27" r="10" fill="#fff" />
-      <circle cx="24" cy="27" r="6" fill={C.water} />
-      <circle cx="14" cy="13" r="2.2" fill="#fff" />
-      <circle cx="21" cy="13" r="2.2" fill="#fff" />
+      <rect x="8" y="6" width="32" height="36" rx="8" fill={C.waterFaint} stroke={C.ink} strokeWidth={OUTLINE} />
+      <rect x="8" y="6" width="32" height="11" rx="7" fill={C.waterLight} stroke={C.ink} strokeWidth="1.4" />
+      <circle cx="24" cy="28" r="10.5" fill="#fff" stroke={C.ink} strokeWidth="1.4" />
+      <circle cx="24" cy="28" r="6" fill={C.water} stroke={C.ink} strokeWidth="1.3" />
+      <circle cx="14" cy="11.5" r="2.2" fill="#fff" stroke={C.ink} strokeWidth="1.2" />
+      <circle cx="33" cy="11.5" r="2.6" fill={C.sun} stroke={C.ink} strokeWidth="1.3" />
     </svg>
   );
 }
@@ -267,12 +289,22 @@ export function ArtShield({ className, size = 40 }: ArtProps) {
     <svg viewBox="0 0 48 48" width={size} height={size} className={cn(svgBase, className)} aria-hidden="true">
       <path
         d="M24 4 40 10v13c0 10-7 18-16 21-9-3-16-11-16-21V10Z"
-        fill={C.safe}
+        fill={C.water}
         stroke={C.ink}
-        strokeWidth="1.8"
+        strokeWidth={OUTLINE}
         strokeLinejoin="round"
       />
-      <path d="m16 24 6 6 11-12" stroke="#fff" strokeWidth="3.6" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      {/* Placa interior clara: el escudo del mockup lleva dos azules y un check
+          verde encima, no un único relleno. */}
+      <path
+        d="M24 9.5 35.5 13.8v9.4c0 7.3-4.9 13.1-11.5 15.4-6.6-2.3-11.5-8.1-11.5-15.4v-9.4Z"
+        fill={C.waterLight}
+        stroke={C.ink}
+        strokeWidth="1.2"
+        strokeLinejoin="round"
+      />
+      <circle cx="24" cy="23" r="8.6" fill={C.safe} stroke={C.ink} strokeWidth="1.3" />
+      <path d="m19.6 23.2 3.3 3.3 5.6-6.2" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" fill="none" />
     </svg>
   );
 }
@@ -284,7 +316,21 @@ export function ArtHeart({ className, size = 40 }: ArtProps) {
         d="M24 42S5 30.5 5 18.5C5 11.6 10.4 6 17.2 6c3.7 0 6.4 1.7 6.8 3.8.4-2.1 3.1-3.8 6.8-3.8C37.6 6 43 11.6 43 18.5 43 30.5 24 42 24 42Z"
         fill={C.warm}
         stroke={C.ink}
-        strokeWidth="1.8"
+        strokeWidth={OUTLINE}
+        strokeLinejoin="round"
+      />
+      {/* Corazón interior: el mismo rojo aclarado, para que el relleno tenga
+          dos planos como la casa y la escarapela. */}
+      <path
+        d="M24 35.5S11 27.4 11 19.2c0-4.2 3.2-7.4 7.2-7.4 2.6 0 4.6 1.3 5.8 3.1 1.2-1.8 3.2-3.1 5.8-3.1 4 0 7.2 3.2 7.2 7.4 0 8.2-13 16.3-13 16.3Z"
+        fill={C.warmLight}
+      />
+      <path d="M13.5 15.5c-1.6 1.6-2.4 3.4-2.4 5.4" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" fill="none" />
+      <path
+        d="M38.5 8.5 40 12l3.5 1.5L40 15l-1.5 3.5L37 15l-3.5-1.5L37 12Z"
+        fill={C.sun}
+        stroke={C.ink}
+        strokeWidth="1.0"
         strokeLinejoin="round"
       />
     </svg>

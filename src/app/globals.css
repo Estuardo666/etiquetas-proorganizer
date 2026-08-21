@@ -208,6 +208,27 @@ section[id] {
   }
 }
 
+/**
+ * Padding corto para secciones que tienen que entrar de una sola pantalla.
+ * Se usa donde la sección es una composición cerrada —imagen, viñetas y
+ * remate— y partirla en dos scrolls le quita el sentido.
+ */
+.section-y-tight {
+  padding-block: 28px;
+}
+
+@media (min-width: 768px) {
+  .section-y-tight {
+    padding-block: 34px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-y-tight {
+    padding-block: 40px;
+  }
+}
+
 .section-y-sm {
   padding-block: 26px;
 }
@@ -438,6 +459,15 @@ h5 {
   height: 1px;
   display: block;
   transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/*
+ * Relleno: el CTA de la tarjeta elegida se pinta con el color de esa tarjeta.
+ * Sobre color, el subrayado se leia como un tachon, asi que desaparece; la
+ * flecha sigue entrando en hover.
+ */
+.tac--filled .tac__line {
+  display: none;
 }
 
 .tac__line--out {
@@ -671,7 +701,10 @@ h5 {
     position: absolute;
     top: 31px;
     right: calc(100% + 12px);
-    width: clamp(28px, 4vw, 58px);
+    /* El hueco de la rejilla es 2rem en `lg`; la línea arranca 12 px a la
+       izquierda de la viñeta, así que este ancho la lleva justo hasta el borde
+       de la hoja. */
+    width: calc(2rem - 12px);
     border-top: 3px dotted color-mix(in srgb, var(--c-accent) 55%, transparent);
   }
 
@@ -688,8 +721,48 @@ h5 {
   }
 }
 
+@media (min-width: 1280px) {
+  .design-feature::before {
+    width: calc(2.5rem - 12px);
+  }
+}
+
 @media (max-width: 639px) {
   .approval-note {
+    transform: none;
+  }
+}
+
+/**
+ * Franja de confianza: el dibujo salta al pasar por encima.
+ *
+ * Va en CSS y no en gestos de framer-motion porque el efecto tiene que
+ * dispararse desde toda la celda —dibujo, titular y pie— y `whileHover` en el
+ * padre no propaga a variantes de hijos que no comparten grupo.
+ */
+.trust-art {
+  transition:
+    transform 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.trust-cell:hover .trust-art,
+.trust-cell:focus-within .trust-art {
+  transform: translateY(-6px) scale(1.09) rotate(-5deg);
+  filter: drop-shadow(0 8px 12px color-mix(in srgb, var(--c-ink) 22%, transparent));
+}
+
+.trust-cell .trust-headline {
+  transition: color 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.trust-cell:hover .trust-headline {
+  color: var(--c-highlight-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trust-cell:hover .trust-art,
+  .trust-cell:focus-within .trust-art {
     transform: none;
   }
 }

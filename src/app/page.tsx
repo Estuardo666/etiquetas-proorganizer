@@ -7,6 +7,7 @@ import { TrustBar } from "@/components/sections/trust-bar";
 import { Sizes } from "@/components/sections/sizes";
 import { Showcase } from "@/components/sections/showcase";
 import { Cost } from "@/components/sections/cost";
+import { Personalization } from "@/components/sections/design-love";
 import { Process } from "@/components/sections/process";
 import { Pricing } from "@/components/sections/pricing";
 // Se reactiva junto con la sección de testimonios, más abajo en este archivo.
@@ -95,6 +96,9 @@ export default async function Page() {
         {/* Diseños, muestras reales y personalización comparten sección: son
             tres respuestas a "¿cómo se ve esto?", no tres argumentos. */}
         <Showcase settings={settings} designs={content.designs} gallery={content.gallery} />
+        {/* Entre ver los diseños y ver los pasos: aquí se responde "¿y si sale
+            feo?" con la nota de aprobación, y el turno pasa a los pasos. */}
+        <Personalization settings={settings} />
         <Process settings={settings} steps={content.steps} />
         {/* Testimonios oculto a propósito: los que trae el contenido por
             defecto son de ejemplo (Mariana G., Carla P., Lucía F., Diego T.) y

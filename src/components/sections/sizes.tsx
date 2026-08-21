@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Check } from "lucide-react";
 import { SectionHeader } from "@/components/ui/section-header";
 import { RevealGroup, RevealItem } from "@/components/ui/reveal";
@@ -10,7 +10,7 @@ import { Media } from "@/components/ui/media";
 import { UsageStrip } from "@/components/sections/usage";
 import { WhatsAppButton } from "@/components/ui/whatsapp-button";
 import { useOrder } from "@/components/order-provider";
-import { cardHover, fadeScaleIn } from "@/lib/motion";
+import { cardHover, decorPop, fadeScaleIn } from "@/lib/motion";
 import { fillMessageTemplate, waMessageForSize } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
 import type { Settings, SizeItem, UsageItem } from "@/lib/types";
@@ -32,6 +32,23 @@ const cardTints = [
   "var(--c-tint-warm)",
   "var(--c-tint-purple)",
   "var(--c-tint-ink)",
+];
+
+/**
+ * El mismo color de cada tarjeta, pero pleno: el CTA de la elegida se pinta
+ * con él. Los tintes son 12-20 % de tono sobre blanco — sobre ellos, un
+ * rótulo blanco no llega ni a 2:1. Mezclados con la tinta conservan el matiz
+ * de la tarjeta ("el botón azul es el de la tarjeta azul") y suben el
+ * contraste del blanco por encima de 4,5:1.
+ */
+const cardSolids = [
+  "color-mix(in srgb, var(--c-positive) 55%, var(--c-ink))",
+  // La naranja mezclada con la tinta da barro: pierde el matiz y deja de
+  // parecerse a su tarjeta. El rojo de marca es el tono cálido saturado que
+  // ya existe en la paleta y llega a 4,7:1 con rótulo blanco.
+  "var(--c-highlight)",
+  "color-mix(in srgb, var(--c-purple) 70%, var(--c-ink))",
+  "var(--c-ink)",
 ];
 
 /** Los usos llegan como frase suelta; se leen mejor separados por puntos. */
@@ -162,22 +179,44 @@ export function Sizes({
                   </span>
                 </motion.button>
 
-                {/* El pedido se cierra por chat: cada tamaño necesita su
-                    propia puerta, con la cantidad ya escrita en el mensaje. */}
-                <span className="mt-2 flex justify-center">
-                  <WhatsAppButton
-                    source="sizes"
-                    variant="link"
-                    message={waMessageForSize(
-                      settings.whatsapp.msgSizeTemplate,
-                      size.title,
-                      size.count,
+                {/*
+                  El pedido se cierra por chat: cada tamaño necesita su propia
+                  puerta, con la cantidad ya escrita en el mensaje.
+
+                  Solo aparece en la tarjeta elegida. Cuatro botones sólidos a
+                  la vez compiten entre sí y con el CTA de la sección; uno
+                  solo, en el color saturado de su tarjeta, es la consecuencia
+                  visible de haber elegido. El hueco se reserva siempre para
+                  que la rejilla no salte al cambiar de tarjeta.
+                */}
+                <span className="mt-2 flex min-h-[44px] justify-center">
+                  <AnimatePresence initial={false}>
+                    {selected && (
+                      <motion.span
+                        key="cta"
+                        initial={{ opacity: 0, scale: 0.72, y: 6 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.86, y: 2, transition: { duration: 0.14 } }}
+                        transition={decorPop}
+                        className="inline-flex"
+                      >
+                        <WhatsAppButton
+                          source="sizes"
+                          variant="inline"
+                          background={cardSolids[index % cardSolids.length]}
+                          message={waMessageForSize(
+                            settings.whatsapp.msgSizeTemplate,
+                            size.title,
+                            size.count,
+                          )}
+                          label={fillMessageTemplate(settings.sizes.orderCtaTemplate, {
+                            title: size.title,
+                          })}
+                          ariaLabel={`Pedir por WhatsApp el tamaño ${size.title}, ${size.count} por hoja`}
+                        />
+                      </motion.span>
                     )}
-                    label={fillMessageTemplate(settings.sizes.orderCtaTemplate, {
-                      title: size.title,
-                    })}
-                    ariaLabel={`Pedir por WhatsApp el tamaño ${size.title}, ${size.count} por hoja`}
-                  />
+                  </AnimatePresence>
                 </span>
               </RevealItem>
             );

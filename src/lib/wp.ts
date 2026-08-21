@@ -1,4 +1,4 @@
-import type { SiteContent } from "./types";
+import type { SiteContent, WpImage } from "./types";
 import { fallbackContent } from "./fallback";
 
 const ENDPOINT =
@@ -52,7 +52,7 @@ const QUERY = /* GraphQL */ `
       }
       process { eyebrow title subtitle }
       pricing {
-        eyebrow promoTitle priceSticker priceTitle priceValue priceSuffix priceSub
+        eyebrow promoTitle promosLabel priceSticker priceTitle priceValue priceSuffix priceSub
         ctaText note
       }
       gallery { enabled title subtitle }
@@ -129,6 +129,35 @@ function list<T>(value: Nodes<T>, fallback: T[]): T[] {
 }
 
 /**
+ * Igual que `list`, pero rellena la foto que WordPress aún no tiene.
+ *
+ * Las fotos de tamaños y usos viven en `public/` y son parte del diseño, no
+ * contenido que el cliente vaya a cambiar cada temporada. Sin esto, en cuanto
+ * WordPress devuelve un solo nodo la lista entera pierde las fotos por
+ * defecto y la sección vuelve a los iconos. El emparejamiento es por `slug` y,
+ * si no hay, por título normalizado: los `id` de WordPress no coinciden con
+ * los del código.
+ */
+type Imageable = { id?: string; slug?: string; title?: string; image?: WpImage | null };
+
+const matchKey = (item: Imageable) =>
+  (item.slug || item.title || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .trim();
+
+function listWithImages<T extends Imageable>(value: Nodes<T>, fallback: T[]): T[] {
+  const nodes = value?.nodes ?? [];
+  if (!nodes.length) return fallback;
+
+  const byKey = new Map(fallback.map((item) => [matchKey(item), item.image]));
+  return nodes.map((node) =>
+    node.image?.url ? node : { ...node, image: byKey.get(matchKey(node)) ?? node.image },
+  );
+}
+
+/**
  * Combina los ajustes de WordPress sobre los valores por defecto del código.
  * Un campo vacío, nulo o inexistente en WordPress no borra el texto por
  * defecto: así la landing siempre se ve completa y el cliente solo tiene que
@@ -179,8 +208,8 @@ export async function getSiteContent(): Promise<SiteContent> {
 
     return {
       settings: merge(fallbackContent.settings, settings),
-      sizes: list(d.poSizes, fallbackContent.sizes),
-      usages: list(d.poUsages, fallbackContent.usages),
+      sizes: listWithImages(d.poSizes, fallbackContent.sizes),
+      usages: listWithImages(d.poUsages, fallbackContent.usages),
       designs: list(d.poDesigns, fallbackContent.designs),
       steps: list(d.poSteps, fallbackContent.steps),
       promos: list(d.poPromos, fallbackContent.promos),

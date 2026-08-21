@@ -15,12 +15,10 @@ import type { DesignItem, GalleryItem, Settings } from "@/lib/types";
  * La landing de Canva que sí convierte es scroll lineal puro: nada se descubre,
  * todo se ve bajando. Aquí se hace lo mismo, y cada panel conserva su ancla.
  *
- * El panel de personalización salió de aquí: ocupaba 1.474 px en móvil —el
- * bloque más alto de toda la página— para explicar lo mismo que la sección
- * "Cómo funciona" que viene justo después, y su botón "Ver el paso a paso"
- * llevaba precisamente allí. Su contenido útil (fondo blanco, nombre legible,
- * personaje o foto, impresión solo tras aprobar) vive ahora en el subtítulo de
- * esa sección. `design-love.tsx` se conserva sin usar por si se recupera.
+ * La personalización salió de aquí y es sección propia (`design-love.tsx`),
+ * justo debajo: ver los diseños y entender cómo se fabrican son dos lecturas
+ * distintas, y la segunda cierra con la nota de aprobación que entrega el
+ * turno a "Cómo funciona".
  */
 export function Showcase({
   settings,

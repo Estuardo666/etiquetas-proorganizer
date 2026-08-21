@@ -25,6 +25,8 @@ type TextArrowCtaProps = {
   rel?: string;
   onClick?: () => void;
   color?: string;
+  /** Relleno del CTA. Con fondo, el subrayado sobra y se oculta. */
+  background?: string;
   lineColor?: string;
   iconColor?: string;
   iconWidth?: number;
@@ -40,6 +42,7 @@ export function TextArrowCta({
   rel,
   onClick,
   color = "var(--c-ink)",
+  background,
   lineColor = "var(--c-accent)",
   iconColor,
   iconWidth = 1.5,
@@ -54,9 +57,12 @@ export function TextArrowCta({
       onClick={onClick}
       aria-label={ariaLabel}
       data-wa-source={dataWaSource}
-      style={{ color }}
+      style={{ color, background }}
       className={cn(
         "focus-ring tac inline-flex min-h-[44px] items-center rounded-full font-[family-name:var(--font-body)] text-[15px] font-bold",
+        // Relleno: pastilla con aire lateral y sin el trazo, que sobre color
+        // se leia como un tachon.
+        background && "tac--filled px-5",
         className,
       )}
     >
