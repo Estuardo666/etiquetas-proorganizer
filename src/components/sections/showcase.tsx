@@ -1,8 +1,7 @@
 import { SectionHeader } from "@/components/ui/section-header";
 import { DecorativeBackground } from "@/components/ui/decor";
 import { DesignsPanel } from "@/components/sections/designs";
-import { GalleryPanel } from "@/components/sections/gallery";
-import type { DesignItem, GalleryItem, Settings } from "@/lib/types";
+import type { DesignItem, Settings } from "@/lib/types";
 
 /**
  * Diseños, muestras reales y personalización, uno detrás de otro.
@@ -15,29 +14,20 @@ import type { DesignItem, GalleryItem, Settings } from "@/lib/types";
  * La landing de Canva que sí convierte es scroll lineal puro: nada se descubre,
  * todo se ve bajando. Aquí se hace lo mismo, y cada panel conserva su ancla.
  *
+ * La galería de muestras se retiró: repetía los mismos personajes que ya
+ * enseña la franja "Personalice a su gusto", con un nombre de ejemplo ("Juan
+ * López") en cada pieza y una rejilla que se descolocaba. El componente sigue
+ * en `gallery.tsx` por si vuelve con fotos de producto real.
+ *
  * La personalización salió de aquí y es sección propia (`design-love.tsx`),
  * justo debajo: ver los diseños y entender cómo se fabrican son dos lecturas
  * distintas, y la segunda cierra con la nota de aprobación que entrega el
  * turno a "Cómo funciona".
  */
-export function Showcase({
-  settings,
-  designs,
-  gallery,
-}: {
-  settings: Settings;
-  designs: DesignItem[];
-  gallery: GalleryItem[];
-}) {
+export function Showcase({ settings, designs }: { settings: Settings; designs: DesignItem[] }) {
   const { designs: copy } = settings;
-  const showGallery = settings.gallery.enabled && gallery.length > 0;
 
-  if (!designs.length && !showGallery) return null;
-
-  /** Compensa el header fijo al saltar por ancla. */
-  const anchorOffset = {
-    scrollMarginTop: "calc(var(--header-h) + var(--admin-bar-offset) + 24px)",
-  } as const;
+  if (!designs.length) return null;
 
   return (
     <section id="disenos" className="section-y relative overflow-hidden bg-white">
@@ -46,13 +36,7 @@ export function Showcase({
       <div className="container-page relative z-10">
         <SectionHeader eyebrow={copy.eyebrow} eyebrowIcon="sparkles" title={copy.title} />
 
-        {designs.length ? <DesignsPanel settings={settings} designs={designs} /> : null}
-
-        {showGallery ? (
-          <div id="galeria" className="mt-14" style={anchorOffset}>
-            <GalleryPanel settings={settings} items={gallery} />
-          </div>
-        ) : null}
+        <DesignsPanel settings={settings} designs={designs} />
       </div>
     </section>
   );

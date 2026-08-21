@@ -93,9 +93,9 @@ export default async function Page() {
         {/* El precio va inmediatamente después del tamaño: son la misma
             decisión ("cuál pido y cuánto me cuesta"), no dos. */}
         <Pricing settings={settings} promos={content.promos} />
-        {/* Diseños, muestras reales y personalización comparten sección: son
-            tres respuestas a "¿cómo se ve esto?", no tres argumentos. */}
-        <Showcase settings={settings} designs={content.designs} gallery={content.gallery} />
+        {/* Diseños y personalización comparten sección: son dos respuestas a
+            "¿cómo se ve esto?", no dos argumentos. */}
+        <Showcase settings={settings} designs={content.designs} />
         {/* Entre ver los diseños y ver los pasos: aquí se responde "¿y si sale
             feo?" con la nota de aprobación, y el turno pasa a los pasos. */}
         <Personalization settings={settings} />
