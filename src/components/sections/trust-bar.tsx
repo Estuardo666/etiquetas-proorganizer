@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+
 import { BenefitArt } from "@/components/ui/illustrations";
 import { SectionHeader } from "@/components/ui/section-header";
 import { StatArt } from "@/components/sections/stats";
@@ -30,6 +32,68 @@ import type { Settings, StatItem } from "@/lib/types";
  * Ancho de celda en móvil: 42vw deja ver dos y media, así que la siguiente
  * asoma cortada. A 58% quedaban muy separadas entre sí.
  */
+/**
+ * Avance automático de la cinta, moviendo `scrollLeft`.
+ *
+ * No es una animación CSS a propósito: el contenedor tiene que seguir siendo
+ * un scroll nativo para poder arrastrarlo con el dedo. Mientras el usuario
+ * toca —o durante el segundo y medio siguiente a soltar— el avance se detiene,
+ * así se puede leer una celda sin perseguirla.
+ *
+ * El bucle se cierra restando un periodo al pasar de él. El periodo se mide
+ * entre una celda y su copia, no como `scrollWidth / 2`: la pista lleva
+ * relleno lateral y ese medio relleno bastaba para que el salto no cayera en
+ * el mismo punto y se viera un tirón cada vuelta.
+ */
+function useMarquee<T extends HTMLElement>(speed = 0.35) {
+  const ref = useRef<T>(null);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+    if (window.matchMedia("(min-width: 640px)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let frame = 0;
+    let pausedUntil = 0;
+
+    const hold = () => {
+      pausedUntil = performance.now() + 1500;
+    };
+
+    /** Distancia entre una celda y su copia; es lo que dura una vuelta. */
+    const periodOf = () => {
+      const cells = node.querySelectorAll<HTMLElement>(".trust-cell");
+      if (cells.length < 2) return 0;
+      const copy = cells[cells.length / 2];
+      return copy ? copy.offsetLeft - cells[0].offsetLeft : 0;
+    };
+
+    const step = (now: number) => {
+      frame = requestAnimationFrame(step);
+      if (now < pausedUntil) return;
+
+      const period = periodOf();
+      const next = node.scrollLeft + speed;
+      node.scrollLeft = period > 0 && next >= period ? next - period : next;
+    };
+
+    frame = requestAnimationFrame(step);
+    node.addEventListener("pointerdown", hold);
+    node.addEventListener("touchstart", hold, { passive: true });
+    node.addEventListener("wheel", hold, { passive: true });
+
+    return () => {
+      cancelAnimationFrame(frame);
+      node.removeEventListener("pointerdown", hold);
+      node.removeEventListener("touchstart", hold);
+      node.removeEventListener("wheel", hold);
+    };
+  }, [speed]);
+
+  return ref;
+}
+
 type Cell = {
   key: string;
   art: React.ReactNode;
@@ -70,6 +134,7 @@ export function TrustBar({
   settings: Settings;
   stats: StatItem[];
 }) {
+  const track = useMarquee<HTMLDivElement>();
   const { trust } = settings;
   const benefits = pipes(trust.items).slice(0, 3);
   const figures = stats.filter((item) => Boolean(item.value));
@@ -110,17 +175,18 @@ export function TrustBar({
         />
 
         {/*
-          Móvil: cinta en bucle (`.trust-marquee`). Cinco columnas en 375 px
-          dejarían cada texto en una tira de 60 px, y una fila con scroll
-          manual no se lee como deslizable: la mitad quedaba fuera de pantalla
-          sin avisar. El contenido va duplicado para que el bucle no corte.
+          Móvil: cinta que avanza sola y también se arrastra (`useMarquee`).
+          Cinco columnas en 375 px dejarían cada texto en una tira de 60 px, y
+          una fila quieta no se lee como deslizable: la mitad quedaba fuera de
+          pantalla sin avisar. El contenido va duplicado para que el bucle no
+          corte al reiniciar.
         */}
         {/*
           Seis columnas en tablet: cada celda ocupa dos, así que salen tres
           arriba y dos abajo, y la fila de abajo va centrada. Desde `lg` los
           cinco entran de una.
         */}
-        <div className="trust-marquee-mask sm:overflow-visible">
+        <div ref={track} className="trust-marquee-mask sm:overflow-visible">
           <RevealGroup
             className="trust-marquee sm:grid sm:gap-x-3 sm:gap-y-8 sm:[grid-template-columns:repeat(6,minmax(0,1fr))] lg:gap-x-2 lg:[grid-template-columns:repeat(5,minmax(0,1fr))]"
             gap={0.05}

@@ -734,53 +734,51 @@ h5 {
 }
 
 /**
- * Móvil: la franja de confianza se desplaza sola, en bucle.
+ * Móvil: la franja de confianza se desplaza sola, y además se puede arrastrar.
  *
- * Era una fila con scroll manual, y una fila que no se mueve no se lee como
- * deslizable: la mitad de las celdas quedaban fuera de pantalla sin que nada
- * lo indicara. En bucle continuo el usuario ve las cinco sin tocar nada.
+ * Estuvo como animación CSS sobre una pista dentro de un `overflow: hidden`, y
+ * eso la dejaba muerta al tacto: no había nada que arrastrar, y la pausa por
+ * `:hover` se quedaba pegada después de tocar —en táctil el hover no se
+ * levanta solo— así que la cinta se paraba para siempre. Ahora el contenedor
+ * es un scroll de verdad y el avance automático lo lleva `useMarquee` moviendo
+ * `scrollLeft`: arrastrar funciona, y al soltar la cinta sigue sola.
  *
- * La pista lleva el contenido duplicado y se desplaza media pista más medio
- * hueco: ese medio hueco es lo que hace que el salto al reiniciar caiga en el
- * mismo sitio y el bucle no dé un tirón.
+ * Ancho de pantalla completa: la franja es una cinta, y una cinta que empieza
+ * y termina dentro de los márgenes del contenido parece una tabla cortada.
+ * `margin-inline: calc(50% - 50vw)` la saca del `container-page` sin
+ * envolverla en otro elemento.
+ *
+ * Los extremos se desvanecen con `mask-image` y no con dos degradados encima:
+ * la máscara funde contra el fondo real de la sección, así que sigue valiendo
+ * si mañana esa sección deja de ser blanca.
  */
-.trust-marquee-mask {
-  overflow: hidden;
-}
-
 @media (max-width: 639px) {
+  .trust-marquee-mask {
+    width: 100vw;
+    margin-inline: calc(50% - 50vw);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      #000 9%,
+      #000 91%,
+      transparent 100%
+    );
+  }
+
+  .trust-marquee-mask::-webkit-scrollbar {
+    display: none;
+  }
+
   .trust-marquee {
     display: flex;
     flex-wrap: nowrap;
     gap: 10px;
     width: max-content;
-    animation: trust-marquee 26s linear infinite;
-  }
-
-  /* Al tocar o enfocar una celda la cinta se detiene: si no, leer el pie de
-     una cifra obliga a perseguirla. */
-  .trust-marquee:hover,
-  .trust-marquee:focus-within {
-    animation-play-state: paused;
-  }
-}
-
-@keyframes trust-marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(calc(-50% - 5px));
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .trust-marquee {
-    animation: none;
-  }
-
-  .trust-marquee-mask {
-    overflow-x: auto;
+    padding-inline: 14px;
   }
 }
 
