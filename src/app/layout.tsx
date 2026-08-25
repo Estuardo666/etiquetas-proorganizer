@@ -12,6 +12,14 @@ const heading = Fredoka({
   variable: "--font-heading",
   display: "swap",
 });
+// Script de marca (Handelson Three): solo para la segunda mitad del H1, igual
+// que en el logotipo. No se usa en cuerpo de texto: es ilegible en tamaños
+// pequeños y no trae juego completo de pesos.
+const script = localFont({
+  src: [{ path: "../../public/fonts/Handelson/handelson-three.woff2", weight: "400", style: "normal" }],
+  variable: "--font-script",
+  display: "swap",
+});
 const body = localFont({
   src: [
     { path: "../../public/fonts/GoogleSans-Regular.woff2", weight: "400", style: "normal" },
@@ -71,7 +79,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   } as CSSProperties;
 
   return (
-    <html lang="es" className={`${heading.variable} ${body.variable}`} style={paletteStyle}>
+    <html lang="es" className={`${heading.variable} ${body.variable} ${script.variable}`} style={paletteStyle}>
       <body>
         <AdminBar />
         <AdminBarLayout>{children}</AdminBarLayout>

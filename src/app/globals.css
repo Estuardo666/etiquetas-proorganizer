@@ -303,6 +303,22 @@ section[id] {
   letter-spacing: -0.01em;
 }
 
+/* Segunda mitad del H1 en el script del logotipo. La caja del script tiene
+   ascendentes y descendentes muy largas, así que sube de tamaño respecto a
+   Fredoka y compensa con line-height corto y un margen negativo arriba para
+   que las dos líneas queden pegadas como en la marca. */
+.h1-script {
+  font-family: var(--font-script), "Brush Script MT", cursive;
+  font-weight: 400;
+  font-size: 1.32em;
+  line-height: 0.9;
+  letter-spacing: 0;
+  text-transform: none;
+  display: inline-block;
+  margin-top: -0.08em;
+  padding-bottom: 0.12em;
+}
+
 .h2-display {
   font-family: var(--font-heading), system-ui, sans-serif;
   font-weight: 600;

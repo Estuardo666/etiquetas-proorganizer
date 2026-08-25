@@ -71,23 +71,17 @@ export function Hero({ settings }: { settings: Settings }) {
               ) : null}
 
               <h1 className="h1-display text-center text-[var(--c-ink)] lg:text-left">
-                {/* Primera línea en rojo de marca, como en el logotipo: la
-                    palabra que nombra el producto se separa de la promesa que
-                    la sigue. A 38 px o más el rojo cumple 3:1 sobre el crema;
-                    en cuerpo pequeño no se usa. */}
-                <motion.span variants={fadeScaleIn} className="block text-[var(--c-red)]">
+                {/* Como el logotipo: la primera línea en Fredoka, en versales y
+                    azul de marca; la segunda en el script Handelson y en rojo.
+                    A 38 px o más el rojo cumple 3:1 sobre el crema. */}
+                <motion.span variants={fadeScaleIn} className="block uppercase">
                   {title}
                 </motion.span>
-                {highlights.map((part, index) => (
-                  <motion.span
-                    key={part}
-                    variants={fadeScaleIn}
-                    className={index === highlights.length - 1 ? "block" : ""}
-                  >
-                    {part}
-                    {index === highlights.length - 1 ? null : " "}
-                  </motion.span>
-                ))}
+                <motion.span variants={fadeScaleIn} className="block">
+                  <span className="h1-script text-[var(--c-red)]">
+                    {highlights.join(" ")}
+                  </span>
+                </motion.span>
               </h1>
 
               <motion.p
