@@ -3,8 +3,11 @@ import {
   Check,
   Droplet,
   Eye,
+  GlassWater,
   Pencil,
+  Shirt,
   Smile,
+  Sticker,
   WashingMachine,
   Heart,
   Image as ImageIcon,
@@ -41,6 +44,10 @@ const map: Record<string, LucideIcon> = {
   washer: WashingMachine,
   smile: Smile,
   pencil: Pencil,
+  bottle: GlassWater,
+  shirt: Shirt,
+  lunchbox: Package,
+  sheet: Sticker,
 };
 
 export function Icon({

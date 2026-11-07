@@ -71,6 +71,12 @@ export function DesignsPanel({ settings, designs }: { settings: Settings; design
         </Reveal>
       ) : null}
 
+        {/* Primero los diseños concretos: "¿tienen el personaje de mi hijo?" se
+            responde antes que las temáticas generales de la rejilla. */}
+        <Reveal className="mb-10 lg:mb-12">
+          <CharacterMarquee />
+        </Reveal>
+
         {/* Tres columnas, y la foto personalizada es un cuadro más: a ancho
             completo bajo las demás parecía otra sección y dejaba la fila
             anterior coja, con dos tarjetas sueltas centradas.
@@ -189,17 +195,6 @@ export function DesignsPanel({ settings, designs }: { settings: Settings; design
             );
           })}
         </RevealGroup>
-
-        {/* Sub-bloque de personajes: la rejilla de arriba enseña categorías
-            ("Foto personalizada", "Animales"...) y la pregunta que queda es
-            "¿tienen el personaje de mi hijo?". La franja la responde sin
-            añadir otra rejilla de tarjetas. */}
-        <Reveal className="mt-10 lg:mt-12">
-          <h3 className="mb-5 text-center font-[family-name:var(--font-heading)] text-[22px] leading-tight font-extrabold text-[var(--c-ink)] sm:text-[26px]">
-            Personalice a su <span className="text-[var(--c-highlight-ink)]">gusto</span>
-          </h3>
-          <CharacterMarquee />
-        </Reveal>
 
         {/* Un solo CTA para toda la sección, pero con el mensaje de la
             categoría elegida: siete botones verdes en la rejilla competirían

@@ -1,12 +1,12 @@
 import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { Fredoka } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { getSiteContent } from "@/lib/wp";
 import { AdminBar, AdminBarLayout } from "@/components/molecules/AdminBar";
 
-const heading = Fredoka({
+const heading = Montserrat({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-heading",

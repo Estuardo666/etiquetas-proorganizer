@@ -71,8 +71,8 @@ export default async function Page() {
       {/*
         El orden replica el de la landing de Canva que ya convierte, porque su
         secuencia responde las preguntas en el orden en que la clienta las hace:
-        qué es (hero) → cuál me sirve (tamaños) → cuánto cuesta (promos) →
-        cómo se ve (diseños) → cómo lo pido (proceso) → quién lo ha probado
+        qué es (hero) → cómo se ve (diseños) → cuál me sirve (tamaños) →
+        cuánto cuesta (promos) → cómo lo pido (proceso) → quién lo ha probado
         (testimonios) → por qué no un marcador (costo) → dudas sueltas (FAQ) →
         quién responde si algo sale mal (Daniella).
 
@@ -86,6 +86,9 @@ export default async function Page() {
       */}
       <main>
         <Hero settings={settings} />
+        {/* Diseños reales en segundo lugar, por decisión de la reunión con la
+            clienta: lo primero que se quiere ver es cómo quedan. */}
+        <Showcase settings={settings} designs={content.designs} />
         {/* La franja de beneficios ya incluye las cifras (StatsRow). */}
         <TrustBar settings={settings} stats={content.stats} />
         {/* La sección de tamaños incluye la franja de usos (UsageStrip). */}
@@ -93,10 +96,7 @@ export default async function Page() {
         {/* El precio va inmediatamente después del tamaño: son la misma
             decisión ("cuál pido y cuánto me cuesta"), no dos. */}
         <Pricing settings={settings} promos={content.promos} />
-        {/* Diseños y personalización comparten sección: son dos respuestas a
-            "¿cómo se ve esto?", no dos argumentos. */}
-        <Showcase settings={settings} designs={content.designs} />
-        {/* Entre ver los diseños y ver los pasos: aquí se responde "¿y si sale
+        {/* Antes de los pasos: aquí se responde "¿y si sale
             feo?" con la nota de aprobación, y el turno pasa a los pasos. */}
         <Personalization settings={settings} />
         <Process settings={settings} steps={content.steps} />

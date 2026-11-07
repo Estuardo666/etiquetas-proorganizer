@@ -1,12 +1,14 @@
 "use client";
 
 import { motion, type Variants } from "framer-motion";
+import { Truck } from "lucide-react";
 import { SectionHeader } from "@/components/ui/section-header";
-import { RevealGroup, RevealItem } from "@/components/ui/reveal";
+import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
 import { ArtGift, ArtSheets } from "@/components/ui/illustrations";
 import { WhatsAppButton } from "@/components/ui/whatsapp-button";
 import { OrderNote } from "@/components/ui/order-note";
 import { fadeScaleIn } from "@/lib/motion";
+import { pipes } from "@/lib/utils";
 import type { PromoItem, Settings } from "@/lib/types";
 
 const promoArt = [ArtSheets, ArtGift];
@@ -85,6 +87,7 @@ function Sticker({ label }: { label: string }) {
  */
 export function Pricing({ settings, promos }: { settings: Settings; promos: PromoItem[] }) {
   const { pricing } = settings;
+  const delivery = pipes(pricing.deliveryOptions).filter(([zone, price]) => zone && price);
 
   return (
     // `pb-fab`: el aviso de condiciones cerraba justo bajo el botón flotante.
@@ -224,6 +227,25 @@ export function Pricing({ settings, promos }: { settings: Settings; promos: Prom
             );
           })}
         </RevealGroup>
+
+        {delivery.length ? (
+          <Reveal className="mx-auto mt-6 max-w-[980px] rounded-[26px] border-2 border-[var(--c-border)] bg-white px-5 py-5">
+            <h3 className="flex items-center justify-center gap-2 text-center font-[family-name:var(--font-heading)] text-[19px] font-bold text-[var(--c-ink)]">
+              <Truck className="size-5 text-[var(--c-accent)]" strokeWidth={2} aria-hidden="true" />
+              {pricing.deliveryTitle}
+            </h3>
+            <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-4 md:grid-cols-4">
+              {delivery.map(([zone, price]) => (
+                <div key={zone} className="text-center">
+                  <dd className="font-[family-name:var(--font-heading)] text-[24px] leading-none font-bold text-[var(--c-ink)]">
+                    {price}
+                  </dd>
+                  <dt className="mt-1.5 text-[14px] leading-snug text-[var(--c-muted)]">{zone}</dt>
+                </div>
+              ))}
+            </dl>
+          </Reveal>
+        ) : null}
 
         <div className="mt-6 flex flex-col items-center gap-3">
           <OrderNote text={settings.whatsapp.previewNote} />

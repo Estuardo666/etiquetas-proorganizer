@@ -43,10 +43,7 @@ export function Hero({ settings }: { settings: Settings }) {
           direction="down-right"
           speedX={0.3}
           speedY={0.3}
-          gradient1="#de2b22"
-          gradient2="#f0913c"
-          gradient3="#2e8fd0"
-          gradientOpacity={0.4}
+          gradientOpacity={0}
         />
 
         <div className="container-page relative z-10">

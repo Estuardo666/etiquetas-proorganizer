@@ -47,13 +47,12 @@ const QUERY = /* GraphQL */ `
         guideBadge guideTitle guideText guideCta guideUrl approvalText
       }
       cost {
-        eyebrow title subtitle prices closing pricesNote
-        badTitle badItems goodTitle goodItems badTabLabel goodTabLabel ctaText
+        eyebrow title subtitle prices closing pricesNote ctaText
       }
       process { eyebrow title subtitle }
       pricing {
         eyebrow promoTitle promosLabel priceSticker priceTitle priceValue priceSuffix priceSub
-        ctaText note
+        ctaText note deliveryTitle deliveryOptions
       }
       gallery { enabled title subtitle }
       testimonials { eyebrow title ratingValue ratingLabel }

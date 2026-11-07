@@ -107,16 +107,13 @@ export type Settings = {
     prices: string;
     closing: string;
     pricesNote: string;
-    badTitle: string;
-    badItems: string;
-    goodTitle: string;
-    goodItems: string;
-    badTabLabel: string;
-    goodTabLabel: string;
     ctaText: string;
   };
   process: { eyebrow: string; title: string; subtitle: string };
   pricing: {
+    deliveryTitle: string;
+    /** Una zona por línea: `Zona|Precio`. */
+    deliveryOptions: string;
     eyebrow: string;
     promoTitle: string;
     /** Rótulo del panel rojo de promociones. */

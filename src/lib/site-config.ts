@@ -18,9 +18,9 @@ import type { Settings } from "./types";
  */
 export const sectionNavigation = [
   { label: "Inicio", anchor: "inicio" },
+  { label: "Diseños", anchor: "disenos" },
   { label: "Tamaños", anchor: "tamanos" },
   { label: "Precios", anchor: "promociones" },
-  { label: "Diseños", anchor: "disenos" },
   { label: "Cómo funciona", anchor: "como-funciona" },
   { label: "Preguntas frecuentes", anchor: "preguntas-frecuentes" },
 ] as const;

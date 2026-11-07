@@ -43,7 +43,15 @@ const usageImage = (slug: string, title: string): WpImage => ({
 export const fallbackContent: SiteContent = {
   settings: {
     brand: {
-      logo: null,
+      // Mismo archivo blanco que el pie: el menú también va sobre azul
+      // marino, así que necesita la misma versión del logotipo, no el texto
+      // de respaldo. El cliente puede subir una versión propia desde WordPress.
+      logo: {
+        url: "/logo-footer.png",
+        alt: "Pro Organizer",
+        width: 1024,
+        height: 376,
+      },
       footerLogo: {
         url: "/logo-footer.png",
         alt: "Pro Organizer",
@@ -119,7 +127,8 @@ export const fallbackContent: SiteContent = {
       // "$8 por hoja" no se puede evaluar sin saber qué trae una hoja.
       sheetNote: "Cada hoja trae de 9 a 60 etiquetas según el tamaño.",
       promoNote: "4ta hoja gratis · Llevas 4 y pagas 3",
-      deliveryNote: "Entrega en 3 a 5 días tras aprobar su diseño.",
+      deliveryNote:
+        "Entrega en 2 a 3 días laborables tras aprobar su diseño, más 1 día de envío. Fines de semana y feriados no cuentan como días hábiles.",
       image: {
         url: "/hero imagen 2.png",
         alt: "Útiles escolares personalizados con etiquetas con el nombre de Camila López",
@@ -182,27 +191,21 @@ export const fallbackContent: SiteContent = {
       approvalText: "Imprimimos sus etiquetas solo cuando usted aprueba el diseño.",
     },
     /**
-     * El competidor real no es otra marca de etiquetas: es el marcador
-     * permanente. Esta sección compara contra eso y contra el precio de lo que
-     * se pierde. Los tres primeros precios son de mercado; el de la hoja es
-     * nuestro y por eso lleva el sufijo `|nuestro`.
+     * No es una comparación "con marcador vs. con etiquetas": esa confrontación
+     * directa (con caritas felices/tristes) se sentía agresiva hacia quien no
+     * compra. La pregunta abierta deja que la propia clienta complete la
+     * respuesta, y los precios de lo que se pierde la sostienen con números,
+     * no con burla. El de la hoja es nuestro y por eso lleva el sufijo
+     * `|nuestro`.
      */
     cost: {
       eyebrow: "LO QUE SE PIERDE, SE PAGA",
-      title: "Un termo perdido cuesta más que un año de etiquetas",
-      subtitle: "Cada cosa sin nombre es una que probablemente no vuelva.",
+      title: "¿Por qué tantos objetos se pierden cada año?",
+      subtitle: "Porque nada tiene nombre. Cada cosa sin etiqueta es una que probablemente no vuelva.",
       prices:
         "bottle|$12|Un termo perdido\nshirt|$25|Una chompa del uniforme\nlunchbox|$18|Una lonchera\nsheet|$8|Una hoja de etiquetas|nuestro",
       closing: "Con una sola cosa que no se pierda, las etiquetas ya se pagaron.",
       pricesNote: "Precios referenciales del mercado ecuatoriano.",
-      badTitle: "Con marcador permanente",
-      badItems:
-        "Se borra al segundo lavado\nSe ve desprolijo en cosas nuevas\nHay que rehacerlo cada mes\nNo funciona en plástico ni en tela",
-      goodTitle: "Con etiquetas Pro Organizer",
-      goodItems:
-        "Aguantan agua y lavavajillas\nSe ven prolijas y ordenadas\nLas pone una vez y listo\nSe adhieren a plástico, metal y tela",
-      badTabLabel: "Con marcador",
-      goodTabLabel: "Con etiquetas",
       ctaText: "Pedir por WhatsApp",
     },
     process: {
@@ -226,6 +229,8 @@ export const fallbackContent: SiteContent = {
       priceSub: "Cada hoja",
       ctaText: "Pedir por WhatsApp",
       note: "Las promociones aplican a hojas de igual o menor valor. Confirme las condiciones al realizar su pedido.",
+      deliveryTitle: "Costo de entrega",
+      deliveryOptions: "Retiro|Gratis\nDentro de Machala|$2\nResto de Ecuador|$3\nGalápagos|$7",
     },
     // Encendida: como sección propia costaba una pantalla entera de scroll
     // para repetir lo que ya decían las categorías, así que estaba apagada.
@@ -297,7 +302,7 @@ export const fallbackContent: SiteContent = {
       },
       title: "Hola, soy Daniella",
       bio:
-        "Organizadora Profesional de Espacios Certificada. Diseñamos personalmente cada hoja para que llegue perfecta para sus hijos.",
+        "Soy mamá de dos. Esto nació de buscar etiquetas para mis propios hijos y no encontrar nada que me convenciera, así que empecé a diseñarlas yo misma. Hoy hago cada hoja como si fuera para los míos, para que a ninguna otra familia se le pierda nada.",
       guaranteeTitle: "Su tranquilidad es nuestra garantía",
       guaranteeText:
         "Si existe un error en el diseño aprobado por nosotros, reimprimimos sin costo.",
@@ -540,7 +545,7 @@ export const fallbackContent: SiteContent = {
       id: "f5",
       title: "¿En cuánto tiempo llega mi pedido?",
       answer:
-        "Entre 24 y 48 horas hábiles después de aprobar el diseño, más el tiempo de envío a su ciudad.",
+        "Producimos en 2 a 3 días laborables después de aprobar el diseño, más el tiempo de envío según su ciudad. Los fines de semana y feriados no cuentan como días hábiles.",
     },
     {
       id: "f9",
@@ -552,7 +557,7 @@ export const fallbackContent: SiteContent = {
       id: "f6",
       title: "¿Realizan envíos a otras ciudades?",
       answer:
-        "Enviamos a todo Ecuador mediante courier. El costo depende de su ciudad y se lo confirmamos al hacer su pedido.",
+        "Sí. Retiro: gratis. Envío dentro de Machala: $2. Envío al resto de Ecuador: $3. Envío a Galápagos: $7.",
     },
     {
       id: "f7",
